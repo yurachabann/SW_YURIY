@@ -8,21 +8,13 @@ h1 {
 }
 
 .miembros {
-    list-style: none;
-    padding: 0;
-    max-width: 700px;
-    margin: 20px auto;
-}
-
-.miembros li {
-    display: flex;
-    align-items: center;
     background-color: #f4f4f4;
     margin: 10px 0;
     padding: 10px;
     border-radius: 10px;
     text-align: center;
 }
+
 
 img {
     width: 150px;
