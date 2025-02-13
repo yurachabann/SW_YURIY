@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario</title>
-    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="stylesheet" href="stylecontacto.css">
 </head>
 <body>
-    <form action="">
+    <form>
         <h1>Formulario</h1>
         <label for="nombre">Nombre:</label>
-        <input id="nombre" type="text" name:"nombre" value=""/>
+        <input id=nombre type="text" name="nombre">
         <label for="email">Email:</label>
-        <input id="email" type="text" name:"email" value=""/>
+        <input id=email type="text" name="email">
         <p>Motivo:</p>
         <label><input type="radio" name="Motivo" value="Evaluación" checked>Evaluación</label>
         <label><input type="radio" name="Motivo" value="Sugerencias">Sugerencias</label>
         <label><input type="radio" name="Motivo" value="Críticas">Críticas</label>
-        
+        <p>    </p>
         <input type="checkbox" value="Casilla">Marque esta casilla para verificar que ha leido nuestros términos y condiciones del servicio
         <p> </p>
         <textarea name="cuadro" rows="4" cols="50">
@@ -26,7 +26,7 @@
 
         <button type="submit">Enviar</button>
     </form>
-
+    
     <div class="buttons">
         <button onclick="location.href='index.html'">Inicio</button>
         <button onclick="location.href='detalles.html'">Detalles</button>
@@ -35,8 +35,6 @@
         <button onclick="location.href='planificacion.html'">Planificación</button>
         
     </div>
-
-    
 
 </body>
 </html>
