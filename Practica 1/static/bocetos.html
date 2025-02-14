@@ -1,40 +1,22 @@
-<!--
-En este documento se describe la apariencia de la web, aportando bocetos en papel
-para las distintas páginas intermedias que van a ver los distintos usuarios.
-Deben ser bocetos de baja tecnología, se recomienda dibujarlos en papel y después
-escanearlos o fotograarlos. Alternativamente, se pueden usar herramientas de
-wireframing (que tienen versión gratuita que te sirve) como Excalidraw1. Con
-Excalidraw puedes exportar los bocetos como cheros SVG que puedes incluir
-fácilmente en la página. Te dejo los siguientes recursos que pueden ser de utilidad:
-    ● (Youtube) Excalidraw - My favorite for low- exploration
-    ● (Youtube) Sketching For Web Designers *Part 1* | Low-delity Wireframe in
-        @excalidraw | Design Hangout ep 8
-    ● (Youtube) How To Wireframe a Website Part 2 | Low-delity Website Mockup
-        in @excalidraw | Design Hangout 8
-    ● Librerías para Excalidraw y wireframes:
-    ○ hps://github.com/MikeJohnPage/shinydraw
-    
-Hay más herramientas que puedes utilizar si ya las conoces. Balsamiq2, Lucidchart3,Figma4, Sketch5
-, o Wireframe.cc6, PenPot7 y exportar los resultados como imágenes.
-Debe incluir también una descripción textual de lo que se puede ver en cada una de
-las pantallas y describir cómo sería la navegación entre pantallas. En particular, para
-las funcionalidades principales de la aplicación, la página y los bocetos debe aclarar
-la interacción paso a paso de los usuarios desde la pantalla principal de vuestra
-aplicación. Es importante que en cada boceto esté indicado a qué funcionalidad
-corresponde.
-Es aceptable y razonable que estos diseños evolucionen y cambien más adelante.
--->
-
 <!DOCTYPE html>
 <html lang="Es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/styles_bocetos.css">
     <title>Bocetos</title>
 </head>
 <body>
     <h1><b>Bocetos</b></h1>
-    <br>
+    
+    <div class="buttons">
+        <button onclick="location.href='index.html'">Inicio</button>
+        <button onclick="location.href='detalles.html'">Detalles</button>
+        <button onclick="location.href='miembros.html'">Miembros</button>
+        <button onclick="location.href='planificacion.html'">Planificación</button>
+        <button onclick="location.href='contacto.html'">Contacto</button>
+    </div>
+
     <section>
         <h2>Pagina principal</h2>
         <img src="./img/inicio.png" alt="">
@@ -43,9 +25,9 @@ Es aceptable y razonable que estos diseños evolucionen y cambien más adelante.
             y las ociones de iniciar sesión y registrarse. 
         </p>
     </section>
-    <br>
+
     <section>
-        <h3>Intercambios</h3>
+        <h2>Intercambios</h2>
         <img src="./img/intercambio.jpg" alt="">
         <p>Esta sería la página de intercambios en la que seleccionarías 
             la carta que quieres cambiar y la que quieres recibir y la opción
@@ -53,15 +35,23 @@ Es aceptable y razonable que estos diseños evolucionen y cambien más adelante.
             si quieren contigo.
         </p>
     </section>
-    <br>
+
     <section>
-        <h4>Gestor de mazos</h4>
+        <h2>Gestor de mazos</h2>
         <img src="./img/usuario.jpg" alt="">
         <p>Aquí el usuario puede gestionar sus cartas para crear un mazo y
             añadirle alguna descripción que explique algo del mismo. Estos 
             mazos también se podrían publicar para recibir feedback de la gente.
         </p>
     </section>
+
+    <div class="buttons">
+        <button onclick="location.href='index.html'">Inicio</button>
+        <button onclick="location.href='detalles.html'">Detalles</button>
+        <button onclick="location.href='miembros.html'">Miembros</button>
+        <button onclick="location.href='planificacion.html'">Planificación</button>
+        <button onclick="location.href='contacto.html'">Contacto</button>
+    </div>
     
 
 
