@@ -1,40 +1,69 @@
 <!DOCTYPE html>
-<html lang="es-ES">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="./css/stylecontacto.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario</title>
-    <link rel="stylesheet" href="stylecontacto.css">
+    <title>Formulario de contacto</title>
+
 </head>
 <body>
-    <form>
-        <h1>Formulario</h1>
-        <label for="nombre">Nombre:</label>
-        <input id=nombre type="text" name="nombre">
-        <label for="email">Email:</label>
-        <input id=email type="text" name="email">
-        <p>Motivo:</p>
-        <label><input type="radio" name="Motivo" value="Evaluación" checked>Evaluación</label>
-        <label><input type="radio" name="Motivo" value="Sugerencias">Sugerencias</label>
-        <label><input type="radio" name="Motivo" value="Críticas">Críticas</label>
-        <p>    </p>
-        <input type="checkbox" value="Casilla">Marque esta casilla para verificar que ha leido nuestros términos y condiciones del servicio
-        <p> </p>
-        <textarea name="cuadro" rows="4" cols="50">
-           
-        </textarea>
+    
+    <h1>Formulario de contacto</h1>
+    
+    <form action="mailto:alexfe03@ucm.es" method="post" enctype="text/plain">
+              
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+        </div>
 
-        <button type="submit">Enviar</button>
+        <p></p>  
+
+        <div>
+            <label for="correo">Dirección de email de contacto:</label>
+            <input type="text" id="correo" name="correo" required>
+        </div>
+
+        <p></p>
+             
+        <fieldset>
+            <legend>Motivo de la consulta:</legend>
+            <div>
+                <label><input type="radio" name="motivo" value="Evaluación" required> Evaluación</label>
+            </div>
+            <div>
+                <label><input type="radio" name="motivo" value="Sugerencias"> Sugerencias</label>           
+            </div>
+            <div>
+                <label><input type="radio" name="motivo" value="Críticas"> Críticas</label>            
+            </div>
+        </fieldset>
+        
+        <div>
+            <input type="checkbox" id="terminos" name="terminos" required>
+            <label for="terminos">Marque esta casilla para verificar que ha leído nuestros términos y condiciones del servicio</label>
+        </div>
+        
+        <div>
+            <label for="consulta">Consulta:</label>
+            <textarea name="consulta" id="consulta" rows="4" cols="50" required></textarea>
+        </div>
+        
+        <p></p>
+
+        <div>
+            <button type="submit" name= "submit1" value="Enviar">Enviar</button>
+        </div>
     </form>
     
     <div class="buttons">
         <button onclick="location.href='index.html'">Inicio</button>
-        <button onclick="location.href='detalles.html'">Detalles</button>
         <button onclick="location.href='bocetos.html'">Bocetos</button>
         <button onclick="location.href='miembros.html'">Miembros</button>
         <button onclick="location.href='planificacion.html'">Planificación</button>
-        
-    </div>
-
+        <button onclick="location.href='contacto.html'">Contacto</button>
+    </div> 
+ 
 </body>
 </html>
