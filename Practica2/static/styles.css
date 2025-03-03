@@ -1,0 +1,86 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+header .logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+header hr {
+    border: 1px solid #555;
+    margin: 10px 0;
+}
+
+/*Contenedor principal*/
+.contenedor {
+    display: flex; /*2 columnas*/
+}
+
+/*Barra lateral*/
+.barra_lateral {
+    width: 200px;
+    background-color: #444;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.barra_lateral ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.barra_lateral ul li {
+    margin: 15px 0;
+}
+
+.barra_lateral ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.barra_lateral ul li a:hover {
+    text-decoration: underline;
+}
+
+/*Main*/
+main {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    margin-left: 20px; /*Espacio entre la barra lateral y el contenido*/
+}
+
+main h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+main p {
+    font-size: 18px;
+    color: #666;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
