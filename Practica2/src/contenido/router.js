@@ -7,4 +7,4 @@ contenidoRouter.get('/normal', viewContenidoNormal);
 
 contenidoRouter.get('/admin', viewContenidoAdmin);
 
-export default contenidoRouter; //
+export default contenidoRouter;

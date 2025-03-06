@@ -5,13 +5,13 @@
  */
 function mostrarSaludo(session){
 	if (session == null || ! session.login){
-		return `<p>Usuario desconocido. <a href="/usuarios/login">Login</a></p>`;
+		return `<p>Usuario desconocido. <a href="/usuarios/login">Login</a><p>Registrarse. <a href="/usuarios/register">Register</a></p>`;
 	}
 
 	return `<p>Bienvenido ${session.nombre}. <a href="/usuarios/logout">(salir)</a></p>`;
 }
 %><header>
-		<h1>Mi gran página web</h1>
+		<h1>ChangeDEX</h1>
 		<div class="saludo">
 			<%- mostrarSaludo(session) %>
 		</div>

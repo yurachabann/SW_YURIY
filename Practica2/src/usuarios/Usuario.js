@@ -108,6 +108,16 @@ export class Usuario {
         if (this.#id === null) return Usuario.#insert(this);
         return Usuario.#update(this);
     }
+    // Dentro de la clase Usuario, antes de la definición de los errores:
+static register(username, password, nombre = username) {
+    // Primero, hasheamos la contraseña
+    const hash = bcrypt.hashSync(password, 10);
+    // Creamos una nueva instancia de Usuario. Puedes decidir qué valor usar para 'nombre'.
+    const nuevoUsuario = new Usuario(username, hash, nombre, RolesEnum.USUARIO);
+    // Persistimos el usuario en la base de datos.
+    return nuevoUsuario.persist();
+}
+
 }
 
 export class UsuarioNoEncontrado extends Error {

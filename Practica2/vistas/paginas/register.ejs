@@ -1,0 +1,13 @@
+<h1>Registrarse</h1>
+
+<form action="/usuarios/register" method="POST">
+<fieldset>
+	<% if (locals.error) { %>
+		<p><strong><%= locals.error %></strong></p>
+	<% } %>
+	<legend>Usuario y contraseña</legend>
+	<div><label>Nombre:</label> <input type="text" name="usernameRegister" /></div>
+	<div><label>Contraseña:</label> <input type="password" name="password1" /></div>
+    <div><label>Confirme la contraseña:</label> <input type="password" name="password2" /></div>
+	<button type="submit">Enviar</button>
+</fieldset>
