@@ -15,6 +15,7 @@ function createConnection() {
     };
     const db = new Database(join(dirname(import.meta.dirname), 'data', 'aw_sw.db'), options);
     db.pragma('journal_mode = WAL'); // Necesario para mejorar la durabilidad y el rendimiento
+    //createCartasTable(db);  //Crear la tabla de cartas si no existe
     return db;
 }
 
@@ -27,6 +28,17 @@ export function checkConnection(db = getConnection()) {
     const checkStmt = db.prepare('SELECT 1+1 as suma');
     const suma = checkStmt.get().suma;
     if (suma == null || suma !== 2) throw Error(`La bbdd no funciona correctamente`);
+}
+
+export function createCartasTable(db) {
+    const createTableQuery = `
+        CREATE TABLE IF NOT EXISTS cartas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT NOT NULL,
+            imagen TEXT NOT NULL
+        );
+    `;
+    db.prepare(createTableQuery).run();
 }
 
 export class ErrorDatos extends Error {
