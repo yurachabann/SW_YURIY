@@ -1,5 +1,5 @@
 import express from 'express';
-import { viewLogin, doLogin, doLogout, viewRegister, doRegister, aniadirUsuario, viewAdd} from './controllers.js';
+import { viewLogin, doLogin, doLogout, viewRegister, doRegister, aniadirUsuario, viewAdd,  viewEliminate ,eliminateUser, viewModify, doModify} from './controllers.js';
 
 const usuariosRouter = express.Router();
 
@@ -10,5 +10,9 @@ usuariosRouter.post('/register', doRegister);    // Ruta POST para procesar el r
 usuariosRouter.get('/logout', doLogout);
 usuariosRouter.get('/addUser', viewAdd);
 usuariosRouter.post('/addUser', aniadirUsuario);
+usuariosRouter.get('/eliminate', viewEliminate);
+usuariosRouter.post('/eliminate', eliminateUser);
+usuariosRouter.get('/modifyUser', viewModify);
+usuariosRouter.post('/modifyUser', doModify);
 
 export default usuariosRouter;

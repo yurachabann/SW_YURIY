@@ -10,6 +10,7 @@ export class Usuario {
     static #getByUsernameStmt = null;
     static #insertStmt = null;
     static #updateStmt = null;
+    static #deleteStmt = null;
 
     static initStatements(db) {
         if (this.#getByUsernameStmt !== null) return;
@@ -17,6 +18,7 @@ export class Usuario {
         this.#getByUsernameStmt = db.prepare('SELECT * FROM Usuarios WHERE username = @username');
         this.#insertStmt = db.prepare('INSERT INTO Usuarios(username, password, nombre, rol) VALUES (@username, @password, @nombre, @rol)');
         this.#updateStmt = db.prepare('UPDATE Usuarios SET username = @username, password = @password, rol = @rol, nombre = @nombre WHERE id = @id');
+        this.#deleteStmt = db.prepare('DELETE FROM Usuarios WHERE username = @username');
     }
 
     static getUsuarioByUsername(username) {
@@ -124,6 +126,37 @@ static addUserAdmin(nombre, pass) {
     return nuevoUsuario.persist();
 }
 
+static deleteByUsername(username) {
+    const result = this.#deleteStmt.run({ username });
+    if (result.changes === 0) throw new UsuarioNoEncontrado(username);
+    //return true;
+}
+
+static usuarioExiste(username) {
+    if (this.#getByUsernameStmt === null) {
+        throw new Error("La base de datos no está inicializada. Llama a initStatements(db) primero.");
+    }
+    const usuario = this.#getByUsernameStmt.get({ username });
+    return usuario !== undefined;
+}
+
+static actualizarCampos(nombre, nombre2, contraseña2, nuevoRol) {
+        const usuario = this.getUsuarioByUsername(nombre);
+    
+    if (nombre2 && nombre2.trim() !== "") {
+        usuario.#username = nombre2;
+    }
+
+    if (contraseña2 && contraseña2.trim() !== "") {
+        usuario.#password = contraseña2;
+    }
+
+    if (nuevoRol && nuevoRol.trim() !== "") {
+        usuario.rol = nuevoRol;
+    }
+
+    return usuario.persist();
+}
 }
 
 export class UsuarioNoEncontrado extends Error {

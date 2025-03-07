@@ -1,4 +1,6 @@
 <form action="/usuarios/addUser" method="POST">
+    <fieldset>
+    <legend>Añadir usuario</legend>
     <label for="nombre">Nombre:</label>
     <input type="text" id="nombre" name="nombre" required>
     <br><br>
@@ -10,14 +12,13 @@
     <label for="contraseña">Contraseña:</label>
     <input type="password" id="pass" name="pass" required>
     <br><br>
-
 <label>
-    <input type="radio" name="tipoUsuario" value="A" required> Administrador
+    <input type="radio" name="tipoUsuario" value="A" required> Admin
 </label>
 
 <label>
     <input type="radio" name="tipoUsuario" value="U"> Usuario
 </label>
-
  <button type="submit">Agregar Usuario</button>
+    </fieldset>
 </form>

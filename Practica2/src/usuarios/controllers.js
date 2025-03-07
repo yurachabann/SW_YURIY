@@ -19,6 +19,20 @@ export function viewRegister(req, res) {
     });
 }
 
+export function viewModify(req, res) {
+    res.render('pagina', {
+        contenido: 'paginas/modifyUser',
+        session: req.session
+    });
+}
+
+export function viewEliminate(req, res) {
+    res.render('pagina', {
+        contenido: 'paginas/borrarUsuario',
+        session: req.session
+    });
+}
+
 export function viewAdd(req, res) {
     res.render('pagina', {
         contenido: 'paginas/aniadirUsuario',
@@ -75,15 +89,7 @@ export function aniadirUsuario(req, res) {
     }
 
     try {
-        // Verificamos si ya existe un usuario con el mismo nombre de usuario o correo electrónico
-       /* const usuarioExistente = Usuario.findByUsernameOrEmail(username, email);
-        if (usuarioExistente) {
-            return res.render('pagina', {
-                contenido: 'paginas/aniadirUsuario',
-                error: 'Ya existe un usuario con ese nombre de usuario o correo electrónico.'
-            });
-        }
-            */
+    
         if(rol == "A") { Usuario.addUserAdmin(nombre,pass,rol); }
         else Usuario.register(nombre,pass);
         // Si la creación es exitosa, redirigimos a la página de administración de usuarios
@@ -164,4 +170,75 @@ export function doLogout(req, res, next) {
             res.redirect('/');
         })
     })
+}
+
+export function eliminateUser(req,res){
+    if(!Usuario.usuarioExiste(req.body.username)){
+    return res.render('pagina', {
+        contenido: 'paginas/borrarUsuario',
+        error: 'Error al borrar el usuario '
+    });
+}
+    else {
+        Usuario.deleteByUsername(req.body.username);
+        return res.render('pagina', {
+        contenido: 'paginas/borrarUsuario',
+        error: 'Borrado con exito '
+        });
+
+}
+
+}
+/*
+export function doLogin(req, res) {
+    body('username').escape();
+    body('password').escape();
+    // Capturo las variables username y password
+    const username = req.body.username.trim();
+    const password = req.body.password.trim();
+
+    try {
+        const usuario = Usuario.login(username, password);
+        req.session.login = true;
+        req.session.nombre = usuario.nombre;
+        req.session.esAdmin = usuario.rol === RolesEnum.ADMIN;
+
+        return res.render('pagina', {
+            contenido: 'paginas/home',
+            session: req.session
+        });
+
+    } catch (e) {
+        res.render('pagina', {
+            contenido: 'paginas/login',
+            error: 'El usuario o contraseña no son válidos'
+        })
+    }
+}
+    */
+
+export function doModify(req, res) {
+    body('nombre').escape();
+    body('nombre2').normalizeEmail();
+    body('pass2').escape();
+    body('rol').isIn([RolesEnum.ADMIN, RolesEnum.USER]); 
+
+    const nombre = req.body.nombre.trim();
+    const nombre2 = req.body.nombre2.trim();
+    const pass2 = req.body.pass2.trim();
+    const rol = req.body.tipoUsuario.trim();
+    //console.log(rol);
+    
+        if(Usuario.usuarioExiste(nombre)){
+        Usuario.actualizarCampos(nombre,nombre2, pass2, rol);
+        return res.render('pagina', {
+            contenido: 'paginas/modifyUser'
+        });
+    }
+        else{
+        return res.render('pagina', {
+            contenido: 'paginas/modifyUser',
+            error: 'El usuario no existe ' 
+        });
+    }
 }
