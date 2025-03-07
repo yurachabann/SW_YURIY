@@ -19,7 +19,12 @@ export function viewRegister(req, res) {
     });
 }
 
-
+export function viewAdd(req, res) {
+    res.render('pagina', {
+        contenido: 'paginas/aniadirUsuario',
+        session: req.session
+    });
+}
 
 export function doLogin(req, res) {
     body('username').escape();
@@ -47,6 +52,55 @@ export function doLogin(req, res) {
     }
 }
 
+export function aniadirUsuario(req, res) {
+    // Sanitizamos los campos del formulario
+    body('nombre').escape();
+    body('email').normalizeEmail();
+    body('pass').escape();
+    body('rol').isIn([RolesEnum.ADMIN, RolesEnum.USER]);  // Asegura que el rol sea válido
+
+    const nombre = req.body.nombre.trim();
+    const email = req.body.email.trim();
+    const pass = req.body.pass.trim();
+    const rol = req.body.tipoUsuario.trim();
+    console.log(rol);
+    
+
+    // Validamos los campos
+    if (!nombre || !email || !rol) {
+        return res.render('pagina', {
+            contenido: 'paginas/aniadirUsuario',
+            error: 'Todos los campos son obligatorios.'
+        });
+    }
+
+    try {
+        // Verificamos si ya existe un usuario con el mismo nombre de usuario o correo electrónico
+       /* const usuarioExistente = Usuario.findByUsernameOrEmail(username, email);
+        if (usuarioExistente) {
+            return res.render('pagina', {
+                contenido: 'paginas/aniadirUsuario',
+                error: 'Ya existe un usuario con ese nombre de usuario o correo electrónico.'
+            });
+        }
+            */
+        if(rol == "A") { Usuario.addUserAdmin(nombre,pass,rol); }
+        else Usuario.register(nombre,pass);
+        // Si la creación es exitosa, redirigimos a la página de administración de usuarios
+        return res.render('pagina', {
+            contenido: 'paginas/aniadirUsuario',
+            session: req.session
+        });
+
+    } catch (e) {
+        // Si ocurre algún error al crear el usuario
+        return res.render('pagina', {
+            contenido: 'paginas/aniadirUsuario',
+            error: 'Error al añadir el usuario: ' + e.message
+        });
+    }
+}
+
 export function doRegister(req, res) {
     // Sanitizamos los campos del formulario
     body('usernameRegister').escape();
@@ -68,6 +122,7 @@ export function doRegister(req, res) {
 
     try {
         // Se asume que Usuario.register se encarga de crear el usuario en la base de datos
+        
         const nuevoUsuario = Usuario.register(username, password1);
 
         // Iniciamos sesión para el usuario registrado

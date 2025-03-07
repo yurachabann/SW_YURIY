@@ -11,7 +11,7 @@ export function viewContenidoNormal(req, res) {
 
 export function viewContenidoAdmin(req, res) {
     let contenido = 'paginas/noPermisos';
-    if (req.session != null && req.session.login && req.session.nombre === 'Administrador') {
+    if (req.session != null && req.session.login && req.session.esAdmin) {
         contenido = 'paginas/admin';
     }
     res.render('pagina', {
