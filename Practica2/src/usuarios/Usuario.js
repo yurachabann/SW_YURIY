@@ -56,7 +56,9 @@ export class Usuario {
         const password = usuario.#password;
         const nombre = usuario.nombre;
         const rol = usuario.rol;
-        const datos = {username, password, nombre, rol};
+        //const datos = {username, password, nombre, rol};
+        const datos = { username, password, nombre, rol, id: usuario.id };
+
 
         const result = this.#updateStmt.run(datos);
         if (result.changes === 0) throw new UsuarioNoEncontrado(username);
@@ -141,17 +143,18 @@ static usuarioExiste(username) {
 }
 
 static actualizarCampos(nombre, nombre2, contraseña2, nuevoRol) {
-        const usuario = this.getUsuarioByUsername(nombre);
+   let usuario = this.getUsuarioByUsername(nombre);
+
     
-    if (nombre2 && nombre2.trim() !== "") {
+    if (nombre2.trim() !== "") {
         usuario.#username = nombre2;
     }
 
-    if (contraseña2 && contraseña2.trim() !== "") {
+    if (contraseña2.trim() !== "") {
         usuario.#password = contraseña2;
     }
 
-    if (nuevoRol && nuevoRol.trim() !== "") {
+    if (nuevoRol.trim() !== "") {
         usuario.rol = nuevoRol;
     }
 

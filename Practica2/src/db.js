@@ -15,7 +15,8 @@ function createConnection() {
     };
     const db = new Database(join(dirname(import.meta.dirname), 'data', 'aw_sw.db'), options);
     db.pragma('journal_mode = WAL'); // Necesario para mejorar la durabilidad y el rendimiento
-    //createCartasTable(db);  //Crear la tabla de cartas si no existe
+    db.prepare('DROP TABLE IF EXISTS cartas').run();
+    createCartasTable(db);  //Crear la tabla de cartas si no existe
     return db;
 }
 
@@ -35,11 +36,13 @@ export function createCartasTable(db) {
         CREATE TABLE IF NOT EXISTS cartas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL,
-            imagen TEXT NOT NULL
+            fuerza INTEGER NOT NULL,
+            tipocarta INTEGER NOT NULL
         );
     `;
     db.prepare(createTableQuery).run();
 }
+
 
 export class ErrorDatos extends Error {
     /**
