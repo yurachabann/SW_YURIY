@@ -11,6 +11,7 @@ export class Usuario {
     static #insertStmt = null;
     static #updateStmt = null;
     static #deleteStmt = null;
+    static #getAll = null;
 
     static initStatements(db) {
         if (this.#getByUsernameStmt !== null) return;
@@ -19,6 +20,7 @@ export class Usuario {
         this.#insertStmt = db.prepare('INSERT INTO Usuarios(username, password, nombre, rol) VALUES (@username, @password, @nombre, @rol)');
         this.#updateStmt = db.prepare('UPDATE Usuarios SET username = @username, password = @password, rol = @rol, nombre = @nombre WHERE id = @id');
         this.#deleteStmt = db.prepare('DELETE FROM Usuarios WHERE username = @username');
+        this.#getAll = db.prepare('SELECT * FROM Usuarios');
     }
 
     static getUsuarioByUsername(username) {
@@ -49,6 +51,10 @@ export class Usuario {
             throw new ErrorDatos('No se ha insertado el usuario', { cause: e });
         }
         return usuario;
+    }
+
+    static obtenerUsuarios() {
+        return this.#getAll.all();
     }
 
     static #update(usuario) {

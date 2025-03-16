@@ -1,0 +1,26 @@
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>TipoUsuario</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (usuarios.length > 0) { %>
+            <% usuarios.forEach(user => { %>
+                <tr>
+                    <td><%= user.id %></td>
+                    <td><%= user.username %></td>
+                    <td><%= user.rol %></td>
+                    <td><%= user.email %></td>
+                </tr>
+            <% }); %>
+        <% } else { %>
+            <tr>
+                <td colspan="4">No hay usuarios disponibles</td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>

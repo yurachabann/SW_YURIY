@@ -1,0 +1,26 @@
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (cartas.length > 0) { %>
+            <% cartas.forEach(carta => { %>
+                <tr>
+                    <td><%= carta.id %></td>
+                    <td><%= carta.nombre %></td>
+                    <td><%= carta.fuerza %></td>
+                    <td><%= carta.tipocarta %></td>
+                </tr>
+            <% }); %>
+        <% } else { %>
+            <tr>
+                <td colspan="4">No hay cartas disponibles</td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>

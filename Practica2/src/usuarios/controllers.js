@@ -19,6 +19,16 @@ export function viewRegister(req, res) {
     });
 }
 
+export function viewAllUsuarios(req, res) {
+    const usuarios = Usuario.obtenerUsuarios();
+    
+    res.render('pagina', {
+        contenido: 'paginas/tablaUsuarios',
+        usuarios,
+        session: req.session
+    });
+}
+
 export function viewModify(req, res) {
     res.render('pagina', {
         contenido: 'paginas/modifyUser',

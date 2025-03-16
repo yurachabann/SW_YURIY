@@ -15,6 +15,17 @@ export function viewModifyCard(req, res) {
     });
 }
 
+export function viewAllCartas(req, res) {
+    const cartas = Carta.obtenerCartas();
+    
+    res.render('pagina', {
+        contenido: 'paginas/tablaCartas',
+        cartas,
+        session: req.session
+    });
+}
+
+
 export function viewEliminateCard(req, res) {
     res.render('pagina', {
         contenido: 'paginas/eliminarCarta',

@@ -19,20 +19,20 @@ export class Carta {
         this.#id = id;
     }
 
-    static #insertStmt = null; 
-    static #getAllStmt = null; 
-    static #existsStmt = null; 
+    static #insertSmth = null; 
+    static #getAll = null; 
+    static #exists = null; 
     static #getByNombre = null; 
     static #updateCarta = null;
     static #delete = null;
 
     static initConsultas(db) {
-        if (this.#insertStmt !== null) return; 
-        this.#insertStmt = db.prepare(
+        if (this.#insertSmth !== null) return; 
+        this.#insertSmth = db.prepare(
             'INSERT INTO Cartas (nombre, fuerza, tipocarta) VALUES (@nombre, @fuerza, @tipocarta)'
         );
-        this.#getAllStmt = db.prepare('SELECT * FROM Cartas');
-        this.#existsStmt = db.prepare('SELECT COUNT(*) as count FROM Cartas WHERE nombre = @nombre');
+        this.#getAll = db.prepare('SELECT * FROM Cartas');
+        this.#exists = db.prepare('SELECT COUNT(*) as count FROM Cartas WHERE nombre = @nombre');
         this.#getByNombre = db.prepare('SELECT * FROM Cartas WHERE nombre = @nombre');
         this.#updateCarta = db.prepare('UPDATE Cartas SET nombre = @nombreNew, fuerza = @fuerza, tipoCarta = @tipoCarta WHERE nombre = @nombre');
         this.#delete = db.prepare('DELETE FROM Cartas WHERE nombre = @name');
@@ -59,7 +59,7 @@ export class Carta {
     
     
     static cartaExiste(nombre) {
-        if (this.#existsStmt === null) {
+        if (this.#exists === null) {
             throw new Error("La base de datos no está inicializada. Llama a initStatements(db) primero.");
         }
         const carta = this.#getByNombre.get({ nombre });
@@ -83,14 +83,14 @@ export class Carta {
             throw new Error(`La carta con el nombre "${nombre}" ya existe`);
         }
         try {
-            this.#insertStmt.run({ nombre, fuerza, tipocarta });
+            this.#insertSmth.run({ nombre, fuerza, tipocarta });
         } catch (e) {
             throw new Error(`No se pudo insertar la carta: ${e.message}`);
         }
     }
 
     static obtenerCartas() {
-        return this.#getAllStmt.all();
+        return this.#getAll.all();
     }
 
 
@@ -102,7 +102,7 @@ export class Carta {
                 const tipoCarta = carta.tipoCarta;
                 const datos = {nombre, fuerza, tipoCarta};
     
-                result = this.#insertStmt.run(datos);
+                result = this.#insert.run(datos);
     
                 usuario.#id = result.lastInsertRowid;
             } catch(e) { // SqliteError: https://github.com/WiseLibs/better-sqlite3/blob/master/docs/api.md#class-sqliteerror
