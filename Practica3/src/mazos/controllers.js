@@ -2,9 +2,10 @@ import { body } from 'express-validator';
 import { Carta } from '../cartas/Cartas.js';
 import { Mazo } from '../mazos/Mazos.js';
 
-export function viewAddMazo(req, res) { //añadir mazo
-    let contenido = 'paginas/login';
-
+export function viewAddMazo(req, res) { //añadir mazoo
+    let contenido = 'paginas/login'; //esto hace algo
+  
+    
         try {
             const cartas = Carta.obtenerCartas();
             contenido = 'paginas/addMazo';

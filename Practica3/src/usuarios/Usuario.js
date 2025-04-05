@@ -213,3 +213,17 @@ export class UsuarioYaExiste extends Error {
         this.name = 'UsuarioYaExiste';
     }
 }
+
+/*
+export class UsuarioYaExiste extends Error {
+    /**
+     * 
+     * @param {string} username 
+     * @param {ErrorOptions} [options]
+     
+    constructor(username, options) {
+        super(`Usuario ya existe: ${username}`, options);
+        this.name = 'UsuarioYaExiste';
+    }
+}
+    */
