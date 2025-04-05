@@ -1,35 +1,42 @@
 <h2>Modificar Cartas</h2>
 
 <form action="/cartas/modificarCard" method="POST">
-    <fieldset>
+  <fieldset>
     <legend>Datos de la carta:</legend>
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required>
-    <br><br>
-    <p>Dejar en blanco lo que no se modifica </p>
-    <label for="nombre2">Nuevo nombre:</label>
-    <input type="text" id="nombre2" name="nombre2">
-    <br><br>
-
-    <label for="power2">Nueva fuerza:</label>
-    <input type="number" id="power2" name="power2">
-    <br><br>
-<label>
-    <input type="radio" name="tipoCarta" value="1"> Tipo 1 (Fuego)
-</label>
-
-<label>
-    <input type="radio" name="tipoCarta" value="2"> Tipo 2 (Agua)
-</label>
-
-<label>
-    <input type="radio" name="tipoCarta" value="3"> Tipo 3 (Aire)
-</label>
-
-<label>
-    <input type="radio" name="tipoCarta" value="4"> Tipo 4 (Hielo)
-</label>
-
- <button type="submit">Modificar carta</button>
-    </fieldset>
+    
+    <div>
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" required>
+    </div>
+    
+    <div>
+      <label for="nombre2">Nuevo nombre:</label>
+      <input type="text" id="nombre2" name="nombre2">
+    </div>
+    
+    <div>
+      <label for="power2">Nueva fuerza:</label>
+      <input type="number" id="power2" name="power2">
+    </div>
+    
+    <div>
+      <label>
+        <input type="radio" name="tipoCarta" value="1"> Tipo 1 (Fuego)
+      </label>
+      <label>
+        <input type="radio" name="tipoCarta" value="2"> Tipo 2 (Agua)
+      </label>
+      <label>
+        <input type="radio" name="tipoCarta" value="3"> Tipo 3 (Aire)
+      </label>
+      <label>
+        <input type="radio" name="tipoCarta" value="4"> Tipo 4 (Hielo)
+      </label>
+    </div>
+    
+    <div>
+      <button type="submit">Modificar carta</button>
+    </div>
+    
+  </fieldset>
 </form>

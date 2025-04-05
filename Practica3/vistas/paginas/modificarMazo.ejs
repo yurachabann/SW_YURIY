@@ -1,0 +1,32 @@
+<h2>Modificar Mazos</h2>
+
+<form action="/mazos/modificarMazo" method="POST">
+  <fieldset>
+    <legend>Datos del mazo:</legend>
+    
+    <div>
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" required>
+    </div>
+    
+    <div>
+      <label for="nombre2">Nuevo nombre:</label>
+      <input type="text" id="nombre2" name="nombre2">
+    </div>
+    
+     <div class="form-group">
+        <label for="cartas">Cartas:</label>
+        <select id="cartas" name="cartas" multiple size="10" required>
+            <% cartas.forEach(function(carta) { %>
+                <option value="<%= carta.id %>"><%= carta.nombre %></option>
+            <% }); %>
+        </select>
+        <p class="form-hint">(Puedes seleccionar hasta 10 cartas)</p>
+    </div>
+    
+    <div>
+      <button type="submit">Modificar mazo</button>
+    </div>
+    
+  </fieldset>
+</form>

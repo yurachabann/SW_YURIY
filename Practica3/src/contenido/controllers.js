@@ -19,3 +19,12 @@ export function viewContenidoAdmin(req, res) {
         session: req.session
     });
 }
+
+export function viewContenidoUser(req, res) {
+    let contenido = 'paginas/user';
+
+    res.render('pagina', {
+        contenido,
+        session: req.session
+    });
+}
