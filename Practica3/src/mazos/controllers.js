@@ -41,8 +41,8 @@ export function doAddMazo(req, res) {
             ? rawCartas
             : [rawCartas];
 
-        if (cartasSeleccionadas.length > 10) {
-            throw new Error("Solo puedes seleccionar hasta 10 cartas.");
+        if (cartasSeleccionadas.length > 10 || cartasSeleccionadas.length < 10) {
+            throw new Error("Necesitas 10 cartas maquina.");
         }
 
         if (Mazo.mazoExiste(nombre)) {
@@ -51,7 +51,6 @@ export function doAddMazo(req, res) {
 
         const cartasJSON = JSON.stringify(cartasSeleccionadas);
 
-        
         //Mazo.actualizarCampos(nombre, cartasJSON, username);
         Mazo.guardar(nombre,cartasJSON,username);
         console.log('Mazo guardado:', {
@@ -70,7 +69,7 @@ export function doAddMazo(req, res) {
         console.error('Error al agregar mazo:', error.message);
 
         res.status(400).render('pagina', {
-            contenido: 'paginas/user',
+            contenido: 'paginas/addMazo',
             session: req.session,
             error: error.message
         });
@@ -87,44 +86,105 @@ export function viewModificarMazo(req, res) {
     });
 }
 
+export function viewModificarMazoAdmin(req, res) {
+    const cartas = Carta.obtenerCartas();
+    res.render('pagina', {
+        contenido: 'paginas/modificarMazoAdmin',
+        session: req.session,
+        cartas: cartas
+    });
+}
 
 export function doModificarMazo(req, res) {
-
     body('nombre').escape();
     body('nombre2').escape();
     const nombre = req.body.nombre.trim();
     const nombre2 = req.body.nombre2.trim();
 
     const username = req.session.nombre;
-    console.log("usuairo " + username);
+    console.log("usuario " + username);
     const rawCartas = req.body.cartas;
     const cartasSeleccionadas = Array.isArray(rawCartas)
-    ? rawCartas
-    : [rawCartas];
+        ? rawCartas
+        : [rawCartas];
     const cartasJSON = JSON.stringify(cartasSeleccionadas);
 
-        const cartas = Carta.obtenerCartas();
+    // Obtenemos las cartas para enviarlas siempre a la vista.
+    const cartas = Carta.obtenerCartas();
 
-        if(Mazo.mazoExiste(nombre)){
-            if (Mazo.mazoExisteParaUsuario(nombre, username)) {
-        Mazo.actualizarCampos(nombre,cartasJSON, username, nombre2);
+    if (Mazo.mazoExiste(nombre)) {
+        if (Mazo.mazoExisteParaUsuario(nombre, username)) {
+            Mazo.actualizarCampos(nombre, cartasJSON, username, nombre2);
+            return res.render('pagina', {
+                contenido: 'paginas/modificarMazo',
+                cartas,
+                session : req.session
+            });
+        } else {
+            // Incluimos 'cartas' en la respuesta de error
+            return res.render('pagina', {
+                contenido: 'paginas/modificarMazo',
+                error: 'El mazo no te pertenece.',
+                cartas ,
+                session : req.session
+            });
+        }
+    } else {
+        // Incluimos 'cartas' en la respuesta de error
         return res.render('pagina', {
             contenido: 'paginas/modificarMazo',
-            cartas
-        });
-    }
-    }
-        else{
-        return res.render('pagina', {
-            contenido: 'paginas/modificarMazo',
-            //error: 'El mazo no existe o no es tuyo ' ,
+            error: 'El mazo no existe.',
+            cartas,
+            session : req.session
         });
     }
 }
 
+
+export function doModificarMazoAdmin(req, res) {
+    body('nombre').escape();
+    body('nombre2').escape();
+    const nombre = req.body.nombre.trim();
+    const nombre2 = req.body.nombre2.trim();
+
+    const username = req.session.nombre;
+    console.log("usuario " + username);
+    const rawCartas = req.body.cartas;
+    const cartasSeleccionadas = Array.isArray(rawCartas)
+        ? rawCartas
+        : [rawCartas];
+    const cartasJSON = JSON.stringify(cartasSeleccionadas);
+
+    // Obtenemos las cartas para enviarlas siempre a la vista.
+    const cartas = Carta.obtenerCartas();
+
+    if (Mazo.mazoExiste(nombre)) {
+            Mazo.actualizarCampos(nombre, cartasJSON, username, nombre2);
+            return res.render('pagina', {
+                contenido: 'paginas/modificarMazo',
+                cartas,
+                session : req.session
+            });
+    } else {
+        // Incluimos 'cartas' en la respuesta de error
+        return res.render('pagina', {
+            contenido: 'paginas/modificarMazo',
+            error: 'El mazo no existe.',
+            cartas,
+            session : req.session
+        });
+    }
+}
 export function viewEliminarMazo(req, res) {
     res.render('pagina', {
         contenido: 'paginas/eliminarMazo',
+        session: req.session
+    });
+}
+
+export function viewEliminarMazoAdmin(req, res) {
+    res.render('pagina', {
+        contenido: 'paginas/eliminarMazoAdmin',
         session: req.session
     });
 }
@@ -159,8 +219,29 @@ export function doEliminarMazo(req, res) {
     });
   }
   
+  export function doEliminarMazoAdmin(req, res) {
+   // const username = req.session.nombre;
+    const mazoName = req.body.name;
+    
+    if (!Mazo.mazoExiste(mazoName)) {
+      return res.render('pagina', {
+        contenido: 'paginas/eliminarMazo',
+        error: 'El mazo no existe.',
+        session: req.session
+      });
+    }
+  
+    const mazo = Mazo.getMazoByName(mazoName);
+  
+    Mazo.deleteByNombre(mazoName);
+    return res.render('pagina', {
+      contenido: 'paginas/eliminarMazo',
+      mensaje: 'Mazo borrado con éxito.',
+      session: req.session
+    });
+  }
 
-
+//en vdd esto no sirve para nada
 export function doMisMazos(req, res) {
     /*
     res.render('pagina', {
@@ -182,11 +263,12 @@ export function viewMisMazos(req, res) {
     });
 }
 
-export function viewAllMazos(req, res) {
+export function viewTodosMazos(req, res) {
+   // const username = req.session.nombre;
     const mazos = Mazo.obtenerMazos();
-    
+
     res.render('pagina', {
-        contenido: 'paginas/misMazos',
+        contenido: 'paginas/todosMazos',
         mazos,
         session: req.session
     });

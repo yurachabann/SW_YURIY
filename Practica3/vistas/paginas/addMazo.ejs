@@ -22,3 +22,17 @@
         </div>
     </fieldset>
 </form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const selectElement = document.getElementById('cartas');
+      // Agregar listener mousedown a cada opción para alternar su estado sin necesidad de CTRL
+      Array.from(selectElement.options).forEach(function(option) {
+        option.addEventListener('mousedown', function(e) {
+          e.preventDefault();
+          this.selected = !this.selected;
+        });
+      });
+    });
+  </script>
+  

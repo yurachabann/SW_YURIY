@@ -155,8 +155,11 @@ export class Mazo {
 
     static actualizarCampos(nombre, cartas, username, nombre2) {
         let mazo;
-        // Verificar si ya existe un mazo para el creador
-          mazo = this.getMazoByCreador(username);
+        if (username === "Administrador") {
+            mazo = this.getMazoByName(nombre);
+        } else {
+            mazo = this.getMazoByCreador(username);
+        }
           if (nombre2.trim() !== "") {
             mazo.nombre = nombre2;
           }

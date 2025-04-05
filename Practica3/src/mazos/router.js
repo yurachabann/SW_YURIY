@@ -1,5 +1,6 @@
 import express from 'express';
-import { viewAddMazo, doAddMazo, viewModificarMazo, doModificarMazo, viewEliminarMazo, doEliminarMazo, viewMisMazos, doMisMazos
+import { viewAddMazo, doAddMazo, viewModificarMazo, doModificarMazo, viewEliminarMazo, doEliminarMazo, viewMisMazos, doMisMazos,
+    doModificarMazoAdmin, doEliminarMazoAdmin, viewTodosMazos, viewEliminarMazoAdmin, viewModificarMazoAdmin
 
 } from './controllers.js';
 
@@ -12,6 +13,11 @@ mazosRouter.post('/modificarMazo', doModificarMazo);
 mazosRouter.get('/eliminarMazo', viewEliminarMazo);
 mazosRouter.post('/eliminarMazo', doEliminarMazo);
 mazosRouter.get('/misMazos', viewMisMazos);
-mazosRouter.post('/misMazos', doMisMazos);
-
+mazosRouter.post('/misMazos', doMisMazos); //sobra
+mazosRouter.get('/modificarMazoAdmin', viewModificarMazoAdmin);
+mazosRouter.post('/modificarMazoAdmin', doModificarMazoAdmin);
+mazosRouter.get('/eliminarMazoAdmin', viewEliminarMazoAdmin);
+mazosRouter.post('/eliminarMazoAdmin', doEliminarMazoAdmin);
+mazosRouter.get('/todosMazos', viewTodosMazos);
+//mazosRouter.post('/todosMazos', doTodosMazos); //no hace falta
 export default mazosRouter;

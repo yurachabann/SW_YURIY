@@ -1,31 +1,45 @@
 <h2>Modificar Usuarios</h2>
 
-
 <form action="/usuarios/modifyUser" method="POST">
-    <fieldset>
+  <fieldset>
     <legend>Datos del usuario</legend>
-    <label for="username">Usuario:</label>
-    <input type="text" id="username" name="username" required>
-    <br><br>
-    <p>Dejar en blanco lo que no se modifica </p>
-    <label for="usuario2">Nuevo usuario:</label>
-    <input type="text" id="usuario2" name="usuario2">
-    <br><br>
-
-    <label for="contraseña2">Nueva contraseña:</label>
-    <input type="password" id="pass2" name="pass2">
-    <br><br>
-    <label for="email">Nuevo correo electrónico:</label>
-    <input type="email" id="email" name="email" required>
-    <br><br>
-<label>
-    <input type="radio" name="tipoUsuario" value="A"> Admin
-</label>
-
-<label>
-    <input type="radio" name="tipoUsuario" value="U"> Usuario
-</label>
- <button type="submit">Modificar usuario</button>
-    </fieldset>
+    
+    <div style="margin-bottom: 1rem;">
+      <label for="username">Usuario:</label>
+      <input type="text" id="username" name="username" required>
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+      <p>Dejar en blanco lo que no se modifica</p>
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+      <label for="usuario2">Nuevo usuario:</label>
+      <input type="text" id="usuario2" name="usuario2">
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+      <label for="pass2">Nueva contraseña:</label>
+      <input type="password" id="pass2" name="pass2">
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+      <label for="email">Nuevo correo electrónico:</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    
+    <div style="margin-bottom: 1rem;">
+      <label>
+        <input type="radio" name="tipoUsuario" value="A"> Admin
+      </label>
+      <label>
+        <input type="radio" name="tipoUsuario" value="U"> Usuario
+      </label>
+    </div>
+    
+    <div>
+      <button type="submit">Modificar usuario</button>
+    </div>
+    
+  </fieldset>
 </form>
-

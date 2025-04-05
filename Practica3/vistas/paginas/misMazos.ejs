@@ -1,9 +1,7 @@
 <table border="1">
     <thead>
         <tr>
-            <th>ID</th>
             <th>Nombre</th>
-            <th>Creador</th>
             <th>Cartas</th>
         </tr>
     </thead>
@@ -11,15 +9,13 @@
         <% if (mazos.length > 0) { %>
             <% mazos.forEach(mazo => { %>
                 <tr>
-                    <td><%= mazo.id %></td>
                     <td><%= mazo.nombre %></td>
-                    <td><%= mazo.creador %></td>
                     <td><%= mazo.cartas %></td>
                 </tr>
             <% }); %>
         <% } else { %>
             <tr>
-                <td colspan="4">No hay mazos disponibles</td>
+                <td colspan="2">No hay mazos disponibles</td>
             </tr>
         <% } %>
     </tbody>

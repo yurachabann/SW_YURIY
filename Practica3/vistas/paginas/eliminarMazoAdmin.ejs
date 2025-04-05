@@ -1,0 +1,11 @@
+<h1>Borrado de mazos</h1>
+
+<form action="/mazos/eliminarMazoAdmin" method="POST">
+<fieldset>
+	<% if (locals.error) { %>
+		<p><strong><%= locals.error %></strong></p>
+	<% } %>
+	<legend>Nombre del mazo a borrar</legend>
+	<div><label>Nombre:</label> <input type="text" name="name" /></div>
+	<button type="submit">Eliminar</button>
+</fieldset>

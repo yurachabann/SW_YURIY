@@ -133,7 +133,8 @@ export function doRegister(req, res) {
     if (password1 !== password2) {
         return res.render('pagina', {
             contenido: 'paginas/register',
-            error: 'Las contraseñas no coinciden'
+            error: 'Las contraseñas no coinciden',
+            session: req.session
         });
     }
 
@@ -152,7 +153,8 @@ export function doRegister(req, res) {
     } catch (e) {
         return res.render('pagina', {
             contenido: 'paginas/register',
-            error: 'Error en el registro: ' + e.message
+            error: 'Error en el registro: ' + e.message,
+            session: req.session
         });
     }
 }
@@ -175,14 +177,16 @@ export function eliminateUser(req,res){
     if(!Usuario.usuarioExiste(req.body.username)){
     return res.render('pagina', {
         contenido: 'paginas/borrarUsuario',
-        error: 'Error al borrar el usuario '
+        error: 'Error al borrar el usuario ',
+        session: req.session
     });
 }
     else {
         Usuario.deleteByUsername(req.body.username);
         return res.render('pagina', {
         contenido: 'paginas/borrarUsuario',
-        error: 'Borrado con exito '
+        error: 'Borrado con exito ',
+        session: req.session
         });
 
 }
@@ -206,13 +210,15 @@ export function doModify(req, res) {
         if(Usuario.usuarioExiste(usuario)){
         Usuario.actualizarCampos(usuario, usuario2, pass2, rol, email);
         return res.render('pagina', {
-            contenido: 'paginas/modifyUser'
+            contenido: 'paginas/modifyUser',
+            session: req.session
         });
     }
         else{
         return res.render('pagina', {
             contenido: 'paginas/modifyUser',
-            error: 'El usuario no existe ' 
+            error: 'El usuario no existe ' ,
+            session: req.session
         });
     }
 }

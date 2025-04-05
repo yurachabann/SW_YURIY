@@ -1,28 +1,40 @@
 <form action="/usuarios/addUser" method="POST">
     <fieldset>
-    <legend>Añadir usuario</legend>
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required>
-    <br><br>
-    <label for="username">Usuario:</label>
-    <input type="text" id="username" name="username" required>
-    <br><br>
-
-    <label for="email">Correo Electrónico:</label>
-    <input type="email" id="email" name="email" required>
-    <br><br>
-
-    <label for="contraseña">Contraseña:</label>
-    <input type="password" id="pass" name="pass" required>
-    <br><br>
-<label>
-    <input type="radio" name="tipoUsuario" value="A" required> Admin
-</label>
-
-<label>
-    <input type="radio" name="tipoUsuario" value="U"> Usuario
-</label>
-<br><br>
- <button type="submit">Agregar Usuario</button>
+      <legend>Añadir usuario</legend>
+      
+      <div style="margin-bottom: 1rem;">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+      </div>
+      
+      <div style="margin-bottom: 1rem;">
+        <label for="username">Usuario:</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      
+      <div style="margin-bottom: 1rem;">
+        <label for="email">Correo Electrónico:</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      
+      <div style="margin-bottom: 1rem;">
+        <label for="pass">Contraseña:</label>
+        <input type="password" id="pass" name="pass" required>
+      </div>
+      
+      <div style="margin-bottom: 1rem;">
+        <label>
+          <input type="radio" name="tipoUsuario" value="A" required> Admin
+        </label>
+        <label>
+          <input type="radio" name="tipoUsuario" value="U"> Usuario
+        </label>
+      </div>
+      
+      <div>
+        <button type="submit">Agregar Usuario</button>
+      </div>
+      
     </fieldset>
-</form>
+  </form>
+  
