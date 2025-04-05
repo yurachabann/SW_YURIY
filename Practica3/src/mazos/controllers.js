@@ -2,7 +2,7 @@ import { body } from 'express-validator';
 import { Carta } from '../cartas/Cartas.js';
 import { Mazo } from '../mazos/Mazos.js';
 
-export function viewAddMazo(req, res) {
+export function viewAddMazo(req, res) { //añadir mazo
     let contenido = 'paginas/login';
 
         try {
