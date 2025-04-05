@@ -182,3 +182,12 @@ export function viewMisMazos(req, res) {
     });
 }
 
+export function viewAllMazos(req, res) {
+    const mazos = Mazo.obtenerMazos();
+    
+    res.render('pagina', {
+        contenido: 'paginas/misMazos',
+        mazos,
+        session: req.session
+    });
+}
