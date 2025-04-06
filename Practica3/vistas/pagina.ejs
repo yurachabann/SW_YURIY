@@ -8,6 +8,7 @@
 
  <div id="contenedor">
   <%- include('./partials/cabecera.ejs', { session: locals.session }) %>
+  <div class="layout">
   <%- include('./partials/sidebarIzq.ejs') %>
 
   <main>
@@ -17,6 +18,7 @@
   </main>
 
   <%- include('./partials/sidebarDer.ejs') %>
+</div>
   <%- include('./partials/pie.ejs') %>
 </div> <!-- Fin del contenedor -->
 
