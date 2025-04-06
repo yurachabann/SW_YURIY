@@ -191,24 +191,9 @@ textarea {
 }
 
 input:focus {
-  border-color: #1E3A8A; /* Azul */
+  border-color: #1E3A8A; 
 }
 
-button {
-  margin-left: 0;
-  background-color: #1E3A8A; /* Azul */
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-button:hover {
-  background-color: #0D2C5F; /* Azul más oscuro */
-}
-
-/* Tablas y listas */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -222,7 +207,7 @@ th, td {
 }
 
 th {
-  background-color: #1E3A8A; /* Azul */
+  background-color: #1E3A8A; 
   color: white;
 }
 
@@ -231,6 +216,70 @@ ul {
   margin-left: 20px;
   margin-bottom: 20px;
 }
+/* Botones de administración*/
+.btn {
+	display: inline-block;
+	padding: 12px 24px;
+	margin: 10px 10px 10px 0;
+	font-size: 1em;
+	font-weight: bold;
+	text-align: center;
+	text-decoration: none;
+	border-radius: 8px;
+	transition: background-color 0.3s ease, transform 0.2s ease;
+	color: white;
+  }
+  
+  /* Botón Añadir */
+  .btn-agregar {
+	background-color: #28a745; /* Verde */
+  }
+  
+  .btn-agregar:hover {
+	background-color: #218838;
+	transform: translateY(-2px);
+  }
+  
+  /* Botón Modificar */
+  .btn-modificar {
+	background-color: #ffc107; /* Amarillo */
+	color: black;
+  }
+  
+  .btn-modificar:hover {
+	background-color: #e0a800;
+	transform: translateY(-2px);
+  }
+  
+  /* Botón Eliminar */
+  .btn-eliminar {
+	background-color: #dc3545; /* Rojo */
+  }
+  
+  .btn-eliminar:hover {
+	background-color: #c82333;
+	transform: translateY(-2px);
+  }
+  
+  /* Botón Visualizar */
+  .btn-visualizar {
+	background-color: #007bff; /* Azul */
+  }
+  
+  .btn-visualizar:hover {
+	background-color: #0056b3;
+	transform: translateY(-2px);
+  }
+
+  .btn-admin {
+	background-color:#333;
+	
+  }
+
+  .btn-admin:hover {
+	background-color: black;
+	transform: translateY(-2px);
+  }
 
 /* Pseudoelementos */
 p::first-letter {
