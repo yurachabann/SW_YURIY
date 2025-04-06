@@ -1,105 +1,248 @@
-body {
-	background-color: #5D3FD3;
-	}
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
-div#contenedor {
-	width: 900px;
-	margin: auto;
-	border: 1px solid black;
-	background-color: #1F51FF;
-	margin-top: 30px;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #f4f4f9; /* Fondo más suave */
+  color: #333;
+  line-height: 1.6;
+  padding: 20px;
+}
+
+/* Contenedor general */
+#contenedor {
+  width: 80%;
+  max-width: 1200px;
+  margin: 50px auto;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Encabezado */
 header {
-	padding: 30px;
-	height: 100px;
-	background-color: #0000ff;
-	color: white;
+  background-color: #1E3A8A; /* Azul más oscuro */
+  color: white;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px;
+  flex-wrap: wrap;
 }
 
 header a, header a:visited {
-	color: white;
-	font-weight: bold;
-	text-decoration: none;
-} 
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 1.2em;
+  margin: 5px 0;
+  margin-left: 5px;
+}
 
 header a:hover {
-	color: red;
-	font-weight: bold;
-	text-decoration: underline;
-} 
-
-
-nav {
-	padding: 10px;
-	float: left;
-	width: 170px;
-	height: 400px;
-	background-color: #0096FF;
+  color: #FFD700; /* Amarillo dorado */
+  text-decoration: underline;
 }
 
-nav a, nav a:visited {
-	color: white;
-	font-weight: bold;
-	text-decoration: none;
-} 
+/* Contenedor de contenido */
+.layout {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* Navegación izquierda */
+nav {
+  width: 100%;
+  max-width: 250px;
+  background-color: #4B9ED3; /* Azul suave */
+  border-radius: 8px;
+  padding: 20px;
+  height: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+nav a {
+  display: block;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
 
 nav a:hover {
-	color: blue;
-	text-decoration: underline;
-} 
-
-
-aside {
-	padding: 10px;
-	float: right;
-	width: 170px;
-	height: 400px;
-	background-color: #0096FF;
+  background-color: #006F9E; /* Azul más oscuro */
+  color: #ffffff;
+  padding-left: 20px;
 }
 
+/* Contenido central */
 main {
-	padding: 10px;
-	float: left;
-	min-height: 600px;
-	width: 500px;
-	background-color: azure;
+  flex: 1;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-height: 600px;
 }
 
-footer	 {
-	clear: both;
-	padding: 20px;
-	background-color: #0096FF;
-	color: white;
-	text-align: center;
+/* Saludo, en deshuso? */
+aside {
+  width: 100%;
+  max-width: 280px;
+  background-color: #EFEFEF; /* Gris suave */
+  border-radius: 8px;
+  padding: 20px;
+  height: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-div.saludo {
-	width: 100%;
-	text-align: right;
+aside form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-fieldset {
-	border: 1px solid black;
-	width: 15em;
-	margin: 0 auto;
+aside input {
+  margin-bottom: 15px;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #ffffff;
+  font-size: 1em;
 }
 
-legend {
-	color: #fff;
-	background: #303030;
-	border: 1px solid black;
-	padding: 2px 6px;
-} 
-
-label {
-	width: 4em;
-	float: left;
-	text-align: right;
-	margin-right: 0.5em;
-	display: block;
+aside input:focus {
+  border-color: #1E3A8A; /* Azul */
+  outline: none;
 }
 
 button {
-	margin-left: 100px;
-} 
+  background-color: #1E3A8A; /* Azul */
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0D2C5F; /* Azul más oscuro */
+}
+
+/* Footer */
+footer {
+  padding: 20px;
+  background-color: #1E3A8A;
+  color: white;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Formulario general */
+fieldset {
+  border: 1px solid #ddd;
+  margin: 0 auto;
+  padding: 20px;
+  width: 90%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+legend {
+  color: #1E3A8A; /* Azul */
+  background: #f4f4f4;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #ffffff;
+  margin-bottom: 15px;
+  font-size: 1em;
+}
+
+input:focus {
+  border-color: #1E3A8A; /* Azul */
+}
+
+button {
+  margin-left: 0;
+  background-color: #1E3A8A; /* Azul */
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #0D2C5F; /* Azul más oscuro */
+}
+
+/* Tablas y listas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #1E3A8A; /* Azul */
+  color: white;
+}
+
+ul {
+  list-style-type: square;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+/* Pseudoelementos */
+p::first-letter {
+  font-size: 150%;
+  color: #1E3A8A;
+}
+
+p::before {
+  content: "→ ";
+  color: #1E3A8A;
+}
