@@ -1,7 +1,7 @@
 BEGIN TRANSACTION;
 INSERT INTO "Mazos" ("id","nombre","creador","cartas") VALUES (37,'Mazo 1','yuriy','["22","23","24","25","26","27","28","29","30","31"]');
 INSERT INTO "Mazos" ("id","nombre","creador","cartas") VALUES (38,'Mazo 2','User','["22","23","24","25","26","27","28","29","30","35"]');
-INSERT INTO "Mazos" ("id","nombre","creador","cartas") VALUES (39,'Mazo3','User','["27","28","29","30","31","32","33","34","35","36"]');
+INSERT INTO "Mazos" ("id","nombre","creador","cartas") VALUES (39,'Mazo 3','User','["27","28","29","30","31","32","33","34","35","36"]');
 INSERT INTO "Mazos" ("id","nombre","creador","cartas") VALUES (41,'Mazo 4','User','["24","25","26","27","31","32","33","34","36","38"]');
 INSERT INTO "Usuarios" ("id","username","nombre","rol","password","email") VALUES (35,'admin','Admin','A','$2b$10$kW/tKxiGqS5TGpJ69Au8oO79mzr.Uygp2nhfh9A.ssnQv25N/aFta','admin@gmail.com');
 INSERT INTO "Usuarios" ("id","username","nombre","rol","password","email") VALUES (38,'user','User','U','$2b$10$C5.c1R79jcK0mP0zfrGe7.XlROC/2izu2j13dKVLR0NL7Q2rPcK72','user@gmail.com');
