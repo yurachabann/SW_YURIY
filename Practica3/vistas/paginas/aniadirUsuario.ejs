@@ -1,7 +1,9 @@
 <form action="/usuarios/addUser" method="POST">
     <fieldset>
       <legend>Añadir usuario</legend>
-      
+      <% if (locals.error) { %>
+        <p><strong><%= locals.error %></strong></p>
+      <% } %>
       <div style="margin-bottom: 1rem;">
         <label for="nombre">Nombre:</label>
         <input type="text" id="nombre" name="nombre" required>

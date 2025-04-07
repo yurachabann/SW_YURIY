@@ -137,7 +137,8 @@ export function aniadirUsuario(req, res) {
 
         return res.render('pagina', {
             contenido: 'paginas/aniadirUsuario',
-            session: req.session
+            session: req.session,
+            error: 'Éxito'
         });
 
     } catch (e) {

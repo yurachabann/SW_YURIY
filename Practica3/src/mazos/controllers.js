@@ -13,7 +13,7 @@ export function viewAddMazo(req, res) { //añadir mazoo
             return res.render('pagina', {
                 contenido,
                 session: req.session,
-                cartas
+                cartas,
             });
         } catch (error) {
             console.error('Error al obtener cartas:', error);
@@ -59,10 +59,11 @@ export function doAddMazo(req, res) {
             username,
             cartasSeleccionadas
         });
-
+        const cartas = Carta.obtenerCartas();
         res.render('pagina', {
-            contenido: 'paginas/user',
+            contenido: 'paginas/addMazo',
             session: req.session,
+            cartas,
             mensaje: 'Mazo creado exitosamente.'
         });
 

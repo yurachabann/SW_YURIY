@@ -1,7 +1,12 @@
 <form action="/mazos/addMazo" method="POST">
     <fieldset>
         <legend>Añadir mazo</legend>
-        
+        <% if (locals.error) { %>
+            <p><strong><%= locals.error %></strong></p>
+          <% } %>
+          <% if (locals.mensaje) { %>
+            <p><strong><%= locals.mensaje %></strong></p>
+          <% } %>
         <div class="form-group">
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" name="nombre" required>
