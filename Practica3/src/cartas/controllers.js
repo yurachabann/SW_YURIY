@@ -71,7 +71,7 @@ export function doAddCard(req,res){
         Carta.agregarCarta(nombre,fuerza,tipoCarta);
         return res.render('pagina', {
             contenido: 'paginas/añadirCarta',
-            error: 'Error al añadir la carta',
+            error: 'Éxito',
             session: req.session
         });
 }
