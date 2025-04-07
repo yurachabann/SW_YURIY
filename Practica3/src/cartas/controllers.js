@@ -52,6 +52,17 @@ export function doEliminateCard(req,res){
   }
 }
 
+export function doEliminateCards(req,res){
+
+         Carta.deleteAllCartas();
+        return res.render('pagina', {
+        contenido: 'paginas/admin',
+        session: req.session
+        });
+
+}
+
+
 
 export function doAddCard(req,res){
     const nombre = req.body.nombre.trim();

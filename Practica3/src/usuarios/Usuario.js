@@ -29,6 +29,7 @@ export class Usuario {
     static #updateStmt = null;
     static #deleteStmt = null;
     static #getAll = null;
+    static #deleteAll = null;
 
     static initStatements(db) {
         if (this.#getByUsernameStmt !== null) return;
@@ -38,6 +39,7 @@ export class Usuario {
         this.#updateStmt = db.prepare('UPDATE Usuarios SET username = @username, password = @password, rol = @rol, nombre = @nombre, email = @email WHERE id = @id');
         this.#deleteStmt = db.prepare('DELETE FROM Usuarios WHERE username = @username');
         this.#getAll = db.prepare('SELECT * FROM Usuarios');
+        this.#deleteAll = db.prepare('DELETE FROM Usuarios WHERE username != @username');
     }
 
     static getUsuarioByUsername(username) {
@@ -74,6 +76,13 @@ export class Usuario {
     static obtenerUsuarios() {
         return this.#getAll.all();
     }
+
+    /*
+    static deleteAllUsers(currentUsername) {
+        this.#deleteAll.run({ username: currentUsername });
+    }
+        */
+    
 
     static #update(usuario) {
         const username = usuario.#username;

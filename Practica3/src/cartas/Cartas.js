@@ -25,6 +25,7 @@ export class Carta {
     static #getByNombre = null; 
     static #updateCarta = null;
     static #delete = null;
+    static #deleteAll = null;
 
     static initConsultas(db) {
         if (this.#insertSmth !== null) return; 
@@ -36,6 +37,7 @@ export class Carta {
         this.#getByNombre = db.prepare('SELECT * FROM Cartas WHERE nombre = @nombre');
         this.#updateCarta = db.prepare('UPDATE Cartas SET nombre = @nombreNew, fuerza = @fuerza, tipoCarta = @tipoCarta WHERE nombre = @nombre');
         this.#delete = db.prepare('DELETE FROM Cartas WHERE nombre = @name');
+        this.#deleteAll = db.prepare('DELETE FROM Cartas');
     }
 
     static deleteByName(name) {
@@ -93,6 +95,9 @@ export class Carta {
         return this.#getAll.all();
     }
 
+    static deleteAllCartas() {
+        this.#deleteAll.run();
+    }
 
     static #insert(carta) {
             let result = null;

@@ -21,6 +21,7 @@ export class Mazo {
     static #deleteByUsuario = null;
     static #getAll = null;
     static #getMy = null;
+    static #deleteAll = null;
 
     static initStatements(db) {
         if (this.#getByUsername !== null) return;
@@ -33,6 +34,7 @@ export class Mazo {
         this.#deleteByUsuario = db.prepare('DELETE FROM Mazos WHERE creador = @creador');
         this.#getAll = db.prepare('SELECT * FROM Mazos');
         this.#getMy = db.prepare('SELECT * FROM Mazos WHERE creador = @username');
+        this.#deleteAll = db.prepare('DELETE FROM Mazos');
     }
 
     static getMazoByName(name) {
@@ -42,6 +44,9 @@ export class Mazo {
         return new Mazo(nombre, creador, cartas, id);
     }
     
+    static deleteAllMazos() {
+        this.#deleteAll.run();
+    }
 
     static getMazoByCreador(name) {  //? y si son varios
         const mazo = this.#getByUsername.get({ creador: name });

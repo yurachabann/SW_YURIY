@@ -17,6 +17,7 @@ usuariosRouter.get('/eliminate', viewEliminate);
 usuariosRouter.post('/eliminate', eliminateUser);
 usuariosRouter.get('/modifyUser', viewModify);
 usuariosRouter.post('/modifyUser', doModify);
+usuariosRouter.post('/delete', doModify);
 usuariosRouter.get('/viewAllUsuarios', viewAllUsuarios);
 
 export default usuariosRouter;

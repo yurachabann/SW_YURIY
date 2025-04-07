@@ -38,4 +38,5 @@ INSERT INTO "cartas" ("id","nombre","fuerza","tipocarta") VALUES (15,'dvdvdv',1,
 INSERT INTO "cartas" ("id","nombre","fuerza","tipocarta") VALUES (16,'rgrgrg',3,4);
 INSERT INTO "cartas" ("id","nombre","fuerza","tipocarta") VALUES (17,'ththh',2,3);
 INSERT INTO "cartas" ("id","nombre","fuerza","tipocarta") VALUES (19,'wswsws',100,2);
+
 COMMIT;
