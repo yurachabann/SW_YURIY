@@ -1,4 +1,31 @@
+
 <h2>Administrar Usuarios</h2>
+
+<dialog id="favDialog">
+  <form method="dialog">
+    <p>Borrado con éxito.<strong id="number"></strong></p>
+    <button>Cerrar</button>
+  </form>
+</dialog>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const favDialog = document.getElementById("favDialog");
+    const buttonIds = ["deleteButton", "deleteButton2"];
+    
+    buttonIds.forEach(function(id) {
+      const button = document.getElementById(id);
+      if (button && favDialog) {
+        button.addEventListener("click", function(event) {
+          favDialog.showModal();
+        });
+      } else {
+        console.error(`No se encontró el botón con id "${id}" o el diálogo favDialog en el DOM.`);
+      }
+    });
+  });
+</script>
+
 
 <!-- Botón para añadir nuevo usuario -->
 <a href="/usuarios/addUser" class="btn btn-admin">Añadir Usuario</a>
@@ -20,7 +47,7 @@
 <a href="/cartas/eliminarCarta" class="btn btn-admin">Eliminar Carta</a>
 
 <form action="/cartas/eliminarCartas" method="POST" style="display: inline;">
-    <button type="submit" class="btn btn-admin-red">Eliminar TODAS las cartas</button>
+    <button type="submit" class="btn btn-admin-red" id = "deleteButton2">Eliminar TODAS las cartas</button>
   </form>
   
 
@@ -33,7 +60,7 @@
 <a href="/mazos/eliminarMazoAdmin" class="btn btn-admin">Eliminar Mazo</a>
 
 <form action="/mazos/eliminarMazos" method="POST" style="display: inline;">
-  <button type="submit" class="btn btn-admin-red">Eliminar TODOS los mazos</button>
+  <button type="submit" class="btn btn-admin-red" id ="deleteButton">Eliminar TODOS los mazos</button>
 </form>
 
 <a href="/mazos/todosMazos" class="btn btn-admin">Visualizar Todos Los Mazos</a>

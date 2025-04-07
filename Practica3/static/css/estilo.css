@@ -302,3 +302,23 @@ p::before {
   content: "→ ";
   color: #1E3A8A;
 }
+
+dialog {
+  border: none;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 400px;
+  text-align: center;
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Fuerza al diálogo a mostrarse en el centro de la pantalla */
+dialog[open] {
+  position: fixed;       /* o absolute, pero fixed es más común para modales */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

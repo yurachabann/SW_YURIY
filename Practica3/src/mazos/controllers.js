@@ -96,14 +96,16 @@ export function viewModificarMazoAdmin(req, res) {
     });
 }
 
-export function doEliminarMazos(req,res){
-   Mazo.deleteAllMazos();
-   return res.render('pagina', {
-   contenido: 'paginas/admin',
-   session: req.session
-   });
+export function doEliminarMazos(req, res) {
 
-}
+    Mazo.deleteAllMazos();
+  /* return res.render('pagina', {
+      contenido: 'paginas/admin',
+      session: req.session,
+      mensaje: 'Borrado con exito'
+    });*/
+ }
+ 
 
 export function doModificarMazo(req, res) {
     body('nombre').escape();
