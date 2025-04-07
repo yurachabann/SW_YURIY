@@ -2,8 +2,8 @@
 
 <form action="/cartas/eliminarCarta" method="POST">
 <fieldset>
-	<% if (locals.error) { %>
-		<p><strong><%= locals.error %></strong></p>
+	<% if (locals.mensaje) { %>
+		<p><strong><%= locals.mensaje %></strong></p>
 	<% } %>
 	<legend>Nombre de la carta a borrar</legend>
 	<div><label>Nombre:</label> <input type="text" name="name" /></div>

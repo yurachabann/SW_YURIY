@@ -2,6 +2,9 @@
 
 <form action="/cartas/modificarCard" method="POST">
   <fieldset>
+    <% if (locals.mensaje) { %>
+      <p><strong><%= locals.mensaje %></strong></p>
+    <% } %>
     <legend>Datos de la carta:</legend>
     
     <div>

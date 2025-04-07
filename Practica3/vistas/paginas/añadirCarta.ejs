@@ -1,7 +1,7 @@
 <form action="/cartas/addCard" method="POST">
     <fieldset>
-      <% if (locals.error) { %>
-        <p><strong><%= locals.error %></strong></p>
+      <% if (locals.mensaje) { %>
+        <p><strong><%= locals.mensaje %></strong></p>
       <% } %>
       <legend>Añadir carta</legend>
       

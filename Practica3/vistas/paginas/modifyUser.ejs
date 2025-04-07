@@ -2,6 +2,9 @@
 
 <form action="/usuarios/modifyUser" method="POST">
   <fieldset>
+    <% if (locals.mensaje) { %>
+      <p><strong><%= locals.mensaje %></strong></p>
+    <% } %>
     <legend>Datos del usuario</legend>
     
     <div style="margin-bottom: 1rem;">

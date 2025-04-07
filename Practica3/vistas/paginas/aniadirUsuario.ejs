@@ -1,8 +1,8 @@
 <form action="/usuarios/addUser" method="POST">
     <fieldset>
       <legend>Añadir usuario</legend>
-      <% if (locals.error) { %>
-        <p><strong><%= locals.error %></strong></p>
+      <% if (locals.mensaje) { %>
+        <p><strong><%= locals.mensaje %></strong></p>
       <% } %>
       <div style="margin-bottom: 1rem;">
         <label for="nombre">Nombre:</label>

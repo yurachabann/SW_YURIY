@@ -2,12 +2,10 @@
 
 <form action="/mazos/modificarMazo" method="POST">
   <fieldset>
-    <legend>Datos del mazo:</legend>
-    <% if (typeof error !== 'undefined' && error) { %>
-      <div class="alert alert-danger">
-        <strong><%= error %></strong>
-      </div>
+    <% if (locals.mensaje) { %>
+      <p><strong><%= locals.mensaje %></strong></p>
     <% } %>
+    <legend>Datos del mazo:</legend>
     
     <div>
       <label for="nombre">Nombre:</label>

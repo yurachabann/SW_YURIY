@@ -1,10 +1,7 @@
 <form action="/mazos/addMazo" method="POST">
     <fieldset>
         <legend>Añadir mazo</legend>
-        <% if (locals.error) { %>
-            <p><strong><%= locals.error %></strong></p>
-          <% } %>
-          <% if (locals.mensaje) { %>
+        <% if (locals.mensaje) { %>
             <p><strong><%= locals.mensaje %></strong></p>
           <% } %>
         <div class="form-group">

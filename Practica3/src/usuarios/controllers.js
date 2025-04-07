@@ -125,7 +125,7 @@ export function aniadirUsuario(req, res) {
     if (!nombre || !email || !rol || !username) {
         return res.render('pagina', {
             contenido: 'paginas/aniadirUsuario',
-            error: 'Todos los campos son obligatorios.'
+            mensaje: 'Todos los campos son obligatorios.'
         });
     }
 
@@ -138,14 +138,14 @@ export function aniadirUsuario(req, res) {
         return res.render('pagina', {
             contenido: 'paginas/aniadirUsuario',
             session: req.session,
-            error: 'Éxito'
+            mensaje: 'Éxito'
         });
 
     } catch (e) {
         // Si ocurre algún error al crear el usuario
         return res.render('pagina', {
             contenido: 'paginas/aniadirUsuario',
-            error: 'Error al añadir el usuario: ' + e.message
+            mensaje: 'Error al añadir el usuario: ' + e.message
         });
     }
 }
@@ -167,14 +167,14 @@ export function doRegister(req, res) {
     if (password1 !== password2) {
         return res.render('pagina', {
             contenido: 'paginas/register',
-            error: 'Las contraseñas no coinciden',
+            mensaje: 'Las contraseñas no coinciden',
             session: req.session
         });
     }
 
     try {
 
-        const nuevoUsuario = Usuario.addUserAdmin(username, password1, email, name);
+        const nuevoUsuario = Usuario.register(username, password1, email, name);
 
         req.session.login = true;
         req.session.nombre = nuevoUsuario.nombre;
@@ -187,7 +187,7 @@ export function doRegister(req, res) {
     } catch (e) {
         return res.render('pagina', {
             contenido: 'paginas/register',
-            error: 'Error en el registro: ' + e.message,
+            mensaje: 'Error en el registro: ' + e.message,
             session: req.session
         });
     }
@@ -212,7 +212,7 @@ export function eliminateUser(req,res){
     if(!Usuario.usuarioExiste(req.body.username)){
     return res.render('pagina', {
         contenido: 'paginas/borrarUsuario',
-        error: 'Error al borrar el usuario ',
+        mensaje: 'Error al borrar el usuario ',
         session: req.session
     });
 }
@@ -220,7 +220,7 @@ export function eliminateUser(req,res){
         Usuario.deleteByUsername(req.body.username);
         return res.render('pagina', {
         contenido: 'paginas/borrarUsuario',
-        error: 'Borrado con exito ',
+        mensaje: 'Borrado con exito ',
         session: req.session
         });
 
@@ -246,13 +246,14 @@ export function doModify(req, res) {
         Usuario.actualizarCampos(usuario, usuario2, pass2, rol, email);
         return res.render('pagina', {
             contenido: 'paginas/modifyUser',
-            session: req.session
+            session: req.session,
+            mensaje: 'Éxito'
         });
     }
         else{
         return res.render('pagina', {
             contenido: 'paginas/modifyUser',
-            error: 'El usuario no existe ' ,
+            mensaje: 'El usuario no existe ' ,
             session: req.session
         });
     }

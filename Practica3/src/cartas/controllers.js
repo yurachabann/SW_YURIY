@@ -37,7 +37,7 @@ export function doEliminateCard(req,res){
       if(!Carta.cartaExiste(req.body.name)){
       return res.render('pagina', {
           contenido: 'paginas/eliminarCarta',
-          error: 'Error al borrar la carta ',
+          mensaje: 'Error al borrar la carta ',
           session: req.session
       });
   }
@@ -45,7 +45,7 @@ export function doEliminateCard(req,res){
           Carta.deleteByName(req.body.name);
           return res.render('pagina', {
           contenido: 'paginas/eliminarCarta',
-          error: 'Borrado con exito ',
+          mensaje: 'Borrado con exito ',
           session: req.session
           });
   
@@ -71,7 +71,7 @@ export function doAddCard(req,res){
         Carta.agregarCarta(nombre,fuerza,tipoCarta);
         return res.render('pagina', {
             contenido: 'paginas/añadirCarta',
-            error: 'Éxito',
+            mensaje: 'Éxito',
             session: req.session
         });
 }
@@ -91,13 +91,14 @@ export function doModifyCard(req, res) {
         Carta.actualizarCampos(nombre,nombre2, fuerza2, tipoCarta);
         return res.render('pagina', {
             contenido: 'paginas/modifyCard',
+            mensaje: 'Éxito',
             session: req.session
         });
     }
         else{
         return res.render('pagina', {
             contenido: 'paginas/modifyCard',
-            error: 'La carta no existe ' ,
+            mensaje: 'La carta no existe ' ,
             session: req.session
         });
     }
