@@ -3,7 +3,7 @@ import { Carta } from '../cartas/Cartas.js';
 import { Mazo } from '../mazos/Mazos.js';
 
 export function viewAddMazo(req, res) { //añadir mazoo
-    let contenido = 'paginas/login'; //esto hace algo
+    let contenido = 'paginas/login';
   
     
         try {
@@ -264,18 +264,38 @@ export function doMisMazos(req, res) {
 export function viewMisMazos(req, res) {
     const username = req.session.nombre;
     const mazos = Mazo.obtenerMisMazos(username);
+    
+    const todasLasCartas = Carta.obtenerCartas();
 
+    mazos.forEach(mazo => {
+        const arrayIds = JSON.parse(mazo.cartas);
+        const nombresCartas = arrayIds.map(id => {
+            const cartaEncontrada = todasLasCartas.find(carta => carta.id === Number(id));
+            return cartaEncontrada ? cartaEncontrada.nombre : `ID ${id} no encontrado`;
+        });
+        mazo.cartas = nombresCartas.join(', ');
+    });
 
     res.render('pagina', {
         contenido: 'paginas/misMazos',
         mazos,
         session: req.session
     });
-}
 
+}
 export function viewTodosMazos(req, res) {
-   // const username = req.session.nombre;
     const mazos = Mazo.obtenerMazos();
+
+    const todasLasCartas = Carta.obtenerCartas();
+
+    mazos.forEach(mazo => {
+        const arrayIds = JSON.parse(mazo.cartas);
+        const nombresCartas = arrayIds.map(id => {
+            const cartaEncontrada = todasLasCartas.find(c => c.id === Number(id));
+            return cartaEncontrada ? cartaEncontrada.nombre : `Carta con ID ${id} no encontrada`;
+        });
+        mazo.cartas = nombresCartas.join(', ');
+    });
 
     res.render('pagina', {
         contenido: 'paginas/todosMazos',

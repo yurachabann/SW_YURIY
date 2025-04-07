@@ -276,6 +276,17 @@ ul {
 	
   }
 
+  .btn-admin-red {
+    background-color:#c90c0c;
+    
+  }
+
+  .btn-admin-red:hover {
+    background-color: rgb(226, 10, 10);
+    transform: translateY(-2px);
+    }
+  
+
   .btn-admin:hover {
 	background-color: black;
 	transform: translateY(-2px);

@@ -31,6 +31,7 @@ export function checkConnection(db = getConnection()) {
     if (suma == null || suma !== 2) throw Error(`La bbdd no funciona correctamente`);
 }
 
+/*
 export function createCartasTable(db) {
     const createTableQuery = `
         CREATE TABLE IF NOT EXISTS cartas (
@@ -42,6 +43,7 @@ export function createCartasTable(db) {
     `;
     db.prepare(createTableQuery).run();
 }
+    */
 
 
 export class ErrorDatos extends Error {
