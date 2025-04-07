@@ -1,11 +1,10 @@
 BEGIN TRANSACTION;
 DROP TABLE IF EXISTS "Mazos";
-CREATE TABLE "Mazos" (
-	"id"	INTEGER,
-	"nombre"	TEXT NOT NULL,
-	"creador"	TEXT NOT NULL,
-	"cartas"	TEXT NOT NULL,
-	PRIMARY KEY("id" AUTOINCREMENT)
+CREATE TABLE Mazos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nombre TEXT NOT NULL,
+  creador TEXT NOT NULL,
+  cartas TEXT NOT NULL
 );
 DROP TABLE IF EXISTS "Usuarios";
 CREATE TABLE "Usuarios" (
@@ -18,11 +17,10 @@ CREATE TABLE "Usuarios" (
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 DROP TABLE IF EXISTS "cartas";
-CREATE TABLE "cartas" (
-	"id"	INTEGER,
-	"nombre"	TEXT NOT NULL,
-	"fuerza"	INTEGER NOT NULL,
-	"tipocarta"	INTEGER NOT NULL,
-	PRIMARY KEY("id" AUTOINCREMENT)
-);
+CREATE TABLE cartas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT NOT NULL,
+            fuerza INTEGER NOT NULL,
+            tipocarta INTEGER NOT NULL
+        );
 COMMIT;
