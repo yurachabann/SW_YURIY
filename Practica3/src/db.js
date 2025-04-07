@@ -16,7 +16,7 @@ function createConnection() {
     const db = new Database(join(dirname(import.meta.dirname), 'data', 'aw_sw.db'), options);
     db.pragma('journal_mode = WAL'); // Necesario para mejorar la durabilidad y el rendimiento
     //db.prepare('DROP TABLE IF EXISTS cartas').run();
-    createCartasTable(db);  //Crear la tabla de cartas si no existe
+    //createCartasTable(db);  //Crear la tabla de cartas si no existe
     return db;
 }
 
