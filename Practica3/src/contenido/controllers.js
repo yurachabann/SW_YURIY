@@ -1,3 +1,4 @@
+
 export function viewContenidoNormal(req, res) {
     let contenido = 'paginas/normal';
   //  if (req.session != null && req.session.nombre != null) {
@@ -32,6 +33,7 @@ export function viewContenidoUser(req, res) {
         contenido = 'paginas/noPermisosUsuario';
     }
     console.log(req.session);
+    
     res.render('pagina', {
         contenido,
         session: req.session

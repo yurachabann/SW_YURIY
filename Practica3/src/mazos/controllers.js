@@ -59,11 +59,10 @@ export function doAddMazo(req, res) {
             username,
             cartasSeleccionadas
         });
-        const cartas = Carta.obtenerCartas();
         res.render('pagina', {
-            contenido: 'paginas/addMazo',
+            contenido: 'paginas/gestionarMazos',
             session: req.session,
-            cartas,
+            mazos : normalizarMazos(req.session.esAdmin, req.session.nombre),
             mensaje: 'Mazo creado exitosamente.'
         });
 
@@ -100,11 +99,13 @@ export function viewModificarMazoAdmin(req, res) {
 export function doEliminarMazos(req, res) {
 
     Mazo.deleteAllMazos();
-  /* return res.render('pagina', {
-      contenido: 'paginas/admin',
+    const mazos = Mazo.obtenerMazos();
+    return res.render('pagina', {
+      contenido: 'paginas/administrarMazos',
       session: req.session,
-      mensaje: 'Borrado con exito'
-    });*/
+      mazos : normalizarMazos(req.session.esAdmin, req.session.nombre),
+      mensaje: 'Todos los mazos borrados con éxito'
+    });
  }
  
 
@@ -129,10 +130,10 @@ export function doEliminarMazos(req, res) {
         if (Mazo.mazoExisteParaUsuario(nombre, username)) {
             Mazo.actualizarCampos(nombre, cartasJSON, username, nombre2);
             return res.render('pagina', {
-                contenido: 'paginas/modificarMazo',
-                cartas,
+                contenido: 'paginas/gestionarMazos',
+                mazos : normalizarMazos(req.session.esAdmin, req.session.nombre),
                 session : req.session,
-                mensaje: 'Éxito'
+                mensaje: 'Mazo modificado con éxito.'
             });
         } else {
             // Incluimos 'cartas' en la respuesta de error
@@ -180,11 +181,12 @@ export function doModificarMazoAdmin(req, res) {
             });
         }
         Mazo.actualizarCampos(nombre, cartasJSON, mazo.creador, nombre2);
+        const mazos = Mazo.obtenerMazos();
         return res.render('pagina', {
-            contenido: 'paginas/modificarMazo',
-            cartas,
+            contenido: 'paginas/administrarMazos',
             session: req.session,
-            mensaje: 'Éxito'
+            mazos : normalizarMazos(req.session.esAdmin, req.session.nombre),
+            mensaje: 'Mazo modificado con éxito'
         });
     } else {
         return res.render('pagina', {
@@ -195,8 +197,6 @@ export function doModificarMazoAdmin(req, res) {
         });
     }
 }
-
-
 
 export function viewEliminarMazo(req, res) {
     res.render('pagina', {
@@ -236,14 +236,14 @@ export function doEliminarMazo(req, res) {
   
     Mazo.deleteByNombre(mazoName);
     return res.render('pagina', {
-      contenido: 'paginas/eliminarMazo',
+      contenido: 'paginas/gestionarMazos',
       mensaje: 'Mazo borrado con éxito.',
+      mazos : normalizarMazos(req.session.esAdmin, req.session.nombre),
       session: req.session
     });
   }
   
   export function doEliminarMazoAdmin(req, res) {
-   // const username = req.session.nombre;
     const mazoName = req.body.name;
     
     if (!Mazo.mazoExiste(mazoName)) {
@@ -254,50 +254,36 @@ export function doEliminarMazo(req, res) {
       });
     }
   
-   // const mazo = Mazo.getMazoByName(mazoName);
-  
     Mazo.deleteByNombre(mazoName);
     return res.render('pagina', {
-      contenido: 'paginas/eliminarMazo',
+      contenido: 'paginas/administrarMazos',
       mensaje: 'Mazo borrado con éxito.',
+      mazos : normalizarMazos(req.session.esAdmin, req.session.nombre),
       session: req.session
     });
   }
 
-//en vdd esto no sirve para nada
-export function doMisMazos(req, res) {
-    /*
+
+export function gestionarMazos(req, res) {
     res.render('pagina', {
-        contenido: 'paginas/aniadirUsuario',
-        session: req.session
-    });
-    */
-}
-
-export function viewMisMazos(req, res) {
-    const username = req.session.nombre;
-    const mazos = Mazo.obtenerMisMazos(username);
-    
-    const todasLasCartas = Carta.obtenerCartas();
-
-    mazos.forEach(mazo => {
-        const arrayIds = JSON.parse(mazo.cartas);
-        const nombresCartas = arrayIds.map(id => {
-            const cartaEncontrada = todasLasCartas.find(carta => carta.id === Number(id));
-            return cartaEncontrada ? cartaEncontrada.nombre : `ID ${id} no encontrado`;
-        });
-        mazo.cartas = nombresCartas.join(', ');
-    });
-
-    res.render('pagina', {
-        contenido: 'paginas/misMazos',
-        mazos,
+        contenido: 'paginas/gestionarMazos',
+        mazos: normalizarMazos(req.session.esAdmin, req.session.nombre),
         session: req.session
     });
 
 }
-export function viewTodosMazos(req, res) {
-    const mazos = Mazo.obtenerMazos();
+export function administrarMazos(req, res) {
+    res.render('pagina', {
+        contenido: 'paginas/administrarMazos',
+        mazos : normalizarMazos(req.session.esAdmin, req.session.nombre),
+        session: req.session
+    });
+}
+
+function normalizarMazos(esAdmin, usuario){
+    let mazos;
+    if (esAdmin == false) { mazos = Mazo.obtenerMisMazos(usuario); }
+    else { mazos = Mazo.obtenerMazos(); }
 
     const todasLasCartas = Carta.obtenerCartas();
 
@@ -310,9 +296,6 @@ export function viewTodosMazos(req, res) {
         mazo.cartas = nombresCartas.join(', ');
     });
 
-    res.render('pagina', {
-        contenido: 'paginas/todosMazos',
-        mazos,
-        session: req.session
-    });
+    return mazos;
 }
+

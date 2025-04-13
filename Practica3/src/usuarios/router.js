@@ -1,6 +1,6 @@
 import express from 'express';
 import { viewLogin, doLogin, doLogout, viewRegister, doRegister, aniadirUsuario, viewAdd,  viewEliminate ,eliminateUser,
-    viewModify, doModify, viewAllUsuarios
+    viewModify, doModify, administrarUsuarios
 
 } from './controllers.js';
 
@@ -18,6 +18,6 @@ usuariosRouter.post('/eliminate', eliminateUser);
 usuariosRouter.get('/modifyUser', viewModify);
 usuariosRouter.post('/modifyUser', doModify);
 usuariosRouter.post('/delete', doModify);
-usuariosRouter.get('/viewAllUsuarios', viewAllUsuarios);
+usuariosRouter.get('/administrarUsuarios', administrarUsuarios);
 
 export default usuariosRouter;

@@ -1,0 +1,11 @@
+Funcionalidad de Gestión de Cartas y Mazos
+
+Hemos realizado la implementación de la gestión de cartas y los mazos. Gracias a ella se pueden añadir diferentes cartas con sus atributos a la web para luego ser utilizadas de diferentes maneras:
+-A nivel de administrador las cartas pueden ser añadidas a la base de datos. También las puedes modificar para cambiarles algún atributo y las puedes eliminar tanto de forma individual como colectivas (el administrador cuneta con la opción
+de eliminar todas las cartas de la base de datos).
+Los administradores también cuentan con la opción de añadir usuarios y eliminarlos .
+También pueden trabajar con los mazos. Pueden modificar los mazos que haya creados por parte de los usuarios o incluso eliminarlos de forma individual como de forma colectiva (puede eliminar todos los mazos existentes).
+-Los usuarios tienen restricciones y no pueden acceder nada más que a lo que tengan ellos, no podrán modificar nada de otro usuario.
+Pueden crear diferentes mazos con las cartas que haya disponible además de poder modificar posteriormente esos mazos o eliminarlos de forma permanente.
+Las funcionalidades a las que puedes acceder dependiendo de tu rol están separados en dos secciones diferenciadas en la página web. Hay un apartado de usuarios para usuarios normales y un
+apartado para administrar para los administradores. En cada sección tienen un menú distinto que tiene las funcionalidades comunes y las propias de cada rol.

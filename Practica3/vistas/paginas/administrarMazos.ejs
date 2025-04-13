@@ -1,0 +1,38 @@
+<h2>Administrar Mazos</h2>
+
+<% if (locals.mensaje) { %>
+    <p><strong><%= locals.mensaje %></strong></p>
+<% } %>
+
+<a href="/mazos/modificarMazoAdmin" class="btn btn-modificar">Modificar Mazo</a>
+
+<a href="/mazos/eliminarMazoAdmin" class="btn btn-eliminar">Eliminar Mazo</a>
+
+<form action="/mazos/eliminarMazos" method="POST" style="display: inline;">
+  <button type="submit" class="btn btn-admin-red" id ="deleteButton">Eliminar TODOS los mazos</button>
+</form>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Creador</th>
+            <th>Cartas</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (mazos.length > 0) { %>
+            <% mazos.forEach(mazo => { %>
+                <tr>
+                    <td><%= mazo.nombre %></td>
+                    <td><%= mazo.creador %></td>
+                    <td><%= mazo.cartas %></td>
+                </tr>
+            <% }); %>
+        <% } else { %>
+            <tr>
+                <td colspan="3">No hay mazos disponibles</td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>

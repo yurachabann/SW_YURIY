@@ -19,23 +19,11 @@ export function viewRegister(req, res) {
     });
 }
 
-/*
-export function doDeleteAllUsers(req, res) {
-    const currentUsername = req.session.username;
-    Usuario.deleteAllUsers(currentUsername);
-   // Usuario.deleteAllUsers();
-    res.render('pagina', {
-        contenido: 'paginas/admin',
-        session: req.session
-    });
-}
-    */
-
-export function viewAllUsuarios(req, res) {
+export function administrarUsuarios(req, res) {
     const usuarios = Usuario.obtenerUsuarios();
     
     res.render('pagina', {
-        contenido: 'paginas/tablaUsuarios',
+        contenido: 'paginas/administrarUsuarios',
         usuarios,
         session: req.session
     });
@@ -134,11 +122,12 @@ export function aniadirUsuario(req, res) {
         if(rol == "A") { Usuario.addUserAdmin(username,pass,email,nombre); }
         else Usuario.register(username,pass,email,nombre);
         //console.log(rol);
-
+        const usuarios = Usuario.obtenerUsuarios();
         return res.render('pagina', {
-            contenido: 'paginas/aniadirUsuario',
+            contenido: 'paginas/administrarUsuarios',
             session: req.session,
-            mensaje: 'Éxito'
+            usuarios,
+            mensaje: 'Usuario añadido con éxito'
         });
 
     } catch (e) {
@@ -218,9 +207,11 @@ export function eliminateUser(req,res){
 }
     else {
         Usuario.deleteByUsername(req.body.username);
+        const usuarios = Usuario.obtenerUsuarios();
         return res.render('pagina', {
-        contenido: 'paginas/borrarUsuario',
-        mensaje: 'Borrado con exito ',
+        contenido: 'paginas/administrarUsuarios',
+        mensaje: 'Usuario borrado con exito ',
+        usuarios,
         session: req.session
         });
 
@@ -244,10 +235,12 @@ export function doModify(req, res) {
     
         if(Usuario.usuarioExiste(usuario)){
         Usuario.actualizarCampos(usuario, usuario2, pass2, rol, email);
+        const usuarios = Usuario.obtenerUsuarios();
         return res.render('pagina', {
-            contenido: 'paginas/modifyUser',
+            contenido: 'paginas/administrarUsuarios',
             session: req.session,
-            mensaje: 'Éxito'
+            usuarios,
+            mensaje: 'Usuario modificado con éxito'
         });
     }
         else{

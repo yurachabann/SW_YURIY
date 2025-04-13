@@ -1,3 +1,15 @@
+<h2>Administrar Usuarios</h2>
+
+<% if (locals.mensaje) { %>
+    <p><strong><%= locals.mensaje %></strong></p>
+<% } %>
+
+<a href="/usuarios/addUser" class="btn btn-agregar">Añadir Usuario</a>
+
+<a href="/usuarios/modifyUser" class="btn btn-modificar">Modificar Usuario</a>
+
+<a href="/usuarios/eliminate" class="btn btn-eliminar">Eliminar Usuario</a>
+
 <table border="1">
     <thead>
         <tr>

@@ -1,66 +1,7 @@
+<h2>Panel de Administrador</h2>
 
-<h2>Administrar Usuarios</h2>
+<a href="/usuarios/administrarUsuarios" class="btn btn-gestionar-administrar">Administrar Usuarios</a>
 
-<dialog id="favDialog">
-  <form method="dialog">
-    <p>Borrado con éxito.<strong id="number"></strong></p>
-    <button>Cerrar</button>
-  </form>
-</dialog>
+<a href="/cartas/administrarCartas" class="btn btn-gestionar-administrar">Administrar Cartas</a>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const favDialog = document.getElementById("favDialog");
-    const buttonIds = ["deleteButton", "deleteButton2"];
-    
-    buttonIds.forEach(function(id) {
-      const button = document.getElementById(id);
-      if (button && favDialog) {
-        button.addEventListener("click", function(event) {
-          favDialog.showModal();
-        });
-      } else {
-        console.error(`No se encontró el botón con id "${id}" o el diálogo favDialog en el DOM.`);
-      }
-    });
-  });
-</script>
-
-
-<!-- Botón para añadir nuevo usuario -->
-<a href="/usuarios/addUser" class="btn btn-admin">Añadir Usuario</a>
-
-<!-- Botón para modificar usuario -->
-<a href="/usuarios/modifyUser" class="btn btn-admin">Modificar Usuario</a>
-
-<!-- Botón para eliminar usuario -->
-<a href="/usuarios/eliminate" class="btn btn-admin">Eliminar Usuario</a>
-
-<a href="/usuarios/viewAllUsuarios" class="btn btn-admin">Visualizar usuarios</a>
-
-<h2>Administrar Cartas</h2>
-
-<a href="/cartas/addCard" class="btn btn-admin">Añadir Carta</a>
-
-<a href="/cartas/modificarCard" class="btn btn-admin">Modificar Carta</a>
-
-<a href="/cartas/eliminarCarta" class="btn btn-admin">Eliminar Carta</a>
-
-<form action="/cartas/eliminarCartas" method="POST" style="display: inline;">
-    <button type="submit" class="btn btn-admin-red" id = "deleteButton2">Eliminar TODAS las cartas</button>
-  </form>
-  
-
-<a href="/cartas/viewAllCartas" class="btn btn-admin">Visualizar cartas</a>
-
-<h2>Administrar Mazos</h2>
-
-<a href="/mazos/modificarMazoAdmin" class="btn btn-admin">Modificar Mazo</a>
-
-<a href="/mazos/eliminarMazoAdmin" class="btn btn-admin">Eliminar Mazo</a>
-
-<form action="/mazos/eliminarMazos" method="POST" style="display: inline;">
-  <button type="submit" class="btn btn-admin-red" id ="deleteButton">Eliminar TODOS los mazos</button>
-</form>
-
-<a href="/mazos/todosMazos" class="btn btn-admin">Visualizar Todos Los Mazos</a>
+<a href="/mazos/administrarMazos" class="btn btn-gestionar-administrar">Administrar Mazos</a>

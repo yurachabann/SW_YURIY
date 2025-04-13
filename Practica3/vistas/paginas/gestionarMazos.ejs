@@ -1,8 +1,19 @@
+<h2>Gestionar Mazos</h2>
+
+<% if (locals.mensaje) { %>
+    <p><strong><%= locals.mensaje %></strong></p>
+<% } %>
+
+<a href="/mazos/addMazo" class="btn btn-agregar">Añadir Mazo</a>
+
+<a href="/mazos/modificarMazo" class="btn btn-modificar">Modificar Mazo</a>
+
+<a href="/mazos/eliminarMazo" class="btn btn-eliminar">Eliminar Mazo</a>
+
 <table border="1">
     <thead>
         <tr>
             <th>Nombre</th>
-            <th>Creador</th>
             <th>Cartas</th>
         </tr>
     </thead>
@@ -11,14 +22,14 @@
             <% mazos.forEach(mazo => { %>
                 <tr>
                     <td><%= mazo.nombre %></td>
-                    <td><%= mazo.creador %></td>
                     <td><%= mazo.cartas %></td>
                 </tr>
             <% }); %>
         <% } else { %>
             <tr>
-                <td colspan="3">No hay mazos disponibles</td>
+                <td colspan="2">No hay mazos disponibles</td>
             </tr>
         <% } %>
     </tbody>
 </table>
+

@@ -15,11 +15,11 @@ export function viewModifyCard(req, res) {
     });
 }
 
-export function viewAllCartas(req, res) {
+export function administrarCartas(req, res) {
     const cartas = Carta.obtenerCartas();
     
     res.render('pagina', {
-        contenido: 'paginas/tablaCartas',
+        contenido: 'paginas/administrarCartas',
         cartas,
         session: req.session
     });
@@ -43,9 +43,11 @@ export function doEliminateCard(req,res){
   }
       else {
           Carta.deleteByName(req.body.name);
+          const cartas = Carta.obtenerCartas();
           return res.render('pagina', {
-          contenido: 'paginas/eliminarCarta',
-          mensaje: 'Borrado con exito ',
+          contenido: 'paginas/administrarCartas',
+          mensaje: 'Carta borrada con éxito',
+          cartas,
           session: req.session
           });
   
@@ -54,14 +56,17 @@ export function doEliminateCard(req,res){
 
 export function doEliminateCards(req,res){
 
-         Carta.deleteAllCartas();
-       /* return res.render('pagina', {
-        contenido: 'paginas/admin',
+    Carta.deleteAllCartas();
+    const cartas = Carta.obtenerCartas();
+    
+    res.render('pagina', {
+        contenido: 'paginas/administrarCartas',
+        cartas,
+        mensaje: 'Todas las cartas eliminadas con éxito',
         session: req.session
-        });
-*/
-}
 
+    });
+}
 
 
 export function doAddCard(req,res){
@@ -69,9 +74,11 @@ export function doAddCard(req,res){
     const fuerza = req.body.fuerza.trim();
     const tipoCarta = req.body.tipocarta.trim();
         Carta.agregarCarta(nombre,fuerza,tipoCarta);
+        const cartas = Carta.obtenerCartas();
         return res.render('pagina', {
-            contenido: 'paginas/añadirCarta',
-            mensaje: 'Éxito',
+            contenido: 'paginas/administrarCartas',
+            mensaje: 'Carta añadida con éxito',
+            cartas,
             session: req.session
         });
 }
@@ -89,9 +96,11 @@ export function doModifyCard(req, res) {
 
         if(Carta.cartaExiste(nombre)){
         Carta.actualizarCampos(nombre,nombre2, fuerza2, tipoCarta);
+        const cartas = Carta.obtenerCartas();
         return res.render('pagina', {
-            contenido: 'paginas/modifyCard',
-            mensaje: 'Éxito',
+            contenido: 'paginas/administrarCartas',
+            mensaje: 'Carta actualizada con éxito',
+            cartas,
             session: req.session
         });
     }
