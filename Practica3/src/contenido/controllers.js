@@ -24,6 +24,13 @@ export function viewContenidoAdmin(req, res) {
     });
 }
 
+export function viewContenidoMiembros(req, res) { //info de los integrantes del equipo
+    res.render('pagina', {
+        contenido: 'paginas/miembros',
+        session: req.session
+    });
+}
+
 export function viewContenidoUser(req, res) {
     let contenido = 'paginas/user';
     if(req.session.login == undefined) {

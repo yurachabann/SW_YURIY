@@ -28,6 +28,7 @@ app.get('/', (req, res) => {
         session: req.session
     });
 })
+
 app.use('/usuarios', usuariosRouter);
 app.use('/contenido', contenidoRouter);
 app.use('/cartas', cartasRouter);

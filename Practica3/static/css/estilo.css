@@ -322,3 +322,25 @@ dialog[open] {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+footer a {
+  color: white;
+}
+
+
+.miembros {
+  background-color: #f4f4f4;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+section {
+  align-items: center;
+  background-color: #f4f4f4;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+}
