@@ -326,6 +326,62 @@ ul {
   box-shadow:0 4px 8px rgba(0,0,0,.25);
 }
 
+.cartas-grid{
+  display:grid;
+  grid-template-columns:repeat(5,120px);
+  justify-content:center;
+  gap:20px 70px;           /*columna fila*/
+  padding:1rem;
+}
+
+.carta-item{
+  position:relative;
+  width:180px;
+  height:180px;
+}
+
+.carta-item img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:10px;
+  box-shadow:0 2px 4px rgba(0,0,0,.25);
+  transition:transform .2s ease; /* zoom */
+}
+
+.carta-info{
+  position:absolute;
+  inset:0;                       /* cubre todo el cuadro */
+  border-radius:inherit;
+  background:rgba(0,0,0,.75);
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:.4rem;
+  font-size:.85rem;
+
+  opacity:0;                     /* oculto por defecto  */
+  transition:opacity .2s ease;
+}
+
+.carta-item:hover img{
+  transform:scale(1.05);  /*zoom*/
+}
+
+.carta-item:hover .carta-info{
+  opacity:1;
+}
+
+/* mensaje cuando no hay cartas */
+.no-cartas{
+  grid-column:1 / -1;                     /* ocupa todo el ancho */
+  text-align:center;
+  font-style:italic;
+}
+
 
 /* Pseudoelementos */
 p::first-letter {

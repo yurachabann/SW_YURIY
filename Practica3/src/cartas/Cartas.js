@@ -19,14 +19,16 @@ export class Carta {
     rareza;
     vida;
     #creador;
+    imagen;
     
-    constructor(nombre, coleccion, rareza, vida, id = null, creador = null) {
+    constructor(nombre, coleccion, rareza, vida, id = null, creador = null, imagen = "https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg") {
         this.nombre = nombre;
         this.coleccion = coleccion;
         this.rareza = rareza;
         this.vida = vida;
         this.#id = id;
         this.#creador = creador;
+        this.imagen = imagen;
     }
 
     static #insertSmth = null; 
