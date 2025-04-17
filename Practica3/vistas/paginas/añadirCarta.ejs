@@ -11,24 +11,26 @@
       </div>
       
       <div>
-        <label for="fuerza">Fuerza:</label>
-        <input type="number" id="fuerza" name="fuerza" required min="1" max="200">
+        <label>
+          <input type="radio" name="rareza" value="1"> Común
+        </label>
+        <label>
+          <input type="radio" name="rareza" value="2"> Rara
+        </label>
+        <label>
+          <input type="radio" name="rareza" value="3"> Épica
+        </label>
+        <label>
+          <input type="radio" name="rareza" value="4"> Legendaria
+        </label>
+      </div>
+
+      <div>
+        <label for="vida">Vida:</label>
+        <input type="number" id="vida" name="vida" required min="1" max="300">
       </div>
       
-      <div>
-        <label>
-          <input type="radio" name="tipocarta" value="1"> Tipo 1 (Fuego)
-        </label>
-        <label>
-          <input type="radio" name="tipocarta" value="2"> Tipo 2 (Agua)
-        </label>
-        <label>
-          <input type="radio" name="tipocarta" value="3"> Tipo 3 (Aire)
-        </label>
-        <label>
-          <input type="radio" name="tipocarta" value="4"> Tipo 4 (Hielo)
-        </label>
-      </div>
+
       
       <div>
         <button type="submit">Agregar Carta</button>

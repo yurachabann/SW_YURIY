@@ -1,22 +1,32 @@
-export const RolesEnum = Object.freeze({
-    FUEGO: '1',
-    AGUA: '2',
-    AIRE: '3',
-    HIELO: '4'
-});
+
+export const EnumColecciones = {
+    0: 'Estandar',
+    1: 'Custom'
+  };
+  
+export const EnumRarezas = {
+    1: 'Común',
+    2: 'Rara',
+    3: 'Épica',
+    4: 'Legendaria'
+  };
 
 export class Carta {
    
     #id;
     nombre;
-    fuerza;
-    tipoCarta;
+    coleccion;
+    rareza;
+    vida;
+    #creador;
     
-    constructor(nombre, fuerza, tipoCarta = RolesEnum.FUEGO, id = null) {
+    constructor(nombre, coleccion, rareza, vida, id = null, creador = null) {
         this.nombre = nombre;
-        this.fuerza = fuerza;
-        this.tipoCarta = tipoCarta;
+        this.coleccion = coleccion;
+        this.rareza = rareza;
+        this.vida = vida;
         this.#id = id;
+        this.#creador = creador;
     }
 
     static #insertSmth = null; 
@@ -26,40 +36,29 @@ export class Carta {
     static #updateCarta = null;
     static #delete = null;
     static #deleteAll = null;
+    static #getByCreador = null;
+    static #getCreadorByName = null;
 
     static initConsultas(db) {
         if (this.#insertSmth !== null) return; 
         this.#insertSmth = db.prepare(
-            'INSERT INTO Cartas (nombre, fuerza, tipocarta) VALUES (@nombre, @fuerza, @tipocarta)'
+            'INSERT INTO Cartas (nombre, coleccion, rareza, vida, creador) VALUES (@nombre, @coleccion, @rareza, @vida, @creador)'
         );
         this.#getAll = db.prepare('SELECT * FROM Cartas');
         this.#exists = db.prepare('SELECT COUNT(*) as count FROM Cartas WHERE nombre = @nombre');
         this.#getByNombre = db.prepare('SELECT * FROM Cartas WHERE nombre = @nombre');
-        this.#updateCarta = db.prepare('UPDATE Cartas SET nombre = @nombreNew, fuerza = @fuerza, tipoCarta = @tipoCarta WHERE nombre = @nombre');
+        this.#updateCarta = db.prepare('UPDATE Cartas SET nombre = @nombreNew, coleccion = @coleccion, rareza = @rareza, vida = @vida WHERE nombre = @nombre');
         this.#delete = db.prepare('DELETE FROM Cartas WHERE nombre = @name');
         this.#deleteAll = db.prepare('DELETE FROM Cartas');
+        this.#getByCreador = db.prepare('SELECT * FROM Cartas WHERE creador = @creador')
+        this.#getCreadorByName = db.prepare('SELECT creador FROM Cartas WHERE nombre = @nombre')
     }
 
     static deleteByName(name) {
         const result = this.#delete.run({ name });
         if (result.changes === 0) throw new CartaNoEncontrada(name);
     }
-
-    static getFuerzaByNombre(nombre) {
-        const carta = this.#getByNombre.get({ nombre });
-        if (carta === undefined) throw new CartaNoEncontrada(nombre);
-    
-        return carta.fuerza; 
-    }
-
-    static getTipoCartaByNombre(nombre) {
-        const carta = this.#getByNombre.get({ nombre });
-        if (carta === undefined) throw new CartaNoEncontrada(nombre);
-    
-        return carta.tipoCarta;  // Return the tipoCarta of the card
-    }
-    
-    
+ 
     static cartaExiste(nombre) {
         if (this.#exists === null) {
             throw new Error("La base de datos no está inicializada. Llama a initStatements(db) primero.");
@@ -68,24 +67,33 @@ export class Carta {
         return carta !== undefined;
     }
 
-    static agregarCarta(nombre, fuerza, tipocarta) {
-        const fuerzaNum = Number(fuerza);
-        const tipoCartaNum = Number(tipocarta);
+    static agregarCarta(nombre, coleccion, rareza, vida, creador) {
+        const coleccionNum = Number(coleccion);
+        const vidaNum = Number(vida);
+        const rarezaNum = Number(rareza);
 
-        if (typeof fuerzaNum !== 'number' || fuerzaNum < 1 || fuerzaNum > 200) {
-            throw new Error('La fuerza debe ser un número entre 1 y 200');
+        if (typeof coleccionNum !== 'number' || coleccionNum < 0 || coleccionNum > 1) {
+            throw new Error('Dicha coleccion no existe');
         }
-        if (typeof tipoCartaNum !== 'number' || ![1, 2, 3, 4].includes(tipoCartaNum)) {
-            throw new Error('El tipocarta debe ser uno de los siguientes valores: 1, 2, 3 o 4');
+
+        if (typeof vidaNum !== 'number' ||  vidaNum < 1 || vidaNum > 300) {
+            throw new Error('La vida tiene que estar entre 1 y 300');
         }
+
+        if (typeof rarezaNum !== 'number' ||  rarezaNum < 1 || rarezaNum > 4) {
+            throw new Error('Esta rareza no existe');
+        }
+
         if (typeof nombre !== 'string' || nombre.trim() === '') {
             throw new Error('El nombre debe ser un texto no vacío');
         }
+
         if (this.cartaExiste(nombre)) {
             throw new Error(`La carta con el nombre "${nombre}" ya existe`);
         }
+
         try {
-            this.#insertSmth.run({ nombre, fuerza, tipocarta });
+            this.#insertSmth.run({ nombre, coleccion, rareza, vida, creador });
         } catch (e) {
             throw new Error(`No se pudo insertar la carta: ${e.message}`);
         }
@@ -93,6 +101,10 @@ export class Carta {
 
     static obtenerCartas() {
         return this.#getAll.all();
+    }
+
+    static obtenerCartasCreadasPorUsuario(creador) {
+        return this.#getByCreador.all({ creador });
     }
 
     static deleteAllCartas() {
@@ -121,10 +133,11 @@ export class Carta {
     
         static #update(carta, nombreNew) {
             const nombre = carta.nombre;
-            const fuerza = carta.fuerza;
-            const tipoCarta = carta.tipoCarta;
+            const coleccion = carta.coleccion;
+            const rareza = carta.rareza;
+            const vida = carta.vida;
 
-            const datos = { nombre, nombreNew, fuerza, tipoCarta, id: carta.id };
+            const datos = { nombre, nombreNew, coleccion, rareza, vida, id: carta.id };
     
     
             const result = this.#updateCarta.run(datos);
@@ -141,29 +154,34 @@ export class Carta {
 
     static getCartaByName(nombre) {
         const carta = this.#getByNombre.get({ nombre });
-        console.log("Fetching card with nombre:", nombre);  // Add this line to see the value of `nombre`
+        console.log("Fetching card with nombre:", nombre); 
         if (carta === undefined) throw new CartaNoEncontrada(nombre);
     
-        const { nombre: cartaNombre, fuerza, tipoCarta, id } = carta; // Destructure the object
+        const { nombre: cartaNombre, coleccion, rareza, vida, id } = carta;
     
-        return new Carta(cartaNombre, fuerza, tipoCarta, id); // Use cartaNombre here
+        return new Carta(cartaNombre, coleccion, rareza, vida, id);
     }
     
-    
+    static getCreadorByNombre(nombre) {
+        const row = this.#getCreadorByName.get({ nombre });
+        if (!row) throw new CartaNoEncontrada(nombre);
+      
+        return row.creador;
+    }
 
-    static actualizarCampos(nombre, nombre2, fuerza2, tipoCarta) {
+    static actualizarCampos(nombre, nombre2, rareza, vida) {
         let carta = this.getCartaByName(nombre);
      
          if (nombre2.trim() !== "") {
              //carta.nombre = nombre2;
          }
      
-         if (fuerza2.trim() !== "") {
-             carta.fuerza = fuerza2;
+         if (rareza.trim() !== "") {
+             carta.rareza = rareza;
          }
      
-         if (tipoCarta.trim() !== "") {
-             carta.tipoCarta = tipoCarta;
+         if (vida.trim() !== "") {
+             carta.vida = vida;
          }
      
          Carta.#update(carta, nombre2);

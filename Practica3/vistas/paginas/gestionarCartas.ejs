@@ -1,4 +1,4 @@
-<h2>Administrar Cartas</h2>
+<h2>Gestionar Tus Cartas</h2>
 
 <% if (locals.mensaje) { %>
     <p><strong><%= locals.mensaje %></strong></p>
@@ -9,10 +9,6 @@
 <a href="/cartas/modificarCard" class="btn btn-modificar">Modificar Carta</a>
 
 <a href="/cartas/eliminarCarta" class="btn btn-eliminar">Eliminar Carta</a>
-
-<form action="/cartas/eliminarCartas" method="POST" style="display: inline;">
-    <button type="submit" class="btn btn-admin-red" id = "deleteButton">Eliminar TODAS las cartas</button>
-</form>
   
 <table border="1">
     <thead>

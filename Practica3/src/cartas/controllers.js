@@ -1,5 +1,6 @@
 import { body } from 'express-validator';
-import { Carta, RolesEnum } from './Cartas.js'
+import { Carta, EnumColecciones, EnumRarezas } from './Cartas.js'
+
 
 export function viewAddCard(req, res) {
     res.render('pagina', {
@@ -17,11 +18,12 @@ export function viewModifyCard(req, res) {
 
 export function administrarCartas(req, res) {
     const cartas = Carta.obtenerCartas();
-    
     res.render('pagina', {
         contenido: 'paginas/administrarCartas',
         cartas,
-        session: req.session
+        session: req.session,
+        EnumColecciones,
+        EnumRarezas
     });
 }
 
@@ -33,26 +35,63 @@ export function viewEliminateCard(req, res) {
     });
 }
 
-export function doEliminateCard(req,res){
-      if(!Carta.cartaExiste(req.body.name)){
+export function viewGestionarCartas(req, res) {
+    const cartas = Carta.obtenerCartasCreadasPorUsuario(req.session.nombre);
+    res.render('pagina', {
+        contenido: 'paginas/gestionarCartas',
+        session: req.session,
+        cartas,
+        EnumColecciones,
+        EnumRarezas
+    });
+}
+
+export function doEliminateCard(req, res) {
+    if (!Carta.cartaExiste(req.body.name)) {
       return res.render('pagina', {
-          contenido: 'paginas/eliminarCarta',
-          mensaje: 'Error al borrar la carta ',
-          session: req.session
+        contenido: 'paginas/eliminarCarta',
+        mensaje: 'Error al borrar la carta',
+        session: req.session,
       });
-  }
-      else {
-          Carta.deleteByName(req.body.name);
-          const cartas = Carta.obtenerCartas();
-          return res.render('pagina', {
+    } else {
+      if (req.session.esAdmin) {
+        Carta.deleteByName(req.body.name);
+        const cartas = Carta.obtenerCartas();
+        return res.render('pagina', {
           contenido: 'paginas/administrarCartas',
           mensaje: 'Carta borrada con éxito',
           cartas,
-          session: req.session
+          session: req.session,
+          EnumColecciones,
+          EnumRarezas,
+        });
+      }
+      else if (!req.session.esAdmin) {
+        if (Carta.getCreadorByNombre(req.body.name) == req.session.nombre) {
+          Carta.deleteByName(req.body.name);
+          const cartas = Carta.obtenerCartasCreadasPorUsuario(req.session.nombre);
+          return res.render('pagina', {
+            contenido: 'paginas/gestionarCartas',
+            mensaje: 'Carta borrada con éxito',
+            cartas,
+            session: req.session,
+            EnumColecciones,
+            EnumRarezas,
           });
-  
+        } else {
+            console.log(Carta.getCreadorByNombre(req.body.name));
+            console.log(req.session.nombre);
+          return res.render('pagina', {
+            contenido: 'paginas/eliminarCarta',
+            mensaje: 'No tienes permisos para borrar esta carta',
+            session: req.session,
+          });
+        }
+      }
+    }
   }
-}
+  
+
 
 export function doEliminateCards(req,res){
 
@@ -71,39 +110,74 @@ export function doEliminateCards(req,res){
 
 export function doAddCard(req,res){
     const nombre = req.body.nombre.trim();
-    const fuerza = req.body.fuerza.trim();
-    const tipoCarta = req.body.tipocarta.trim();
-        Carta.agregarCarta(nombre,fuerza,tipoCarta);
+    const rareza = req.body.rareza.trim();
+    const vida = req.body.vida.trim();
+    if(req.session.esAdmin) {
+        Carta.agregarCarta(nombre,0,rareza,vida,null);
         const cartas = Carta.obtenerCartas();
         return res.render('pagina', {
             contenido: 'paginas/administrarCartas',
             mensaje: 'Carta añadida con éxito',
             cartas,
-            session: req.session
+            session: req.session,
+            EnumColecciones,
+            EnumRarezas
         });
+    }
+    else {
+        Carta.agregarCarta(nombre,1,rareza,vida,req.session.nombre);
+        const cartas = Carta.obtenerCartasCreadasPorUsuario(req.session.nombre);
+        return res.render('pagina', {
+            contenido: 'paginas/gestionarCartas',
+            mensaje: 'Carta añadida con éxito',
+            cartas,
+            session: req.session,
+            EnumColecciones,
+            EnumRarezas
+        });
+    }
+        
 }
 
 export function doModifyCard(req, res) {
-    body('nombre').escape();
-    body('nombre2').normalizeEmail();
-    body('power2').escape();
-    body('tipoCarta').isIn([RolesEnum.FUEGO, RolesEnum.AGUA, RolesEnum.AIRE, RolesEnum.HIELO]); 
-
     const nombre = req.body.nombre.trim();
-    const nombre2 = req.body.nombre2.trim() || nombre;
-    const fuerza2 = req.body.power2.trim() || Carta.getFuerzaByNombre(nombre);
-    const tipoCarta = req.body.tipoCarta.trim() || Carta.getTipoCartaByNombre(nombre);
-
+    const nombre2 = req.body.nombre2.trim();
+    const rareza = req.body.rareza.trim();
+    const vida = req.body.vida.trim();
+    
         if(Carta.cartaExiste(nombre)){
-        Carta.actualizarCampos(nombre,nombre2, fuerza2, tipoCarta);
+            if(req.session.esAdmin){
+        Carta.actualizarCampos(nombre,nombre2, rareza, vida);
         const cartas = Carta.obtenerCartas();
         return res.render('pagina', {
             contenido: 'paginas/administrarCartas',
             mensaje: 'Carta actualizada con éxito',
             cartas,
+            session: req.session,
+            EnumColecciones,
+            EnumRarezas
+        });
+    }
+    else if(Carta.getCreadorByNombre(nombre) == req.session.nombre){
+        Carta.actualizarCampos(nombre,nombre2, rareza, vida);
+        const cartas = Carta.obtenerCartasCreadasPorUsuario(req.session.nombre);
+        return res.render('pagina', {
+            contenido: 'paginas/gestionarCartas',
+            mensaje: 'Carta actualizada con éxito',
+            cartas,
+            session: req.session,
+            EnumColecciones,
+            EnumRarezas
+        });
+    }
+    else{
+        return res.render('pagina', {
+            contenido: 'paginas/modifyCard',
+            mensaje: 'No tienes permisos para modificar esta carta' ,
             session: req.session
         });
     }
+}
         else{
         return res.render('pagina', {
             contenido: 'paginas/modifyCard',

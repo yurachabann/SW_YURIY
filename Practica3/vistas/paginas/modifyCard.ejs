@@ -1,11 +1,9 @@
-<h2>Modificar Cartas</h2>
-
 <form action="/cartas/modificarCard" method="POST">
   <fieldset>
     <% if (locals.mensaje) { %>
       <p><strong><%= locals.mensaje %></strong></p>
     <% } %>
-    <legend>Datos de la carta:</legend>
+    <legend>Modificar carta</legend>
     
     <div>
       <label for="nombre">Nombre:</label>
@@ -13,33 +11,32 @@
     </div>
     
     <div>
-      <label for="nombre2">Nuevo nombre:</label>
-      <input type="text" id="nombre2" name="nombre2">
+      <label for="nombre">Nuevo Nombre:</label>
+      <input type="text" id="nombre2" name="nombre2" required>
+    </div>
+
+    <div>
+      <label>
+        <input type="radio" name="rareza" value="1"> Común
+      </label>
+      <label>
+        <input type="radio" name="rareza" value="2"> Rara
+      </label>
+      <label>
+        <input type="radio" name="rareza" value="3"> Épica
+      </label>
+      <label>
+        <input type="radio" name="rareza" value="4"> Legendaria
+      </label>
+    </div>
+
+    <div>
+      <label for="vida">Vida:</label>
+      <input type="number" id="vida" name="vida" required min="1" max="300">
     </div>
     
     <div>
-      <label for="power2">Nueva fuerza:</label>
-      <input type="number" id="power2" name="power2">
+      <button type="submit">Modificar Carta</button>
     </div>
-    
-    <div>
-      <label>
-        <input type="radio" name="tipoCarta" value="1"> Tipo 1 (Fuego)
-      </label>
-      <label>
-        <input type="radio" name="tipoCarta" value="2"> Tipo 2 (Agua)
-      </label>
-      <label>
-        <input type="radio" name="tipoCarta" value="3"> Tipo 3 (Aire)
-      </label>
-      <label>
-        <input type="radio" name="tipoCarta" value="4"> Tipo 4 (Hielo)
-      </label>
-    </div>
-    
-    <div>
-      <button type="submit">Modificar carta</button>
-    </div>
-    
   </fieldset>
 </form>

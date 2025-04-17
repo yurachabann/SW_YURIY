@@ -1,5 +1,5 @@
 import express from 'express';
-import { viewAddCard, doAddCard, viewModifyCard, doModifyCard, viewEliminateCard, doEliminateCard, doEliminateCards, administrarCartas
+import { viewAddCard, doAddCard, viewModifyCard, doModifyCard, viewEliminateCard, doEliminateCard, doEliminateCards, administrarCartas, viewGestionarCartas
 
 } from './controllers.js';
 
@@ -13,5 +13,6 @@ cartasRouter.get('/eliminarCarta', viewEliminateCard);
 cartasRouter.post('/eliminarCarta', doEliminateCard);
 cartasRouter.post('/eliminarCartas', doEliminateCards);
 cartasRouter.get('/administrarCartas', administrarCartas);
+cartasRouter.get('/gestionarCartas', viewGestionarCartas);
 
 export default cartasRouter;
