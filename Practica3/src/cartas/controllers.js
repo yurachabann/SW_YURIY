@@ -92,7 +92,6 @@ export function doEliminateCard(req, res) {
   }
   
 
-
 export function doEliminateCards(req,res){
 
     Carta.deleteAllCartas();

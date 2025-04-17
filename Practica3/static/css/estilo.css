@@ -276,6 +276,13 @@ ul {
 	
   }
 
+  .btn-gestionar-administrar:hover,
+.btn-gestionar-administrar:focus-visible{
+  background-color:#6e6d6d;
+  transform:translateY(-2px);
+  box-shadow:0 4px 8px rgba(0,0,0,.25);
+}
+
   .btn-admin-red {
     background-color:#c90c0c;
     
@@ -291,6 +298,34 @@ ul {
 	background-color: black;
 	transform: translateY(-2px);
   }
+
+.btn-intercambio{
+  padding:.6rem 1.6rem;
+  font:600 1rem system-ui;
+  color:#fff;
+  border:none;
+  border-radius:.5rem;
+  cursor:pointer;
+
+  background:linear-gradient(
+              135deg,
+              #006eff 0 49%,
+              #ff0033 51% 100%
+            );
+
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease,
+    filter .15s ease;
+}
+
+.btn-intercambio:hover,
+.btn-intercambio:focus-visible{
+  transform:translateY(-2px);
+  filter:brightness(1.1);
+  box-shadow:0 4px 8px rgba(0,0,0,.25);
+}
+
 
 /* Pseudoelementos */
 p::first-letter {
