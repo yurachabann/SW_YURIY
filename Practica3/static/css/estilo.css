@@ -326,53 +326,83 @@ ul {
   box-shadow:0 4px 8px rgba(0,0,0,.25);
 }
 
-.cartas-grid{
-  display:grid;
-  grid-template-columns:repeat(5,120px);
-  justify-content:center;
-  gap:20px 70px;           /*columna fila*/
-  padding:1rem;
+/* 1) Grid de cartas (si no lo tienes) */
+.cartas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 20px 70px;
+  justify-content: center;
+  padding: 1rem;
 }
 
-.carta-item{
-  position:relative;
-  width:180px;
-  height:180px;
+/* 2) Cada carta (contenedor relativo) */
+.carta-item {
+  position: relative;
+  cursor: pointer;
 }
 
-.carta-item img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:10px;
-  box-shadow:0 2px 4px rgba(0,0,0,.25);
-  transition:transform .2s ease; /* zoom */
+/* 3) Imagen en el grid */
+.carta-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  transition: transform .2s ease, box-shadow .2s ease;
+  position: relative;
+  z-index: 1;
 }
 
-.carta-info{
-  position:absolute;
-  inset:0;                       /* cubre todo el cuadro */
-  border-radius:inherit;
-  background:rgba(0,0,0,.75);
-  color:#fff;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding:.4rem;
-  font-size:.85rem;
-
-  opacity:0;                     /* oculto por defecto  */
-  transition:opacity .2s ease;
+/* 4) Overlay de info en hover */
+.carta-info {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: .5rem;
+  font-size: .85rem;
+  opacity: 0;
+  transition: opacity .2s ease;
+  z-index: 2;
+}
+.carta-item:hover .carta-info {
+  opacity: 1;
 }
 
-.carta-item:hover img{
-  transform:scale(1.05);  /*zoom*/
+/* 5) Suave zoom al pasar el ratón */
+.carta-item:hover img {
+  transform: scale(1.05);
 }
 
-.carta-item:hover .carta-info{
-  opacity:1;
+/* 6) Fondo oscuro full‑screen y zoom‑centro mientras dure el click */
+.carta-item::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease;
+  z-index: 1000;
+}
+.carta-item:active::before {
+  opacity: 1;
+}
+
+.carta-item:active img {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  max-width: 60vw;
+  max-height: 60vh;
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 8px 16px rgba(0,0,0,.5);
+  pointer-events: none;
+  z-index: 1001;
+  cursor: zoom-out;
 }
 
 /* mensaje cuando no hay cartas */

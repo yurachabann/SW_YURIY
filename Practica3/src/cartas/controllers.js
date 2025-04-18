@@ -111,8 +111,9 @@ export function doAddCard(req,res){
     const nombre = req.body.nombre.trim();
     const rareza = req.body.rareza.trim();
     const vida = req.body.vida.trim();
+    const imagen = req.body.imagen.trim();
     if(req.session.esAdmin) {
-        Carta.agregarCarta(nombre,0,rareza,vida,null);
+        Carta.agregarCarta(nombre,0,rareza,vida,null,imagen);
         const cartas = Carta.obtenerCartas();
         return res.render('pagina', {
             contenido: 'paginas/administrarCartas',
@@ -124,7 +125,7 @@ export function doAddCard(req,res){
         });
     }
     else {
-        Carta.agregarCarta(nombre,1,rareza,vida,req.session.nombre);
+        Carta.agregarCarta(nombre,1,rareza,vida,req.session.nombre, imagen);
         const cartas = Carta.obtenerCartasCreadasPorUsuario(req.session.nombre);
         return res.render('pagina', {
             contenido: 'paginas/gestionarCartas',

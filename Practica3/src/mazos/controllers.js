@@ -27,7 +27,6 @@ export function viewAddMazo(req, res) { //añadir mazoo
 
 
 export function doAddMazo(req, res) {
-    body('nombre').escape();
     const username = req.session.nombre;
     console.log("usuairo " + username);
     const nombre = req.body.nombre.trim();
@@ -110,8 +109,6 @@ export function doEliminarMazos(req, res) {
  
 
  export function doModificarMazo(req, res) {
-    body('nombre').escape();
-    body('nombre2').escape();
     const nombre = req.body.nombre.trim();
     const nombre2 = req.body.nombre2.trim();
 

@@ -44,7 +44,7 @@ export class Carta {
     static initConsultas(db) {
         if (this.#insertSmth !== null) return; 
         this.#insertSmth = db.prepare(
-            'INSERT INTO Cartas (nombre, coleccion, rareza, vida, creador) VALUES (@nombre, @coleccion, @rareza, @vida, @creador)'
+            'INSERT INTO Cartas (nombre, coleccion, rareza, vida, creador, imagen) VALUES (@nombre, @coleccion, @rareza, @vida, @creador, @imagen)'
         );
         this.#getAll = db.prepare('SELECT * FROM Cartas');
         this.#exists = db.prepare('SELECT COUNT(*) as count FROM Cartas WHERE nombre = @nombre');
@@ -69,7 +69,7 @@ export class Carta {
         return carta !== undefined;
     }
 
-    static agregarCarta(nombre, coleccion, rareza, vida, creador) {
+    static agregarCarta(nombre, coleccion, rareza, vida, creador, imagen) {
         const coleccionNum = Number(coleccion);
         const vidaNum = Number(vida);
         const rarezaNum = Number(rareza);
@@ -90,12 +90,16 @@ export class Carta {
             throw new Error('El nombre debe ser un texto no vacío');
         }
 
+        if (typeof imagen !== 'string' || nombre.trim() === '') {
+            throw new Error('la imagen debe ser una url');
+        }
+
         if (this.cartaExiste(nombre)) {
             throw new Error(`La carta con el nombre "${nombre}" ya existe`);
         }
 
         try {
-            this.#insertSmth.run({ nombre, coleccion, rareza, vida, creador });
+            this.#insertSmth.run({ nombre, coleccion, rareza, vida, creador, imagen });
         } catch (e) {
             throw new Error(`No se pudo insertar la carta: ${e.message}`);
         }
