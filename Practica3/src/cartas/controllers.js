@@ -16,6 +16,25 @@ export function viewModifyCard(req, res) {
     });
 }
 
+export function preModificarCard(req, res) {
+    res.render('pagina', {
+        contenido: 'paginas/preModificarCard',
+        session: req.session
+    });
+}
+
+export function modificarCartaConRelleno(req,res){
+    const nombreCarta = req.body.nombre.trim();
+    let carta = Carta.getCartaByName(nombreCarta);
+
+    res.render('pagina', {
+        contenido: 'paginas/modifyCard',
+        session: req.session,
+        carta
+    });
+
+}
+
 export function administrarCartas(req, res) {
     const cartas = Carta.obtenerCartas();
     res.render('pagina', {

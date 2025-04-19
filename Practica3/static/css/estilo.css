@@ -363,8 +363,6 @@ ul {
 }
 
 
-
-/* 1) Grid de cartas (si no lo tienes) */
 .cartas-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -373,13 +371,16 @@ ul {
   padding: 1rem;
 }
 
-/* 2) Cada carta (contenedor relativo) */
 .carta-item {
   position: relative;
   cursor: pointer;
 }
 
-/* 3) Imagen en el grid */
+.carta-item-seleccionar {
+  position: relative;
+  cursor: pointer;
+}
+
 .carta-item img {
   display: block;
   width: 100%;
@@ -390,7 +391,16 @@ ul {
   z-index: 1;
 }
 
-/* 4) Overlay de info en hover */
+.carta-item-seleccionar img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  transition: transform .2s ease, box-shadow .2s ease;
+  position: relative;
+  z-index: 1;
+}
+
 .carta-info {
   position: absolute;
   inset: 0;
@@ -411,12 +421,10 @@ ul {
   opacity: 1;
 }
 
-/* 5) Suave zoom al pasar el ratón */
 .carta-item:hover img {
   transform: scale(1.05);
 }
 
-/* 6) Fondo oscuro full‑screen y zoom‑centro mientras dure el click */
 .carta-item::before {
   content: '';
   position: fixed;
@@ -488,7 +496,6 @@ dialog[open] {
 footer a {
   color: white;
 }
-
 
 .miembros {
   background-color: #f4f4f4;

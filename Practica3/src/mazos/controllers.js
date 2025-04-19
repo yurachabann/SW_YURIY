@@ -1,5 +1,5 @@
 import { body } from 'express-validator';
-import { Carta } from '../cartas/Cartas.js';
+import { Carta, EnumColecciones, EnumRarezas } from '../cartas/Cartas.js';
 import { Mazo } from '../mazos/Mazos.js';
 
 export function viewAddMazo(req, res) { //añadir mazoo
@@ -14,6 +14,8 @@ export function viewAddMazo(req, res) { //añadir mazoo
                 contenido,
                 session: req.session,
                 cartas,
+                EnumColecciones,
+                EnumRarezas
             });
         } catch (error) {
             console.error('Error al obtener cartas:', error);
@@ -30,16 +32,16 @@ export function doAddMazo(req, res) {
     const username = req.session.nombre;
     console.log("usuairo " + username);
     const nombre = req.body.nombre.trim();
-    const rawCartas = req.body.cartas;
-
+    const rawCartas = req.body['cartas[]'];
+ 
     try {
         if (!nombre || !rawCartas) {
             throw new Error("Faltan campos obligatorios.");
         }
 
         const cartasSeleccionadas = Array.isArray(rawCartas)
-            ? rawCartas
-            : [rawCartas];
+        ? rawCartas
+        : [rawCartas];
 
         if (cartasSeleccionadas.length > 10 || cartasSeleccionadas.length < 10) {
             throw new Error("Necesitas 10 cartas maquina.");
@@ -49,15 +51,15 @@ export function doAddMazo(req, res) {
             throw new MazoYaExiste(nombre);
         }
 
-        const cartasJSON = JSON.stringify(cartasSeleccionadas);
+       const cartasJSON = JSON.stringify(cartasSeleccionadas);
 
-        //Mazo.actualizarCampos(nombre, cartasJSON, username);
         Mazo.guardar(nombre,cartasJSON,username);
         console.log('Mazo guardado:', {
             nombre,
             username,
             cartasSeleccionadas
         });
+        
         res.render('pagina', {
             contenido: 'paginas/gestionarMazos',
             session: req.session,
@@ -67,11 +69,14 @@ export function doAddMazo(req, res) {
 
     } catch (error) {
         console.error('Error al agregar mazo:', error.message);
-
+        const cartas = Carta.obtenerCartas();
         res.status(400).render('pagina', {
             contenido: 'paginas/addMazo',
             session: req.session,
-            mensaje: error.message
+            mensaje: error.message,
+            cartas,                                  // <— aquí!
+            EnumColecciones,                         // <— y aquí
+            EnumRarezas,                             // <— y aquí
         });
     }
 }
@@ -178,7 +183,6 @@ export function doModificarMazoAdmin(req, res) {
             });
         }
         Mazo.actualizarCampos(nombre, cartasJSON, mazo.creador, nombre2);
-        const mazos = Mazo.obtenerMazos();
         return res.render('pagina', {
             contenido: 'paginas/administrarMazos',
             session: req.session,

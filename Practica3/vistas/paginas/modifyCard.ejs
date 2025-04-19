@@ -7,32 +7,39 @@
     
     <div>
       <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" name="nombre" required>
+      <input type="text" id="nombre" name="nombre" required
+      value="<%= carta.nombre %>">
     </div>
     
     <div>
       <label for="nombre">Nuevo Nombre:</label>
-      <input type="text" id="nombre2" name="nombre2" required>
+      <input type="text" id="nombre2" name="nombre2" required
+      value="<%= carta.nombre %>">
     </div>
 
     <div>
       <label>
-        <input type="radio" name="rareza" value="1"> Común
+        <input type="radio" name="rareza" value="1"
+        <%= carta.rareza == 1 ? 'checked' : '' %>> Común
       </label>
       <label>
-        <input type="radio" name="rareza" value="2"> Rara
+        <input type="radio" name="rareza" value="2"
+        <%= carta.rareza == 2 ? 'checked' : '' %>> Rara
       </label>
       <label>
-        <input type="radio" name="rareza" value="3"> Épica
+        <input type="radio" name="rareza" value="3"
+        <%= carta.rareza == 3 ? 'checked' : '' %>> Épica
       </label>
       <label>
-        <input type="radio" name="rareza" value="4"> Legendaria
+        <input type="radio" name="rareza" value="4"
+        <%= carta.rareza == 4 ? 'checked' : '' %>> Legendaria
       </label>
     </div>
 
     <div>
       <label for="vida">Vida:</label>
-      <input type="number" id="vida" name="vida" required min="1" max="300">
+      <input type="number" id="vida" name="vida" required min="1" max="300"
+      value="<%= carta.vida %>">
     </div>
     
     <div>

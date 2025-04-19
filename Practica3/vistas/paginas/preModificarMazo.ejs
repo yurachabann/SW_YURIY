@@ -1,0 +1,11 @@
+<h1>Introduce el nombre del mazo que quieres modificar</h1>
+
+<form action="/cartas/preModificarMazo" method="POST">
+<fieldset>
+	<% if (locals.mensaje) { %>
+		<p><strong><%= locals.mensaje %></strong></p>
+	<% } %>
+	<legend>Nombre del mazo a modificar</legend>
+	<div><label>Nombre:</label> <input type="text" name="nombre" /></div>
+	<button type="submit">Modificar</button>
+</fieldset>

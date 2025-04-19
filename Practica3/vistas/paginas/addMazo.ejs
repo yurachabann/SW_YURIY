@@ -1,40 +1,46 @@
-<form action="/mazos/addMazo" method="POST">
-    <fieldset>
-        <legend>Añadir mazo</legend>
-        <% if (locals.mensaje) { %>
-            <p><strong><%= locals.mensaje %></strong></p>
-          <% } %>
-        <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="cartas">Cartas:</label>
-            <select id="cartas" name="cartas" multiple size="10" required>
-                <% cartas.forEach(function(carta) { %>
-                    <option value="<%= carta.id %>"><%= carta.nombre %></option>
-                <% }); %>
-            </select>
-            <p class="form-hint">(Tienes que seleccionar 10 cartas)</p>
-        </div>
+<form action="/mazos/addMazo" method="POST" id="form-seleccion">
+  <fieldset>
+    <legend>Añadir mazo</legend>
+    <% if (locals.mensaje) { %>
+      <p><strong><%= locals.mensaje %></strong></p>
+    <% } %>
 
-        <div class="form-group">
-            <button type="submit">Agregar Mazo</button>
-        </div>
-    </fieldset>
+    <div class="form-group">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" required>
+    </div>
+    
+    <!-- GRID DE CARTAS -->
+    <div class="form-group">
+      <label>Cartas (selecciona 10):</label>
+      <p id="contador" class="form-hint">Seleccionadas: 0/10</p>
+      <div class="cartas-grid">
+        <% cartas.forEach(carta => { %>
+          <label class="carta-item-seleccionar">
+            <input
+              type="checkbox"
+              name="cartas[]"
+              value="<%= carta.id %>"
+            >
+            <img
+              src="<%= carta.Imagen || 'https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg' %>"
+              alt="<%= carta.nombre %>"
+            >
+            <div class="carta-info">
+              <h4><%= carta.nombre %></h4>
+              <p>Colección: <%= EnumColecciones[carta.coleccion] || 'N/D' %></p>
+              <p>Rareza: <%= EnumRarezas[carta.rareza] || 'N/D' %></p>
+              <p>Vida: <%= carta.vida %></p>
+            </div>
+          </label>
+        <% }) %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button type="submit">Agregar Mazo</button>
+    </div>
+  </fieldset>
 </form>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const selectElement = document.getElementById('cartas');
-      // Agregar listener mousedown a cada opción para alternar su estado sin necesidad de CTRL
-      Array.from(selectElement.options).forEach(function(option) {
-        option.addEventListener('mousedown', function(e) {
-          e.preventDefault();
-          this.selected = !this.selected;
-        });
-      });
-    });
-  </script>
-  
+<script src="/js/seleccionCartas.js" defer></script>
