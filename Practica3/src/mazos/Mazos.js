@@ -23,6 +23,13 @@ export class Mazo {
     static #getMy = null;
     static #deleteAll = null;
 
+    static #insertCartas = null; //TABLA PARA HACER JOINS ENTRE MAZOS Y CARTAS
+    static #deleteCartas = null;
+    static #getAllWithNames = null;
+    static #getMyWithNames = null;
+    static #upsertCartas = null;
+    static #deleteAllCartas = null; //limpia las referencias de mazoCartas cuando queremos eliminar TODOS los mazos
+
     static initStatements(db) {
         if (this.#getByUsername !== null) return;
 
@@ -35,6 +42,41 @@ export class Mazo {
         this.#getAll = db.prepare('SELECT * FROM Mazos');
         this.#getMy = db.prepare('SELECT * FROM Mazos WHERE creador = @username');
         this.#deleteAll = db.prepare('DELETE FROM Mazos');
+
+        this.#insertCartas = db.prepare('INSERT INTO MazoCartas(mazo_id, carta_id) VALUES (@mazoId, @cartaId)'); //TABLA PARA HACER JOINS ENTRE MAZOS Y CARTAS
+        this.#deleteCartas = db.prepare('DELETE FROM MazoCartas WHERE mazo_id = @id');
+        this.#deleteAllCartas = db.prepare('DELETE FROM MazoCartas');
+        this.#getAllWithNames = db.prepare(`
+            SELECT
+              m.id,
+              m.nombre,
+              m.creador,
+              GROUP_CONCAT(c.nombre, ', ') AS cartas
+            FROM Mazos m
+            LEFT JOIN MazoCartas mc ON mc.mazo_id = m.id
+            LEFT JOIN Cartas      c  ON c.id      = mc.carta_id
+            GROUP BY m.id
+          `);
+          
+          this.#getMyWithNames = db.prepare(`
+            SELECT
+              m.id,
+              m.nombre,
+              m.creador,
+              GROUP_CONCAT(c.nombre, ', ') AS cartas
+            FROM Mazos m
+            LEFT JOIN MazoCartas mc ON mc.mazo_id = m.id
+            LEFT JOIN Cartas      c  ON c.id      = mc.carta_id
+            WHERE m.creador = @username
+            GROUP BY m.id
+          `);
+
+   // una pequeña transacción para actualizar la lista de cartas de un mazo
+    this.#upsertCartas = db.transaction((id, cartaIds) => {
+    this.#deleteCartas.run({ id });
+    for (const cartaId of cartaIds)
+      this.#insertCartas.run({ mazoId: id, cartaId });
+    });
     }
 
     static getMazoByName(name) {
@@ -45,6 +87,7 @@ export class Mazo {
     }
     
     static deleteAllMazos() {
+        this.#deleteAllCartas.run(); //limpiamos las referencias de MazoCartas para que se pueda borrar la tabla mazos
         this.#deleteAll.run();
     }
 
@@ -77,6 +120,10 @@ export class Mazo {
             result = this.#insertStmt.run(datos);
 
             mazo.#id = result.lastInsertRowid;
+
+            const cartaIds = JSON.parse(mazo.cartas);
+            this.#upsertCartas(mazo.#id, cartaIds);
+
         } catch(e) { // SqliteError: https://github.com/WiseLibs/better-sqlite3/blob/master/docs/api.md#class-sqliteerror
             if (e.code === 'SQLITE_CONSTRAINT') {
                 throw new MazoYaExiste(mazo.nombre);
@@ -87,16 +134,12 @@ export class Mazo {
     }
 
     static obtenerMazos() {
-        return this.#getAll.all();
-    }
-
+        return this.#getAllWithNames.all();
+      }
+      
     static obtenerMisMazos(username) {
-        if (!this.#getMy) {
-            throw new Error("Base de datos no inicializada");
-        }
-        return this.#getMy.all({ username });
+        return this.#getMyWithNames.all({ username });
     }
-    
 
     static #update(mazo) {
         const nombre = mazo.nombre;
@@ -108,7 +151,8 @@ export class Mazo {
     
         const result = this.#updateStmt.run(datos);
         if (result.changes === 0) throw new MazoNoEncontrado(mazo);
-    
+        const cartaIds = JSON.parse(mazo.cartas);
+        this.#upsertCartas(mazo.id, cartaIds);
         return mazo;
     }
     

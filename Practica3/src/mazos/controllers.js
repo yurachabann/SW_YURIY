@@ -277,22 +277,8 @@ export function administrarMazos(req, res) {
     });
 }
 
-function normalizarMazos(esAdmin, usuario){
-    let mazos;
-    if (esAdmin == false) { mazos = Mazo.obtenerMisMazos(usuario); }
-    else { mazos = Mazo.obtenerMazos(); }
-
-    const todasLasCartas = Carta.obtenerCartas();
-
-    mazos.forEach(mazo => {
-        const arrayIds = JSON.parse(mazo.cartas);
-        const nombresCartas = arrayIds.map(id => {
-            const cartaEncontrada = todasLasCartas.find(c => c.id === Number(id));
-            return cartaEncontrada ? cartaEncontrada.nombre : `Carta con ID ${id} no encontrada`;
-        });
-        mazo.cartas = nombresCartas.join(', ');
-    });
-
-    return mazos;
-}
-
+function normalizarMazos(esAdmin, usuario) {
+    return esAdmin
+      ? Mazo.obtenerMazos()
+      : Mazo.obtenerMisMazos(usuario);
+  }

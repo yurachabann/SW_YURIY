@@ -78,8 +78,8 @@ export class Carta {
             throw new Error('Dicha coleccion no existe');
         }
 
-        if (typeof vidaNum !== 'number' ||  vidaNum < 1 || vidaNum > 300) {
-            throw new Error('La vida tiene que estar entre 1 y 300');
+        if (typeof vidaNum !== 'number' ||  vidaNum < 1 || vidaNum > 1000) {
+            throw new Error('La vida tiene que estar entre 1 y 1000');
         }
 
         if (typeof rarezaNum !== 'number' ||  rarezaNum < 1 || rarezaNum > 4) {
