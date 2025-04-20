@@ -1,6 +1,6 @@
 import express from 'express';
 import { viewAddMazo, doAddMazo, viewModificarMazo, doModificarMazo, viewEliminarMazo, doEliminarMazo, gestionarMazos,
-    doModificarMazoAdmin, doEliminarMazoAdmin, viewEliminarMazoAdmin, viewModificarMazoAdmin, doEliminarMazos, administrarMazos
+ doEliminarMazoAdmin, viewEliminarMazoAdmin, doEliminarMazos, administrarMazos
 
 } from './controllers.js';
 
@@ -13,8 +13,8 @@ mazosRouter.post('/modificarMazo', doModificarMazo);
 mazosRouter.get('/eliminarMazo', viewEliminarMazo);
 mazosRouter.post('/eliminarMazo', doEliminarMazo);
 mazosRouter.get('/gestionarMazos', gestionarMazos);
-mazosRouter.get('/modificarMazoAdmin', viewModificarMazoAdmin);
-mazosRouter.post('/modificarMazoAdmin', doModificarMazoAdmin);
+mazosRouter.get('/modificarMazoAdmin', viewModificarMazo);
+//mazosRouter.post('/modificarMazoAdmin', doModificarMazoAdmin);
 mazosRouter.get('/eliminarMazoAdmin', viewEliminarMazoAdmin);
 mazosRouter.post('/eliminarMazoAdmin', doEliminarMazoAdmin);
 mazosRouter.post('/eliminarMazos', doEliminarMazos);

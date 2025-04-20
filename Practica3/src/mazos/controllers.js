@@ -74,9 +74,9 @@ export function doAddMazo(req, res) {
             contenido: 'paginas/addMazo',
             session: req.session,
             mensaje: error.message,
-            cartas,                                  // <— aquí!
-            EnumColecciones,                         // <— y aquí
-            EnumRarezas,                             // <— y aquí
+            cartas,
+            EnumColecciones,
+            EnumRarezas,
         });
     }
 }
@@ -87,10 +87,13 @@ export function viewModificarMazo(req, res) {
     res.render('pagina', {
         contenido: 'paginas/modificarMazo',
         session: req.session,
-        cartas: cartas
+        cartas,
+        EnumColecciones,
+        EnumRarezas
     });
 }
 
+/*
 export function viewModificarMazoAdmin(req, res) {
     const cartas = Carta.obtenerCartas();
     res.render('pagina', {
@@ -99,11 +102,12 @@ export function viewModificarMazoAdmin(req, res) {
         cartas: cartas
     });
 }
+*/
 
 export function doEliminarMazos(req, res) {
 
     Mazo.deleteAllMazos();
-    const mazos = Mazo.obtenerMazos();
+   // const mazos = Mazo.obtenerMazos();
     return res.render('pagina', {
       contenido: 'paginas/administrarMazos',
       session: req.session,
@@ -112,7 +116,65 @@ export function doEliminarMazos(req, res) {
     });
  }
  
+ export function doModificarMazo(req, res) {
 
+    const nombre  = req.body.nombre.trim();
+    const nombre2 = req.body.nombre2.trim();
+    const username = req.session.nombre;
+    const isAdmin = !!req.session.esAdmin;
+  
+    const rawCartas = req.body['cartas[]'];
+
+    const cartasSeleccionadas = Array.isArray(rawCartas)
+        ? rawCartas
+        : [rawCartas];
+
+    const cartasJSON = JSON.stringify(cartasSeleccionadas);
+
+    const cartas = Carta.obtenerCartas();
+  
+    if (!Mazo.mazoExiste(nombre)) {
+      return res.render('pagina', {
+        contenido: 'paginas/modificarMazo',
+        mensaje: 'El mazo no existe.',
+        cartas,
+        EnumColecciones,
+        EnumRarezas,
+        session: req.session
+      });
+    }
+
+    if (!isAdmin && !Mazo.mazoExisteParaUsuario(nombre, username)) {
+      return res.render('pagina', {
+        contenido: 'paginas/modificarMazo',
+        mensaje: 'El mazo no te pertenece.',
+        cartas,
+        EnumColecciones,
+        EnumRarezas,
+        session: req.session
+      });
+    }
+  
+    let creatorForUpdate = username;
+    if (isAdmin) {
+      // Para admin, mantenemos el creador original (nulo)
+      const mazo = Mazo.getMazoByName(nombre);
+      creatorForUpdate = mazo.creador;
+    }
+  
+    Mazo.actualizarCampos(nombre, cartasJSON, creatorForUpdate, nombre2);
+  
+    return res.render('pagina', {
+      contenido: isAdmin
+        ? 'paginas/administrarMazos'
+        : 'paginas/gestionarMazos',
+      mazos: normalizarMazos(isAdmin, username),
+      session: req.session,
+      mensaje: 'Mazo modificado con éxito.'
+    });
+  }
+
+ /*
  export function doModificarMazo(req, res) {
     const nombre = req.body.nombre.trim();
     const nombre2 = req.body.nombre2.trim();
@@ -176,7 +238,7 @@ export function doModificarMazoAdmin(req, res) {
             mazo = Mazo.getMazoByName(nombre);
         } catch (error) {
             return res.render('pagina', {
-                contenido: 'paginas/modificarMazo',
+                contenido: 'paginas/modificarMazoAdmin',
                 mensaje: 'El mazo no existe.',
                 cartas,
                 session: req.session
@@ -191,14 +253,14 @@ export function doModificarMazoAdmin(req, res) {
         });
     } else {
         return res.render('pagina', {
-            contenido: 'paginas/modificarMazo',
+            contenido: 'paginas/modificarMazoAdmin',
             mensaje: 'El mazo no existe.',
             cartas,
             session: req.session
         });
     }
 }
-
+*/
 export function viewEliminarMazo(req, res) {
     res.render('pagina', {
         contenido: 'paginas/eliminarMazo',

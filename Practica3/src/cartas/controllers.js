@@ -1,7 +1,6 @@
 import { body } from 'express-validator';
 import { Carta, EnumColecciones, EnumRarezas } from './Cartas.js'
 
-
 export function viewAddCard(req, res) {
     res.render('pagina', {
         contenido: 'paginas/añadirCarta',
@@ -12,7 +11,7 @@ export function viewAddCard(req, res) {
 export function viewModifyCard(req, res) {
     res.render('pagina', {
         contenido: 'paginas/modifyCard',
-        session: req.session
+        session: req.session,
     });
 }
 
@@ -45,7 +44,6 @@ export function administrarCartas(req, res) {
         EnumRarezas
     });
 }
-
 
 export function viewEliminateCard(req, res) {
     res.render('pagina', {

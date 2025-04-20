@@ -40,6 +40,8 @@ export class Carta {
     static #deleteAll = null;
     static #getByCreador = null;
     static #getCreadorByName = null;
+    static #deleteCarta = null;
+    static #deleteAllCartas = null;
 
     static initConsultas(db) {
         if (this.#insertSmth !== null) return; 
@@ -54,9 +56,14 @@ export class Carta {
         this.#deleteAll = db.prepare('DELETE FROM Cartas');
         this.#getByCreador = db.prepare('SELECT * FROM Cartas WHERE creador = @creador')
         this.#getCreadorByName = db.prepare('SELECT creador FROM Cartas WHERE nombre = @nombre')
+        this.#deleteCarta = db.prepare('DELETE FROM MazoCartas WHERE carta_id = @id');
+        this.#deleteAllCartas = db.prepare('DELETE FROM MazoCartas'); //limpiar las referencias en la tabla mazoCartas antes de eliminar para q no haya error
     }
 
     static deleteByName(name) {
+        const carta = this.getCartaByName(name);
+        let id = carta.#id;
+        this.#deleteCarta.run({id});
         const result = this.#delete.run({ name });
         if (result.changes === 0) throw new CartaNoEncontrada(name);
     }
@@ -114,6 +121,7 @@ export class Carta {
     }
 
     static deleteAllCartas() {
+        this.#deleteAllCartas.run();
         this.#deleteAll.run();
     }
 

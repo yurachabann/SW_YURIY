@@ -24,11 +24,11 @@ export class Mazo {
     static #deleteAll = null;
 
     static #insertCartas = null; //TABLA PARA HACER JOINS ENTRE MAZOS Y CARTAS
-    static #deleteCartas = null;
     static #getAllWithNames = null;
     static #getMyWithNames = null;
     static #upsertCartas = null;
     static #deleteAllCartas = null; //limpia las referencias de mazoCartas cuando queremos eliminar TODOS los mazos
+    static #deleteCartas = null;
 
     static initStatements(db) {
         if (this.#getByUsername !== null) return;
@@ -91,7 +91,7 @@ export class Mazo {
         this.#deleteAll.run();
     }
 
-    static getMazoByCreador(name) {  //? y si son varios
+    static getMazoByCreador(name) {
         const mazo = this.#getByUsername.get({ creador: name });
         if (mazo === undefined) throw new MazoNoEncontrado(name);
         const { nombre, creador, cartas, id } = mazo;
@@ -145,7 +145,7 @@ export class Mazo {
         const nombre = mazo.nombre;
         const creador = mazo.creador;
         const cartas = mazo.cartas;
-        const id = mazo.id; // Usa el getter para obtener el id
+        const id = mazo.id;
     
         const datos = { nombre, creador, cartas, id };
     
@@ -167,13 +167,16 @@ export class Mazo {
         return Mazo.#update(this);
     }
 
-    static deleteByUsername(username) {
+    static deleteByUsername(username) { //NO SE USA
         const result = this.#deleteByUsuario.run({ creador: username });
         if (result.changes === 0) throw new MazoNoEncontrado(username);
     }
     
 
-    static deleteByNombre(name) {
+    static deleteByNombre(name) { 
+        const mazo = this.getMazoByName(name);
+        let id = mazo.#id;
+        this.#deleteCartas.run({id}); // limpiamos las referencias en tabla mazoCartas para q no haya error
         const result = this.#deleteByNombre.run({ nombre: name });
         if (result.changes === 0) throw new MazoNoEncontrado(name);
     }
