@@ -1,21 +1,18 @@
-// static/js/upload.js
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import crypto from 'node:crypto';
 import multer from 'multer';
 
-/* carpeta absoluta  …/practica3/static/img  */
-const __dirname = path.dirname(fileURLToPath(import.meta.url));   // …/static/js
-const uploadDir = path.resolve(__dirname, '..', 'img');           // sube 1 nivel
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const uploadDir = path.resolve(__dirname, '..', 'img');
 
-/* crea la carpeta si falta */
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
-  console.log('🗂️  Creada carpeta', uploadDir);
+  console.log('Carpeta cerada', uploadDir);
 }
 
-export const uploadDirAbs = uploadDir;       // la exportamos para app.js
+export const uploadDirAbs = uploadDir;
 
 const storage = multer.diskStorage({
   destination: uploadDir,

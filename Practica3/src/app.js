@@ -16,7 +16,7 @@ const IMG_DIR    = path.join(STATIC_DIR, 'img');                // …/static/im
 
 if (!fs.existsSync(IMG_DIR)) {
   fs.mkdirSync(IMG_DIR, { recursive: true });
-  console.log('Creada carpeta', IMG_DIR);
+  console.log('Carpeta creada', IMG_DIR);
 }
 
 export const app = express();
