@@ -6,21 +6,23 @@
       <p><strong><%= locals.mensaje %></strong></p>
     <% } %>
     <legend>Datos del mazo:</legend>
-    
+
     <div>
-      <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" name="nombre" required>
+      <label for="nombre">Nombre actual:</label>
+      <input type="text" id="nombre" name="nombre"  value="<%= mazo.nombre %>" readonly>
     </div>
-    
+
     <div>
       <label for="nombre2">Nuevo nombre:</label>
-      <input type="text" id="nombre2" name="nombre2">
+      <input type="text" id="nombre2" name="nombre2" value="<%= mazo.nombre %>" required>
     </div>
-    
-    <!-- GRID DE CARTAS -->
+
     <div class="form-group">
       <label>Cartas (selecciona 10):</label>
-      <p id="contador" class="form-hint">Seleccionadas: 0/10</p>
+      <p id="contador" class="form-hint">
+        Seleccionadas: <%= cartasSeleccionadas.length %>/10
+      </p>
+
       <div class="cartas-grid">
         <% cartas.forEach(carta => { %>
           <label class="carta-item-seleccionar">
@@ -28,6 +30,7 @@
               type="checkbox"
               name="cartas[]"
               value="<%= carta.id %>"
+              <%= cartasSeleccionadas.includes(carta.id) ? 'checked' : '' %>
             >
             <img
               src="<%= carta.Imagen || 'https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg' %>"
@@ -45,9 +48,10 @@
     </div>
 
     <div class="form-group">
-      <button type="submit">Agregar Mazo</button>
+      <button type="submit">Guardar cambios</button>
     </div>
   </fieldset>
 </form>
 
 <script src="/js/seleccionCartas.js" defer></script>
+
