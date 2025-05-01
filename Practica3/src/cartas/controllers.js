@@ -128,7 +128,17 @@ export function doAddCard(req,res){
     const nombre = req.body.nombre.trim();
     const rareza = req.body.rareza.trim();
     const vida = req.body.vida.trim();
-    const imagen = req.body.imagen.trim();
+    //const imagen = req.body.imagen.trim();
+      // Multer rellena req.file
+  if (!req.file) {                      // por si el usuario no adjunta nada
+    return res.render('pagina', {
+        contenido: 'paginas/añadirCarta',   // ← la vista que quieres
+        mensaje:   'Debes subir una imagen',
+        session:   req.session,
+      });
+    }
+
+  const imagen = `/img/${req.file.filename}`;  // <-- ruta pública
     if(req.session.esAdmin) {
         Carta.agregarCarta(nombre,0,rareza,vida,null,imagen);
         const cartas = Carta.obtenerCartas();

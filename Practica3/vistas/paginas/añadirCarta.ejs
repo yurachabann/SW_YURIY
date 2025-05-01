@@ -1,4 +1,4 @@
-<form action="/cartas/addCard" method="POST">
+<form action="/cartas/addCard" method="POST" enctype="multipart/form-data">
     <fieldset>
       <% if (locals.mensaje) { %>
         <p><strong><%= locals.mensaje %></strong></p>
@@ -31,8 +31,8 @@
       </div>
       
       <div>
-        <label for="nombre">Imagen:</label>
-        <input type="text" id="imagen" name="imagen" required>
+        <label for="file">Imagen:</label>
+        <input type="file" id="imagen" name="imagen" accept="image/*" required>
       </div>
       
       <div>

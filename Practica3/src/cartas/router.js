@@ -4,12 +4,24 @@ import { viewAddCard, doAddCard, viewModifyCard, doModifyCard, viewEliminateCard
 
 } from './controllers.js';
 
+import { uploadImg } from '../../static/js/upload.js';
 const cartasRouter = express.Router();
 
 cartasRouter.get('/addCard', viewAddCard);
-cartasRouter.post('/addCard', doAddCard);
+
+cartasRouter.post('/addCard',
+    uploadImg.single('imagen'),
+    doAddCard,
+  );
+  
+  cartasRouter.post('/modificarCard',
+    uploadImg.single('imagen'),
+    doModifyCard,
+  );
+  
+//cartasRouter.post('/addCard', doAddCard);
 cartasRouter.get('/modificarCard', viewModifyCard);
-cartasRouter.post('/modificarCard', doModifyCard);
+//cartasRouter.post('/modificarCard', doModifyCard);
 cartasRouter.get('/eliminarCarta', viewEliminateCard);
 cartasRouter.post('/eliminarCarta', doEliminateCard);
 cartasRouter.post('/eliminarCartas', doEliminateCards);
