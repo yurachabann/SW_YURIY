@@ -1,4 +1,10 @@
 BEGIN TRANSACTION;
+DROP TABLE IF EXISTS "MazoCartas";
+CREATE TABLE MazoCartas (
+  mazo_id   INTEGER    REFERENCES Mazos(id),
+  carta_id  INTEGER    REFERENCES Cartas(id),
+  PRIMARY KEY (mazo_id, carta_id)
+);
 DROP TABLE IF EXISTS "Mazos";
 CREATE TABLE Mazos (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,9 +24,11 @@ CREATE TABLE "Usuarios" (
 );
 DROP TABLE IF EXISTS "cartas";
 CREATE TABLE cartas (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT NOT NULL,
-            fuerza INTEGER NOT NULL,
-            tipocarta INTEGER NOT NULL
-        );
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    coleccion INTEGER NOT NULL,
+    rareza INTEGER NOT NULL,
+    vida INTEGER NOT NULL
+, creador TEXT DEFAULT NULL, Imagen TEXT
+DEFAULT 'https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg');
 COMMIT;
