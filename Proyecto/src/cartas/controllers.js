@@ -52,6 +52,13 @@ export function viewEliminateCard(req, res) {
     });
 }
 
+export function viewEliminateCardsUsuario(req, res) {
+    res.render('pagina', {
+        contenido: 'paginas/eliminarCartasUsuario',
+        session: req.session
+    });
+}
+
 export function viewGestionarCartas(req, res) {
     const cartas = Carta.obtenerCartasCreadasPorUsuario(req.session.nombre);
     res.render('pagina', {
@@ -109,17 +116,18 @@ export function doEliminateCard(req, res) {
   }
   
 
-export function doEliminateCards(req,res){
-
-    Carta.deleteAllCartas();
+export function doEliminateCardsUsuario(req,res){
+    const usuario = req.body.name.trim();
+    Carta.deleteAllCartasUsuario(usuario);
     const cartas = Carta.obtenerCartas();
     
     res.render('pagina', {
         contenido: 'paginas/administrarCartas',
         cartas,
-        mensaje: 'Todas las cartas eliminadas con éxito',
-        session: req.session
-
+        mensaje: 'Todas las cartas del usuario eliminadas con éxito',
+        session: req.session,
+        EnumColecciones,
+        EnumRarezas
     });
 }
 

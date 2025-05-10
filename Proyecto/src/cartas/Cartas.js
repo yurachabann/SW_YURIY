@@ -37,11 +37,12 @@ export class Carta {
     static #getByNombre = null; 
     static #updateCarta = null;
     static #delete = null;
-    static #deleteAll = null;
     static #getByCreador = null;
     static #getCreadorByName = null;
     static #deleteCarta = null;
-    static #deleteAllCartas = null;
+    static #deleteAllCartasOfUsuario = null; //para borrar las cartas de la tabla Cartas
+    static #deleteAllCartasOfUsuario2 = null; //para borrar las cartas de la tabla MazoCartas
+    static #getCartasOfUsuario = null;
 
     static initConsultas(db) {
         if (this.#insertSmth !== null) return; 
@@ -53,11 +54,14 @@ export class Carta {
         this.#getByNombre = db.prepare('SELECT * FROM Cartas WHERE nombre = @nombre');
         this.#updateCarta = db.prepare('UPDATE Cartas SET nombre = @nombreNew, coleccion = @coleccion, rareza = @rareza, vida = @vida WHERE nombre = @nombre');
         this.#delete = db.prepare('DELETE FROM Cartas WHERE nombre = @name');
-        this.#deleteAll = db.prepare('DELETE FROM Cartas');
+       // this.#deleteAll = db.prepare('DELETE FROM Cartas');
         this.#getByCreador = db.prepare('SELECT * FROM Cartas WHERE creador = @creador')
         this.#getCreadorByName = db.prepare('SELECT creador FROM Cartas WHERE nombre = @nombre')
         this.#deleteCarta = db.prepare('DELETE FROM MazoCartas WHERE carta_id = @id');
-        this.#deleteAllCartas = db.prepare('DELETE FROM MazoCartas'); //limpiar las referencias en la tabla mazoCartas antes de eliminar para q no haya error
+        this.#deleteAllCartasOfUsuario = db.prepare('DELETE FROM Cartas where creador = @creador');
+        this.#deleteAllCartasOfUsuario2 = db.prepare('DELETE FROM MazoCartas where carta_id = @id')
+        this.#getCartasOfUsuario = db.prepare('SELECT id FROM Cartas WHERE creador = @creador')
+
     }
 
     static deleteByName(name) {
@@ -120,9 +124,16 @@ export class Carta {
         return this.#getByCreador.all({ creador });
     }
 
-    static deleteAllCartas() {
-        this.#deleteAllCartas.run();
-        this.#deleteAll.run();
+    static deleteAllCartasUsuario(usuario) {
+        const mazos = this.#getCartasOfUsuario.all({ creador: usuario });
+        
+        for (const { id } of mazos) {
+            this.#deleteAllCartasOfUsuario2.run({ id });
+        }
+        
+        const result = this.#deleteAllCartasOfUsuario.run({ creador: usuario });
+        
+        if (result.changes === 0) throw new CartaNoEncontrada(usuario);
     }
 
     static #insert(carta) {

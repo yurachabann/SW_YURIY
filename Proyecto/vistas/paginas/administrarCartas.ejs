@@ -10,10 +10,8 @@
 
 <a href="/cartas/eliminarCarta" class="btn btn-eliminar">Eliminar Carta</a>
 
-<form action="/cartas/eliminarCartas" method="POST" style="display: inline;">
-    <button type="submit" class="btn btn-admin-red" id = "deleteButton">Eliminar TODAS las cartas</button>
-</form>
-  
+<a href="/cartas/eliminarCartas" class="btn btn-eliminar">Eliminar TODAS las cartas de un usuario</a>
+
 <div class="cartas-grid">
     <% cartas.forEach(carta => { %>
       <div class="carta-item">

@@ -21,14 +21,15 @@ export class Mazo {
     static #deleteByUsuario = null;
     static #getAll = null;
     static #getMy = null;
-    static #deleteAll = null;
+    static #deleteAllMazosOfUsuario = null;
 
     static #insertCartas = null; //TABLA PARA HACER JOINS ENTRE MAZOS Y CARTAS
     static #getAllWithNames = null;
     static #getMyWithNames = null;
     static #upsertCartas = null;
-    static #deleteAllCartas = null; //limpia las referencias de mazoCartas cuando queremos eliminar TODOS los mazos
+    static #deleteAllMazosOfUsuario2 = null; //limpia las referencias de mazoCartas cuando queremos eliminar TODOS los mazos de un usuario
     static #deleteCartas = null;
+    static #getMazosOfUsuario = null;
 
     static initStatements(db) {
         if (this.#getByUsername !== null) return;
@@ -41,11 +42,12 @@ export class Mazo {
         this.#deleteByUsuario = db.prepare('DELETE FROM Mazos WHERE creador = @creador');
         this.#getAll = db.prepare('SELECT * FROM Mazos');
         this.#getMy = db.prepare('SELECT * FROM Mazos WHERE creador = @username');
-        this.#deleteAll = db.prepare('DELETE FROM Mazos');
+        this.#deleteAllMazosOfUsuario = db.prepare('DELETE FROM Mazos WHERE creador = @creador');
 
         this.#insertCartas = db.prepare('INSERT INTO MazoCartas(mazo_id, carta_id) VALUES (@mazoId, @cartaId)'); //TABLA PARA HACER JOINS ENTRE MAZOS Y CARTAS
         this.#deleteCartas = db.prepare('DELETE FROM MazoCartas WHERE mazo_id = @id');
-        this.#deleteAllCartas = db.prepare('DELETE FROM MazoCartas');
+        this.#deleteAllMazosOfUsuario2 = db.prepare('DELETE FROM MazoCartas WHERE mazo_id = @id');
+        
         this.#getAllWithNames = db.prepare(`
             SELECT
               m.id,
@@ -70,6 +72,8 @@ export class Mazo {
             WHERE m.creador = @username
             GROUP BY m.id
           `);
+         this.#getMazosOfUsuario = db.prepare('SELECT id FROM Mazos WHERE creador = @creador')
+
 
    // una pequeña transacción para actualizar la lista de cartas de un mazo
     this.#upsertCartas = db.transaction((id, cartaIds) => {
@@ -86,9 +90,16 @@ export class Mazo {
         return new Mazo(nombre, creador, cartas, id);
     }
     
-    static deleteAllMazos() {
-        this.#deleteAllCartas.run(); //limpiamos las referencias de MazoCartas para que se pueda borrar la tabla mazos
-        this.#deleteAll.run();
+    static deleteAllMazosUsuario(usuario) {
+        const mazos = this.#getMazosOfUsuario.all({ creador: usuario });
+
+        for (const { id } of mazos) {
+            this.#deleteAllMazosOfUsuario2.run({ id });
+        }
+
+        const result = this.#deleteAllMazosOfUsuario.run({ creador: usuario });
+
+        if (result.changes === 0) throw new MazoNoEncontrado(usuario);
     }
 
     static getMazoByCreador(name) {

@@ -116,15 +116,22 @@ export function viewModificarMazo(req, res) {
     });
 }
 
-export function doEliminarMazos(req, res) {
+export function viewEliminarMazos(req, res) {
+    res.render('pagina', {
+        contenido: 'paginas/eliminarMazosUsuario',
+        session: req.session,
+    });
+}
 
-    Mazo.deleteAllMazos();
-   // const mazos = Mazo.obtenerMazos();
+export function doEliminarMazosUsuario(req, res) {
+    const nombre  = req.body.name.trim();
+    Mazo.deleteAllMazosUsuario(nombre);
+
     return res.render('pagina', {
       contenido: 'paginas/administrarMazos',
       session: req.session,
       mazos : normalizarMazos(req.session.esAdmin, req.session.nombre),
-      mensaje: 'Todos los mazos borrados con éxito'
+      mensaje: 'Todos los mazos del usuario borrados con éxito'
     });
  }
  
