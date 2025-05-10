@@ -1,0 +1,16 @@
+BEGIN TRANSACTION;
+INSERT INTO "Usuarios" ("id","username","nombre","rol","password","email") VALUES (35,'admin','Admin','A','$2b$10$kW/tKxiGqS5TGpJ69Au8oO79mzr.Uygp2nhfh9A.ssnQv25N/aFta','admin@gmail.com');
+INSERT INTO "Usuarios" ("id","username","nombre","rol","password","email") VALUES (58,'user','user','U','$2b$10$4yfeYb3H7TN5pvGqKvKvPeheMO0Rj9YX27xYACQzJAxna.AAcMiFi','yuriy@gmail.com');
+INSERT INTO "cartas" ("id","nombre","coleccion","rareza","vida","creador","Imagen") VALUES (127,'Pikachu',0,1,60,NULL,'/img/82242a5c-2c5a-4518-85b4-84587332a39c.png');
+INSERT INTO "cartas" ("id","nombre","coleccion","rareza","vida","creador","Imagen") VALUES (128,'Aerodactyl_ex',0,4,140,NULL,'/img/87ca3cfe-82b3-416e-ad1c-ee65e6d501a6.png');
+INSERT INTO "cartas" ("id","nombre","coleccion","rareza","vida","creador","Imagen") VALUES (129,'Ferrotesta_ex',0,3,220,NULL,'/img/c8343eb9-520e-4079-a22f-03ecaef7a25b.png');
+INSERT INTO "cartas" ("id","nombre","coleccion","rareza","vida","creador","Imagen") VALUES (130,'Magnemite',0,1,60,NULL,'/img/514f06c7-1f9b-4a87-9410-56d01fdf9a71.png');
+INSERT INTO "cartas" ("id","nombre","coleccion","rareza","vida","creador","Imagen") VALUES (131,'Clefairy',0,2,60,NULL,'/img/dfd00217-d438-4534-b965-98c02bc2573b.png');
+INSERT INTO "cartas" ("id","nombre","coleccion","rareza","vida","creador","Imagen") VALUES (132,'Durant_ex',0,2,190,NULL,'/img/9d24b4f8-2e40-4e59-92a4-9b0de7be0dee.png');
+INSERT INTO "cartas" ("id","nombre","coleccion","rareza","vida","creador","Imagen") VALUES (133,'Revavroom_ex',0,4,280,NULL,'/img/99789e56-c176-4507-b0e4-e750715cf568.png');
+INSERT INTO "cartas" ("id","nombre","coleccion","rareza","vida","creador","Imagen") VALUES (134,'Pidgeotto',0,1,90,NULL,'/img/80341dc0-eb69-4dcc-9a49-ae88cd150bb0.png');
+INSERT INTO "cartas" ("id","nombre","coleccion","rareza","vida","creador","Imagen") VALUES (135,'Eiscue_ex',0,4,210,NULL,'/img/d6507417-ef7c-461b-95a0-838447e33774.png');
+INSERT INTO "cartas" ("id","nombre","coleccion","rareza","vida","creador","Imagen") VALUES (136,'Ogerpon_ex',0,4,210,NULL,'/img/59b21469-bb6c-49f0-ab5c-745df66557f9.png');
+INSERT INTO "cartas" ("id","nombre","coleccion","rareza","vida","creador","Imagen") VALUES (137,'Arceus_ex',0,4,140,NULL,'/img/65930941-a54e-4d20-b475-e2ec728f94e7.png');
+INSERT INTO "cartas" ("id","nombre","coleccion","rareza","vida","creador","Imagen") VALUES (138,'Chi-Yu_ex',0,2,190,NULL,'/img/d8ce2067-5455-4d2e-9666-5273e205f68e.png');
+COMMIT;
