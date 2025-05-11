@@ -1,4 +1,7 @@
 <h1>Foro de intercambio de cartas</h1>
 
+<% if (locals.mensaje) { %>
+		<p><strong><%= locals.mensaje %></strong></p>
+	<% } %>
 <a href="/intercambios/solicitarIntercambio" class="btn btn-intercambio">Solicitar intercambio</a>
 

@@ -38,8 +38,8 @@ export class Intercambio {
     }
 
     static comprobarSiExiste(usuarioQueSolicita, cartaQueQuiere){
-        const exists = this.#existe.run({usuarioQueSolicita, cartaQueQuiere});
-        return exists;
+        const { count } = this.#existe.get({ usuarioQueSolicita, cartaQueQuiere });
+        return count > 0;
     }
 
     static guardarIntercambio(usuarioQueSolicita, cartaQueQuiere, cartaQueDa){

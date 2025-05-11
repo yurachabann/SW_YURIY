@@ -3,8 +3,8 @@ import { Carta, EnumColecciones, EnumRarezas } from '../cartas/Cartas.js'
 import { Intercambio } from './Intercambio.js';
 
 export function viewSolicitarIntercambio(req, res) {
-    const cartasObtener = Carta.obtenerCartas();
-    const cartasDar = Carta.obtenerCartas();
+    const cartasObtener = Carta.obtenerCartasAPedir(req.session.nombre);
+    const cartasDar = Carta.getCartasUsuario(req.session.nombre);
     res.render('pagina', {
         contenido: 'paginas/solicitarIntercambio',
         session: req.session,
@@ -20,10 +20,10 @@ export function doSolicitarIntercambio(req, res) {
     const cartaQueDa = req.body.cartasDar.trim();
     const existe = Intercambio.comprobarSiExiste(req.session.nombre,cartaQueQuiere)
 
-    const cartasObtener = Carta.obtenerCartas();
-    const cartasDar = Carta.obtenerCartas();
+    const cartasObtener = Carta.obtenerCartasAPedir(req.session.nombre);
+    const cartasDar = Carta.getCartasUsuario(req.session.nombre);
 
-    if(existe == 0){
+    if(existe){
         return res.render('pagina', {
             contenido: 'paginas/solicitarIntercambio',
             mensaje: 'Ese intercambio ya existe',
@@ -36,11 +36,8 @@ export function doSolicitarIntercambio(req, res) {
     }
     Intercambio.guardarIntercambio(req.session.nombre,cartaQueQuiere, cartaQueDa);
     res.render('pagina', {
+        mensaje: 'Intercambio guardado y disponible para otros usuarios',
         contenido: 'paginas/normal',
         session: req.session,
-        //EnumColecciones,
-       // EnumRarezas,
-       // cartasObtener,
-       // cartasDar
     });
 }

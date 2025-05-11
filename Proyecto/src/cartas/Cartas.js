@@ -43,30 +43,33 @@ export class Carta {
     static #deleteAllCartasOfUsuario = null; //para borrar las cartas de la tabla Cartas
     static #deleteAllCartasOfUsuario2 = null; //para borrar las cartas de la tabla MazoCartas
     static #getCartasOfUsuario = null;
+    static #getTodasCartasMenosUsuario = null; //cartas que el usuario puede pedir en el intercambio. Logicamente no puede
+    //pedir una carta que ya tiene. El proposito del intercambio es pedir cartas que no tienes todavia
 
     static initStatements(db) {
+        
         if (this.#insertSmth !== null) return; 
         this.#insertSmth = db.prepare(
             'INSERT INTO Cartas (nombre, coleccion, rareza, vida, creador, imagen) VALUES (@nombre, @coleccion, @rareza, @vida, @creador, @imagen)'
         );
+
         this.#getAll = db.prepare('SELECT * FROM Cartas');
         this.#exists = db.prepare('SELECT COUNT(*) as count FROM Cartas WHERE nombre = @nombre');
         this.#getByNombre = db.prepare('SELECT * FROM Cartas WHERE nombre = @nombre');
         this.#updateCarta = db.prepare('UPDATE Cartas SET nombre = @nombreNew, coleccion = @coleccion, rareza = @rareza, vida = @vida WHERE nombre = @nombre');
         this.#delete = db.prepare('DELETE FROM Cartas WHERE nombre = @name');
-       // this.#deleteAll = db.prepare('DELETE FROM Cartas');
         this.#getByCreador = db.prepare('SELECT * FROM Cartas WHERE creador = @creador')
         this.#getCreadorByName = db.prepare('SELECT creador FROM Cartas WHERE nombre = @nombre')
         this.#deleteCarta = db.prepare('DELETE FROM MazoCartas WHERE carta_id = @id');
         this.#deleteAllCartasOfUsuario = db.prepare('DELETE FROM Cartas where creador = @creador');
         this.#deleteAllCartasOfUsuario2 = db.prepare('DELETE FROM MazoCartas where carta_id = @id')
-        this.#getCartasOfUsuario = db.prepare('SELECT id FROM Cartas WHERE creador = @creador')
+        this.#getCartasOfUsuario = db.prepare('SELECT * FROM Cartas WHERE creador = @creador')
+        this.#getTodasCartasMenosUsuario = db.prepare('SELECT * FROM Cartas WHERE creador != @creador OR creador IS NULL'); //nulo si fue creado por admins
 
     }
 
     static getCartasUsuario(usuario){
-        const cartas = this.#getCartasOfUsuario({creador : usuario});
-        return cartas;
+        return this.#getCartasOfUsuario.all({creador : usuario});
     }
 
     static deleteByName(name) {
@@ -123,6 +126,10 @@ export class Carta {
 
     static obtenerCartas() {
         return this.#getAll.all();
+    }
+
+    static obtenerCartasAPedir(usuario) { //cartas que el usuario puede pedir en el intercambio, xq no las posee
+        return this.#getTodasCartasMenosUsuario.all({creador : usuario});
     }
 
     static obtenerCartasCreadasPorUsuario(creador) {
