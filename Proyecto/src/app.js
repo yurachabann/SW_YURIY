@@ -9,6 +9,7 @@ import usuariosRouter     from './usuarios/router.js';
 import contenidoRouter    from './contenido/router.js';
 import cartasRouter       from './cartas/router.js';
 import mazosRouter        from './mazos/router.js';
+import intercambiosRouter from './intercambios/router.js';
 
 const __dirname  = path.dirname(fileURLToPath(import.meta.url)); // …/src
 const STATIC_DIR = path.resolve(__dirname, '..', 'static');     // …/static
@@ -41,3 +42,4 @@ app.use('/usuarios',   usuariosRouter);
 app.use('/contenido',  contenidoRouter);
 app.use('/cartas',     cartasRouter);
 app.use('/mazos',      mazosRouter);
+app.use('/intercambios',  intercambiosRouter);

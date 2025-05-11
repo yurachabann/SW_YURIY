@@ -19,9 +19,7 @@ cartasRouter.post('/addCard',
     doModifyCard,
   );
   
-//cartasRouter.post('/addCard', doAddCard);
 cartasRouter.get('/modificarCard', viewModifyCard);
-//cartasRouter.post('/modificarCard', doModifyCard);
 cartasRouter.get('/eliminarCarta', viewEliminateCard);
 cartasRouter.post('/eliminarCarta', doEliminateCard);
 cartasRouter.post('/eliminarCartas', doEliminateCardsUsuario);

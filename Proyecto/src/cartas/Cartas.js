@@ -44,7 +44,7 @@ export class Carta {
     static #deleteAllCartasOfUsuario2 = null; //para borrar las cartas de la tabla MazoCartas
     static #getCartasOfUsuario = null;
 
-    static initConsultas(db) {
+    static initStatements(db) {
         if (this.#insertSmth !== null) return; 
         this.#insertSmth = db.prepare(
             'INSERT INTO Cartas (nombre, coleccion, rareza, vida, creador, imagen) VALUES (@nombre, @coleccion, @rareza, @vida, @creador, @imagen)'
@@ -62,6 +62,11 @@ export class Carta {
         this.#deleteAllCartasOfUsuario2 = db.prepare('DELETE FROM MazoCartas where carta_id = @id')
         this.#getCartasOfUsuario = db.prepare('SELECT id FROM Cartas WHERE creador = @creador')
 
+    }
+
+    static getCartasUsuario(usuario){
+        const cartas = this.#getCartasOfUsuario({creador : usuario});
+        return cartas;
     }
 
     static deleteByName(name) {

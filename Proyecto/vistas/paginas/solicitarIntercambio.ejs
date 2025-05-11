@@ -1,0 +1,69 @@
+<form action="/intercambios/solicitarIntercambio" method="POST" id="form-seleccion">
+  <fieldset>
+    <legend>Solicitar intercambio</legend>
+    <% if (locals.mensaje) { %>
+      <p><strong><%= locals.mensaje %></strong></p>
+    <% } %>
+
+    <!-- GRID DE CARTAS -->
+    <div class="form-group seleccion-grupo">
+  <label>Carta que quiere obtener (selecciona 1):</label>
+  <p class="contador form-hint">Seleccionada: 0/1</p>
+
+  <div class="cartas-grid">
+    <% cartasObtener.forEach(carta => { %>
+      <label class="carta-item-seleccionar">
+        <input
+          type="checkbox"
+          name="cartasObtener"
+          value="<%= carta.id %>"
+        >
+        <img
+              src="<%= carta.Imagen || 'https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg' %>"
+              alt="<%= carta.nombre %>"
+            >
+            <div class="carta-info">
+              <h4><%= carta.nombre %></h4>
+              <p>Colección: <%= EnumColecciones[carta.coleccion] || 'N/D' %></p>
+              <p>Rareza: <%= EnumRarezas[carta.rareza] || 'N/D' %></p>
+              <p>Vida: <%= carta.vida %></p>
+            </div>
+      </label>
+    <% }) %>
+  </div>
+</div>
+
+<div class="form-group seleccion-grupo">
+  <label>Carta que quiere dar a cambio (selecciona 1):</label>
+  <p class="contador form-hint">Seleccionada: 0/1</p>
+
+  <div class="cartas-grid">
+    <% cartasDar.forEach(carta => { %>
+      <label class="carta-item-seleccionar">
+        <input
+          type="checkbox"
+          name="cartasDar"
+          value="<%= carta.id %>"
+        >
+        <img
+              src="<%= carta.Imagen || 'https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg' %>"
+              alt="<%= carta.nombre %>"
+            >
+            <div class="carta-info">
+              <h4><%= carta.nombre %></h4>
+              <p>Colección: <%= EnumColecciones[carta.coleccion] || 'N/D' %></p>
+              <p>Rareza: <%= EnumRarezas[carta.rareza] || 'N/D' %></p>
+              <p>Vida: <%= carta.vida %></p>
+            </div>
+      </label>
+    <% }) %>
+  </div>
+</div>
+
+    <div class="form-group">
+      <button type="submit">solicitarIntercambio</button>
+    </div>
+  </fieldset>
+</form>
+
+<script src="/js/seleccionIntercambio.js" defer></script>
