@@ -1,9 +1,9 @@
-<form action="/cartas/addCard" method="POST" enctype="multipart/form-data">
+<form action="/cartas/createCard" method="POST" enctype="multipart/form-data">
     <fieldset>
       <% if (locals.mensaje) { %>
         <p><strong><%= locals.mensaje %></strong></p>
       <% } %>
-      <legend>Añadir carta</legend>
+      <legend>Crear una nueva carta</legend>
       
       <div>
         <label for="nombre">Nombre:</label>
@@ -36,7 +36,7 @@
       </div>
       
       <div>
-        <button type="submit">Agregar Carta</button>
+        <button type="submit">Crear Carta</button>
       </div>
     </fieldset>
   </form>

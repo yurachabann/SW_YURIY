@@ -1,9 +1,9 @@
 import { body } from 'express-validator';
 import { Carta, EnumColecciones, EnumRarezas } from './Cartas.js'
 
-export function viewAddCard(req, res) {
+export function viewCreateCard(req, res) {
     res.render('pagina', {
-        contenido: 'paginas/añadirCarta',
+        contenido: 'paginas/crearCarta',
         session: req.session
     });
 }
@@ -48,6 +48,13 @@ export function administrarCartas(req, res) {
 export function viewEliminateCard(req, res) {
     res.render('pagina', {
         contenido: 'paginas/eliminarCarta',
+        session: req.session
+    });
+}
+
+export function viewAddCardInventario(req, res) {
+    res.render('pagina', {
+        contenido: 'paginas/añadirAlInventario',
         session: req.session
     });
 }
@@ -132,7 +139,7 @@ export function doEliminateCardsUsuario(req,res){
 }
 
 
-export function doAddCard(req,res){
+export function doCreateCard(req,res){
     const nombre = req.body.nombre.trim();
     const rareza = req.body.rareza.trim();
     const vida = req.body.vida.trim();
@@ -152,7 +159,7 @@ export function doAddCard(req,res){
         const cartas = Carta.obtenerCartas();
         return res.render('pagina', {
             contenido: 'paginas/administrarCartas',
-            mensaje: 'Carta añadida con éxito',
+            mensaje: 'Carta creada con éxito',
             cartas,
             session: req.session,
             EnumColecciones,
@@ -164,7 +171,7 @@ export function doAddCard(req,res){
         const cartas = Carta.obtenerCartasCreadasPorUsuario(req.session.nombre);
         return res.render('pagina', {
             contenido: 'paginas/gestionarCartas',
-            mensaje: 'Carta añadida con éxito',
+            mensaje: 'Carta creada con éxito',
             cartas,
             session: req.session,
             EnumColecciones,

@@ -29,26 +29,10 @@ export function viewContenidoIntercambios(req, res) {
     });
   }
 
-  const intercambiosRaw = Intercambio.obtenerIntercambios();
-  console.log('INTERCAMBIOS RAW:', intercambiosRaw);
-
-  const intercambiosCartas = intercambiosRaw.map(ix => {
-    const idQuiere = ix.CartaQueQuiere;
-    const idDa     = ix.CartaQueDa;
-
-    return {
-      usuarioQueSolicita: ix.UsuarioQueSolicita,
-      cartaQueQuiere:     idQuiere,
-      imagenQuiere:       Carta.getImagenPorId(idQuiere), 
-      cartaQueDa:         idDa,
-      imagenDa:           Carta.getImagenPorId(idDa)
-    };
-  });
-
   return res.render('pagina', {
     contenido:    'paginas/intercambios',
     session:      req.session,
-    intercambiosCartas
+    intercambiosCartas: normalizarIntercambios()
   });
 }
 
@@ -72,11 +56,79 @@ export function doSolicitarIntercambio(req, res) {
             cartasDar
           });
     }
-    Intercambio.guardarIntercambio(req.session.nombre,cartaQueQuiere, cartaQueDa);
+    const nuevo = new Intercambio(req.session.nombre, cartaQueQuiere, cartaQueDa);
+    Intercambio.guardarIntercambio(nuevo);
+
     res.render('pagina', {
         mensaje: 'Intercambio guardado y disponible para otros usuarios',
-        contenido: 'paginas/normal',
+        contenido: 'paginas/intercambios',
         session: req.session,
+        intercambiosCartas: normalizarIntercambios()
     });
 }
 
+export function doRealizarIntercambio(req, res) {
+    const { cartaQueQuiere, cartaDa } = req.body;
+    
+    const cartaQuiere = Carta.getCardPorId(cartaQueQuiere);
+    const cartaDar   = Carta.getCardPorId(cartaDa);
+
+    if (!cartaQuiere) {
+     console.error('ERROR: no se encontró la carta que quiere con id=', cartaQueQuiere);
+    }
+    if (!cartaDar) {
+      console.error('ERROR: no se encontró la carta que da con id=', cartaDa);
+    }
+
+    /*
+  if (cartaQuiere && cartaDar) {
+    console.log('--- Realizando Intercambio ---');
+    console.log('Carta que quiere el usuario:', {
+      id:        cartaQuiere.id,
+      nombre:    cartaQuiere.nombre,
+      coleccion: cartaQuiere.coleccion,
+      rareza:    cartaQuiere.rareza,
+      vida:      cartaQuiere.vida,
+      creador:   cartaQuiere.creador,
+      imagen:    cartaQuiere.Imagen
+    });
+    console.log('Carta que da el usuario:', {
+      id:        cartaDar.id,
+      nombre:    cartaDar.nombre,
+      coleccion: cartaDar.coleccion,
+      rareza:    cartaDar.rareza,
+      vida:      cartaDar.vida,
+      creador:   cartaDar.creador,
+      imagen:    cartaDar.Imagen
+    });
+    console.log('------------------------------');
+  }*/
+
+   res.render('pagina', {
+        mensaje: 'Intercambio realizado exitosamente. Revisa tu nueva carta en el inventario!',
+        contenido: 'paginas/intercambios',
+        session: req.session,
+        intercambiosCartas: normalizarIntercambios()
+    });
+
+}
+
+function normalizarIntercambios(){
+  const intercambiosRaw = Intercambio.obtenerIntercambios();
+   console.log('INTERCAMBIOS RAW:', intercambiosRaw);
+
+    const intercambiosCartas = intercambiosRaw.map(ix => {
+    const idQuiere = ix.CartaQueQuiere;
+    const idDa     = ix.CartaQueDa;
+
+    return {
+      usuarioQueSolicita: ix.UsuarioQueSolicita,
+      cartaQueQuiere:     idQuiere,
+      imagenQuiere:       Carta.getImagenPorId(idQuiere), 
+      cartaDa:         idDa,
+      imagenDa:           Carta.getImagenPorId(idDa)
+    };
+  });
+
+  return intercambiosCartas;
+}

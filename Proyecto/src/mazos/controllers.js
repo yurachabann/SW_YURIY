@@ -53,7 +53,7 @@ export function preModificarMazo(req, res) {
 
 export function doAddMazo(req, res) {
     const username = req.session.nombre;
-    console.log("usuairo " + username);
+    console.log("usuario" + username);
     const nombre = req.body.nombre.trim();
     const rawCartas = req.body['cartas[]'];
  
@@ -67,7 +67,7 @@ export function doAddMazo(req, res) {
         : [rawCartas];
 
         if (cartasSeleccionadas.length > 10 || cartasSeleccionadas.length < 10) {
-            throw new Error("Necesitas 10 cartas maquina.");
+            throw new Error("Necesitas 10 cartas.");
         }
 
         if (Mazo.mazoExiste(nombre)) {

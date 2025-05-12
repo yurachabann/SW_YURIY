@@ -6,7 +6,7 @@
 
 <div class="intercambio-header">
   <h1>Foro de intercambio de cartas</h1>
-  <p>El foro es totalmente anonimo. Solo cartas, nada sobrante.</p>
+  <p>El foro es totalmente anónimo. Solo cartas, nada sobrante.</p>
   <a href="/intercambios/solicitarIntercambio" class="btn btn-intercambio">
     Solicitar intercambio
   </a>
@@ -20,27 +20,29 @@
       <div class="intercambio-item">
 
         <div class="imagenes-intercambio">
-          <!-- Imagen que quiere -->
           <div class="imagen-contenedor">
             <span class="label">Imagen que quiere un usuario:</span>
             <img src="<%= ix.imagenQuiere %>" alt="<%= ix.cartaQueQuiere %>">
           </div>
 
-          <!-- Flecha -->
           <div class="imagen-contenedor">
             <span class="label">&nbsp;</span>
             <img src="/img/intercambio.png" alt="→">
           </div>
 
-          <!-- Imagen que ofrece -->
           <div class="imagen-contenedor">
             <span class="label">Imagen que ofrece:</span>
             <img src="<%= ix.imagenDa %>" alt="<%= ix.cartaDa %>">
           </div>
         </div>
 
-        <form action="/intercambios/realizar/<%= ix.id %>" method="POST">
-          <button type="submit" class="btn btn-realizar">Realizar intercambio</button>
+        <form action="/intercambios/realizarIntercambio" method="POST">
+          <!-- enviamos los dos IDs como inputs ocultos -->
+          <input type="hidden" name="cartaQueQuiere" value="<%= ix.cartaQueQuiere %>">
+          <input type="hidden" name="cartaDa"         value="<%= ix.cartaDa %>">
+          <button type="submit" class="btn btn-realizar">
+            Realizar intercambio
+          </button>
         </form>
       </div>
     <% }) %>

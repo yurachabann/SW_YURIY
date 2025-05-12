@@ -266,19 +266,58 @@ ul {
 	color: white;
   }
   
-  /* Botón Añadir */
-  .btn-agregar {
-	background-color: #28a745; /* Verde */
+   .btn-coleccion-estandar {
+	background-color: #2002c9;
   }
   
-  .btn-agregar:hover {
+  .btn-coleccion-estandar:hover {
+	background-color: #1242e0;
+	transform: translateY(-2px);
+  }
+
+
+    .btn-coleccion-custom {
+	background-color: #04a0a5;
+  }
+  
+  .btn-coleccion-custom:hover {
+	background-color: #078fb1;
+	transform: translateY(-2px);
+  }
+
+
+    .btn-coleccion-todos {
+	background-color: #02b653;
+  }
+  
+  .btn-coleccion-todos:hover {
+	background-color: #04c45a;
+	transform: translateY(-2px);
+  }
+
+  /* Botón Crear */
+  .btn-crear {
+	background-color: #28a745;
+  }
+  
+  .btn-crear:hover {
 	background-color: #218838;
 	transform: translateY(-2px);
   }
   
+   /* Botón Añadir */
+  .btn-add {
+	background-color: #0313f8;
+  }
+  
+  .btn-add:hover {
+	background-color: #2277f7;
+	transform: translateY(-2px);
+  }
+
   /* Botón Modificar */
   .btn-modificar {
-	background-color: #ffc107; /* Amarillo */
+	background-color: #ffc107;
 	color: black;
   }
   

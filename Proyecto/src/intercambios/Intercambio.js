@@ -42,27 +42,9 @@ export class Intercambio {
         return count > 0;
     }
 
-    static guardarIntercambio(usuarioQueSolicita, cartaQueQuiere, cartaQueDa){
-        this.#nuevoIntercambio.run({usuarioQueSolicita,cartaQueQuiere,cartaQueDa});
+    static guardarIntercambio(intercambio){
+        return this.#insert(intercambio);
     }
-    /*
-    static obtenerCartasCreadasPorUsuario(creador) {
-        return this.#getByCreador.all({ creador });
-    }
-    */
-
-    /*
-    static deleteAllCartasUsuario(usuario) {
-        const mazos = this.#getCartasOfUsuario.all({ creador: usuario });
-        
-        for (const { id } of mazos) {
-            this.#deleteAllCartasOfUsuario2.run({ id });
-        }
-        
-        const result = this.#deleteAllCartasOfUsuario.run({ creador: usuario });
-        
-        if (result.changes === 0) throw new CartaNoEncontrada(usuario);
-    }*/
 
     static #insert(intercambio) {
             let result = null;
@@ -70,9 +52,10 @@ export class Intercambio {
                 const usuarioQueSolicita = intercambio.usuarioQueSolicita;
                 const cartaQueQuiere = intercambio.cartaQueQuiere;
                 const cartaQueDa = intercambio.cartaQueDa;
+                
                 const datos = {usuarioQueSolicita, cartaQueQuiere, cartaQueDa};
     
-                result = this.#insert.run(datos);
+                result = this.#nuevoIntercambio.run(datos);
     
                 intercambio.#id = result.lastInsertRowid;
             } catch(e) { // SqliteError: https://github.com/WiseLibs/better-sqlite3/blob/master/docs/api.md#class-sqliteerror
@@ -83,69 +66,6 @@ export class Intercambio {
             }
             return intercambio;
         }
-    
-        /*
-        static #update(carta, nombreNew) {
-            const nombre = carta.nombre;
-            const coleccion = carta.coleccion;
-            const rareza = carta.rareza;
-            const vida = carta.vida;
-
-            const datos = { nombre, nombreNew, coleccion, rareza, vida, id: carta.id };
-    
-    
-            const result = this.#updateCarta.run(datos);
-            if (result.changes === 0) throw new CartaNoEncontrada(nombre);
-    
-            return carta;
-        }*/
-    
-
-    persist() {
-        /*if (this.#id === null) return Carta.#insert(this);*/
-        /*return Carta.#update(this);*/
-        return Intercambio.#insert(this);
-    }
-
-    /*
-    static getCartaByName(nombre) {
-        const carta = this.#getByNombre.get({ nombre });
-        console.log("Fetching card with nombre:", nombre); 
-        if (carta === undefined) throw new CartaNoEncontrada(nombre);
-    
-        const { nombre: cartaNombre, coleccion, rareza, vida, id } = carta;
-    
-        return new Carta(cartaNombre, coleccion, rareza, vida, id);
-    }*/
-    
-        /*
-    static getCreadorByNombre(nombre) {
-        const row = this.#getCreadorByName.get({ nombre });
-        if (!row) throw new CartaNoEncontrada(nombre);
-      
-        return row.creador;
-    }*/
-
-        /*
-    static actualizarCampos(nombre, nombre2, rareza, vida) {
-        let carta = this.getCartaByName(nombre);
-     
-         if (nombre2.trim() !== "") {
-             //carta.nombre = nombre2;
-         }
-     
-         if (rareza.trim() !== "") {
-             carta.rareza = rareza;
-         }
-     
-         if (vida.trim() !== "") {
-             carta.vida = vida;
-         }
-     
-         Carta.#update(carta, nombre2);
-     }
-         */
-
 }
 
 export class IntercambioNoEncontrado extends Error {

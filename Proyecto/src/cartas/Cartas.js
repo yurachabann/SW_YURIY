@@ -46,10 +46,11 @@ export class Carta {
     static #getTodasCartasMenosUsuario = null; //cartas que el usuario puede pedir en el intercambio. Logicamente no puede
     //pedir una carta que ya tiene. El proposito del intercambio es pedir cartas que no tienes todavia
     static #getImagenPorId = null;
+    static #getCardPorId = null;
 
     static initStatements(db) {
         
-        if (this.#insertSmth !== null) return; 
+        if (this.#insertSmth !== null) return;    
         this.#insertSmth = db.prepare(
             'INSERT INTO Cartas (nombre, coleccion, rareza, vida, creador, imagen) VALUES (@nombre, @coleccion, @rareza, @vida, @creador, @imagen)'
         );
@@ -67,11 +68,17 @@ export class Carta {
         this.#getCartasOfUsuario = db.prepare('SELECT * FROM Cartas WHERE creador = @creador')
         this.#getTodasCartasMenosUsuario = db.prepare('SELECT * FROM Cartas WHERE creador != @creador OR creador IS NULL'); //nulo si fue creado por admins
         this.#getImagenPorId = db.prepare('SELECT Imagen FROM Cartas WHERE id = @id');
+        this.#getCardPorId = db.prepare('SELECT * FROM Cartas WHERE id = @id');
     }
 
     static getImagenPorId(id){
         const row = this.#getImagenPorId.get({id});
         return row ? row.Imagen : null;
+    }
+
+    static getCardPorId(id){
+        const carta = this.#getCardPorId.get({id});
+        return carta;
     }
 
     static getCartasUsuario(usuario){

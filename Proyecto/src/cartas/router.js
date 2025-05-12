@@ -1,17 +1,17 @@
 import express from 'express';
-import { viewAddCard, doAddCard, viewModifyCard, doModifyCard, viewEliminateCard, doEliminateCard, doEliminateCardsUsuario, administrarCartas, viewGestionarCartas, preModificarCard,
-    modificarCartaConRelleno, viewEliminateCardsUsuario
+import { viewCreateCard, doCreateCard, viewModifyCard, doModifyCard, viewEliminateCard, doEliminateCard, doEliminateCardsUsuario, administrarCartas, viewGestionarCartas, preModificarCard,
+    modificarCartaConRelleno, viewEliminateCardsUsuario, viewAddCardInventario
 
 } from './controllers.js';
 
 import { uploadImg } from '../../static/js/upload.js';
 const cartasRouter = express.Router();
 
-cartasRouter.get('/addCard', viewAddCard);
+cartasRouter.get('/createCard', viewCreateCard);
 
-cartasRouter.post('/addCard',
+cartasRouter.post('/createCard',
     uploadImg.single('imagen'),
-    doAddCard,
+    doCreateCard,
   );
   
   cartasRouter.post('/modificarCard',
@@ -20,6 +20,7 @@ cartasRouter.post('/addCard',
   );
   
 cartasRouter.get('/modificarCard', viewModifyCard);
+cartasRouter.get('/addCardInventario', viewAddCardInventario);
 cartasRouter.get('/eliminarCarta', viewEliminateCard);
 cartasRouter.post('/eliminarCarta', doEliminateCard);
 cartasRouter.post('/eliminarCartas', doEliminateCardsUsuario);
