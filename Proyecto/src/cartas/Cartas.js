@@ -45,6 +45,7 @@ export class Carta {
     static #getCartasOfUsuario = null;
     static #getTodasCartasMenosUsuario = null; //cartas que el usuario puede pedir en el intercambio. Logicamente no puede
     //pedir una carta que ya tiene. El proposito del intercambio es pedir cartas que no tienes todavia
+    static #getImagenPorId = null;
 
     static initStatements(db) {
         
@@ -65,7 +66,12 @@ export class Carta {
         this.#deleteAllCartasOfUsuario2 = db.prepare('DELETE FROM MazoCartas where carta_id = @id')
         this.#getCartasOfUsuario = db.prepare('SELECT * FROM Cartas WHERE creador = @creador')
         this.#getTodasCartasMenosUsuario = db.prepare('SELECT * FROM Cartas WHERE creador != @creador OR creador IS NULL'); //nulo si fue creado por admins
+        this.#getImagenPorId = db.prepare('SELECT Imagen FROM Cartas WHERE id = @id');
+    }
 
+    static getImagenPorId(id){
+        const row = this.#getImagenPorId.get({id});
+        return row ? row.Imagen : null;
     }
 
     static getCartasUsuario(usuario){

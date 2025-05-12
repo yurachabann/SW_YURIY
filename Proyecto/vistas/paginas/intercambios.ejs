@@ -1,7 +1,48 @@
-<h1>Foro de intercambio de cartas</h1>
+<link rel="stylesheet" href="/css/intercambios.css">
 
 <% if (locals.mensaje) { %>
-		<p><strong><%= locals.mensaje %></strong></p>
-	<% } %>
-<a href="/intercambios/solicitarIntercambio" class="btn btn-intercambio">Solicitar intercambio</a>
+  <p><strong><%= locals.mensaje %></strong></p>
+<% } %>
 
+<div class="intercambio-header">
+  <h1>Foro de intercambio de cartas</h1>
+  <p>El foro es totalmente anonimo. Solo cartas, nada sobrante.</p>
+  <a href="/intercambios/solicitarIntercambio" class="btn btn-intercambio">
+    Solicitar intercambio
+  </a>
+</div>
+
+<% if (!intercambiosCartas || intercambiosCartas.length === 0) { %>
+  <p>No hay intercambios disponibles en este momento.</p>
+<% } else { %>
+  <div class="lista-intercambios">
+    <% intercambiosCartas.forEach(ix => { %>
+      <div class="intercambio-item">
+
+        <div class="imagenes-intercambio">
+          <!-- Imagen que quiere -->
+          <div class="imagen-contenedor">
+            <span class="label">Imagen que quiere un usuario:</span>
+            <img src="<%= ix.imagenQuiere %>" alt="<%= ix.cartaQueQuiere %>">
+          </div>
+
+          <!-- Flecha -->
+          <div class="imagen-contenedor">
+            <span class="label">&nbsp;</span>
+            <img src="/img/intercambio.png" alt="→">
+          </div>
+
+          <!-- Imagen que ofrece -->
+          <div class="imagen-contenedor">
+            <span class="label">Imagen que ofrece:</span>
+            <img src="<%= ix.imagenDa %>" alt="<%= ix.cartaDa %>">
+          </div>
+        </div>
+
+        <form action="/intercambios/realizar/<%= ix.id %>" method="POST">
+          <button type="submit" class="btn btn-realizar">Realizar intercambio</button>
+        </form>
+      </div>
+    <% }) %>
+  </div>
+<% } %>

@@ -335,26 +335,6 @@ ul {
 	transform: translateY(-2px);
   }
 
-.btn-intercambio{
-  padding:.6rem 1.6rem;
-  font:600 1rem system-ui;
-  color:#fff;
-  border:none;
-  border-radius:.5rem;
-  cursor:pointer;
-
-  background:linear-gradient(
-              135deg,
-              #006eff 0 49%,
-              #ff0033 51% 100%
-            );
-
-  transition:
-    transform .15s ease,
-    box-shadow .15s ease,
-    filter .15s ease;
-}
-
 .btn-intercambio:hover,
 .btn-intercambio:focus-visible{
   transform:translateY(-2px);
