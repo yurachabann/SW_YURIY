@@ -22,3 +22,11 @@
     width: 110px;
     height: 110px;
   }
+
+  .nombre-verde {
+  color: green;
+}
+
+.nombre-rojo {
+  color: red;
+}

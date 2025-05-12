@@ -15,6 +15,25 @@ export function viewSolicitarIntercambio(req, res) {
     });
 }
 
+export function viewContenidoIntercambios(req, res) {
+    if(req.session.login == undefined) {
+       return res.render('pagina', {
+            contenido: 'paginas/noPermisosLogin',
+            session: req.session,
+          });
+    }
+    else if (req.session != null && req.session.login && req.session.esAdmin) {
+           return res.render('pagina', {
+            contenido: 'paginas/noPermisosUsuario',
+            session: req.session,
+          });
+    }
+       return res.render('pagina', {
+            contenido: 'paginas/intercambios',
+            session: req.session,
+          });
+}
+
 export function doSolicitarIntercambio(req, res) {
     const cartaQueQuiere = req.body.cartasObtener.trim();
     const cartaQueDa = req.body.cartasDar.trim();
@@ -41,3 +60,4 @@ export function doSolicitarIntercambio(req, res) {
         session: req.session,
     });
 }
+
