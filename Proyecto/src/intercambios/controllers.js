@@ -5,13 +5,16 @@ import { Intercambio } from './Intercambio.js';
 export function viewSolicitarIntercambio(req, res) {
     const cartasObtener = Carta.obtenerCartasAPedir(req.session.nombre);
     const cartasDar = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
+    console.log('cartasObtener (con id):', cartasObtener.map(c => ({ nombre: c.nombre, id: c.id })));
+  console.log('cartasDar     (con id):',     cartasDar.map(c => ({ nombre: c.nombre, id: c.id })));
+
     res.render('pagina', {
         contenido: 'paginas/solicitarIntercambio',
         session: req.session,
         EnumColecciones,
         EnumRarezas,
-        cartasObtener,
-        cartasDar
+        cartasDar,
+        cartasObtener
     });
 }
 
@@ -38,12 +41,13 @@ export function viewContenidoIntercambios(req, res) {
 
 
 export function doSolicitarIntercambio(req, res) {
-    const cartaQueQuiere = req.body.cartasObtener.trim();
-    const cartaQueDa = req.body.cartasDar.trim();
+    console.log('>> req.body:', req.body);
+    const cartaQueQuiere = req.body.cartaObtener.trim();
+    const cartaQueDa = req.body.cartaDar.trim();
     const existe = Intercambio.comprobarSiExiste(req.session.nombre,cartaQueQuiere)
 
     const cartasObtener = Carta.obtenerCartasAPedir(req.session.nombre);
-    const cartasDar = Carta.getCartasUsuario(req.session.nombre);
+    const cartasDar = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
 
     if(existe){
         return res.render('pagina', {
@@ -57,7 +61,9 @@ export function doSolicitarIntercambio(req, res) {
           });
     }
     const nuevo = new Intercambio(req.session.nombre, cartaQueQuiere, cartaQueDa);
-    Intercambio.guardarIntercambio(nuevo);
+const guardado = Intercambio.guardarIntercambio(nuevo);
+console.log('→ Intercambio guardado:', guardado);
+
 
     res.render('pagina', {
         mensaje: 'Intercambio guardado y disponible para otros usuarios',
@@ -68,7 +74,7 @@ export function doSolicitarIntercambio(req, res) {
 }
 
 export function doRealizarIntercambio(req, res) {
-    const { cartaQueQuiere, cartaDa } = req.body;
+    const { usuarioQueSolicita, cartaQueQuiere, cartaDa } = req.body;
     
     const cartaQuiere = Carta.getCardPorId(cartaQueQuiere);
     const cartaDar   = Carta.getCardPorId(cartaDa);
@@ -80,6 +86,7 @@ export function doRealizarIntercambio(req, res) {
       console.error('ERROR: no se encontró la carta que da con id=', cartaDa);
     }
 
+    Carta.intercambiar(usuarioQueSolicita, req.session.nombre, cartaQueQuiere,cartaDa);
     /*
   if (cartaQuiere && cartaDar) {
     console.log('--- Realizando Intercambio ---');
@@ -114,19 +121,29 @@ export function doRealizarIntercambio(req, res) {
 }
 
 function normalizarIntercambios(){
+  console.log('INTERCAMBIOS RAW tras INSERT:', Intercambio.obtenerIntercambios());
   const intercambiosRaw = Intercambio.obtenerIntercambios();
-   console.log('INTERCAMBIOS RAW:', intercambiosRaw);
+  console.log('INTERCAMBIOS RAW:', intercambiosRaw);
 
-    const intercambiosCartas = intercambiosRaw.map(ix => {
-    const idQuiere = ix.CartaQueQuiere;
-    const idDa     = ix.CartaQueDa;
+  const intercambiosCartas = intercambiosRaw.map(ix => {
+    const usuario   = ix.UsuarioQueSolicita;
+    const idQuiere  = ix.CartaQueQuiere;
+    const idDa      = ix.CartaQueDa;
+    
+    console.log(`Procesando intercambio: usuario=${usuario}, idQuiere=${idQuiere}, idDa=${idDa}`);
+
+    const imagenQuiere = Carta.getImagenPorId(idQuiere);
+    const imagenDa     = Carta.getImagenPorId(idDa);
+
+    console.log(`→ imagenQuiere(${idQuiere}) =`, imagenQuiere);
+    console.log(`→ imagenDa(${idDa})     =`, imagenDa);
 
     return {
-      usuarioQueSolicita: ix.UsuarioQueSolicita,
+      usuarioQueSolicita: usuario,
       cartaQueQuiere:     idQuiere,
-      imagenQuiere:       Carta.getImagenPorId(idQuiere), 
-      cartaDa:         idDa,
-      imagenDa:           Carta.getImagenPorId(idDa)
+      imagenQuiere:       imagenQuiere,
+      cartaDa:            idDa,
+      imagenDa:           imagenDa
     };
   });
 

@@ -38,6 +38,7 @@
 
         <form action="/intercambios/realizarIntercambio" method="POST">
           <!-- enviamos los dos IDs como inputs ocultos -->
+          <input type="hidden" name="usuarioQueSolicita" value="<%= ix.usuarioQueSolicita %>">
           <input type="hidden" name="cartaQueQuiere" value="<%= ix.cartaQueQuiere %>">
           <input type="hidden" name="cartaDa"         value="<%= ix.cartaDa %>">
           <button type="submit" class="btn btn-realizar">
@@ -48,3 +49,5 @@
     <% }) %>
   </div>
 <% } %>
+
+<script src="/js/seleccionIntercambio.js" defer></script>

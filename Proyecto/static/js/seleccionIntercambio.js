@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
   const MAX = 1;
 
@@ -7,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateUI() {
       const seleccionadas = [...checkboxes].filter(cb => cb.checked).length;
+      console.log('Grupo:', grupo, '→ total checkboxes:', checkboxes.length, 'marcados:', seleccionadas);
       contador.textContent = `Seleccionadas: ${seleccionadas}/${MAX}`;
 
       checkboxes.forEach(cb => {

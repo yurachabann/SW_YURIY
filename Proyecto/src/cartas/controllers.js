@@ -153,7 +153,7 @@ export function doCreateCard(req,res){
       });
     }
 
-        const imagen = `/img/${req.file.filename}`;  // <-- ruta pública
+        const imagen = `/img/${req.file.filename}`;
         const vidaNum = Number(vida);
         const rarezaNum = Number(rareza);
 

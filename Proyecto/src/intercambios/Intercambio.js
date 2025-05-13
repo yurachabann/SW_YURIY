@@ -58,7 +58,7 @@ export class Intercambio {
                 result = this.#nuevoIntercambio.run(datos);
     
                 intercambio.#id = result.lastInsertRowid;
-            } catch(e) { // SqliteError: https://github.com/WiseLibs/better-sqlite3/blob/master/docs/api.md#class-sqliteerror
+            } catch(e) {
                 if (e.code === 'SQLITE_CONSTRAINT') {
                     throw new IntercambioYaExiste(usuarioQueSolicita,cartaQueQuiere);
                 }

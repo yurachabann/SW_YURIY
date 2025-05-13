@@ -20,7 +20,7 @@ export const EnumRarezas = {
 
 export class Carta {
    
-    #id;
+    id;
     nombre;
     coleccion;
     rareza;
@@ -33,7 +33,7 @@ export class Carta {
         this.coleccion = coleccion;
         this.rareza = rareza;
         this.vida = vida;
-        this.#id = id;
+        this.id = id;
         this.#creador = creador;
         this.Imagen = Imagen;
     }
@@ -49,6 +49,7 @@ export class Carta {
     static #deleteCarta = null;
     static #deleteAllCartasOfUsuario = null; //para borrar las cartas de la tabla Cartas
     static #deleteAllCartasOfUsuario2 = null; //para borrar las cartas de la tabla MazoCartas
+     static #deleteAllCartasOfUsuario3 = null; //para borrar las cartas de la tabla UsuarioCartas
     static #getTodasCartasMenosUsuario = null; //cartas que el usuario puede pedir en el intercambio. Logicamente no puede
     //pedir una carta que ya tiene. El proposito del intercambio es pedir cartas que no tienes todavia
     static #getImagenPorId = null;
@@ -73,18 +74,35 @@ export class Carta {
         this.#delete = db.prepare('DELETE FROM Cartas WHERE nombre = @name');
         this.#getByCreador = db.prepare('SELECT * FROM Cartas WHERE creador = @creador')
         this.#getCreadorByName = db.prepare('SELECT creador FROM Cartas WHERE nombre = @nombre')
-        this.#deleteCarta = db.prepare('DELETE FROM MazoCartas WHERE carta_id = @id');
         this.#deleteAllCartasOfUsuario = db.prepare('DELETE FROM Cartas where creador = @creador');
-        this.#deleteAllCartasOfUsuario2 = db.prepare('DELETE FROM MazoCartas where carta_id = @id')
         //this.#getCartasOfUsuario = db.prepare('SELECT * FROM Cartas WHERE creador = @creador')
         this.#getImagenPorId = db.prepare('SELECT Imagen FROM Cartas WHERE id = @id');
         this.#getCardPorId = db.prepare('SELECT * FROM Cartas WHERE id = @id');
+
+        //mazoCartas
+        this.#deleteAllCartasOfUsuario2 = db.prepare('DELETE FROM MazoCartas where carta_id = @id')
+        this.#deleteCarta = db.prepare('DELETE FROM MazoCartas WHERE carta_id = @id');
 
         //sentencias de la tabla de pertenencia
         this.#insertarCarta = db.prepare(`INSERT INTO UsuariosCartas (usuario, carta_id) VALUES (@usuario, @carta_id)`);
         this.#borrarCartaUsuario = db.prepare('DELETE FROM UsuariosCartas WHERE usuario = @usuario AND carta_id = @carta_id');
         this.#getCartasOfUsuario = db.prepare('SELECT carta_id FROM UsuariosCartas WHERE usuario = @usuario');
         this.#getTodasCartasMenosUsuario = db.prepare('SELECT * FROM UsuariosCartas WHERE usuario != @usuario');
+        this.#deleteAllCartasOfUsuario3 = db.prepare('DELETE FROM UsuariosCartas where usuario = @usuario');
+    }
+
+    static intercambiar(usuarioSolicita, usuarioAcepta, cartaObtiene, cartaDa){ //probablemente el metodo mas lioso. cartaObtiene se refiere a la carta que obtiene el usuario que
+        //solicitó el intercambio. cartaDa lo mismo
+        try{
+         this.#borrarCartaUsuario.run({ usuario: usuarioSolicita, carta_id: cartaDa }); //borramos de la tabla usuarioCartas la carta (de la BBDD no, ya que solo se intercambia)
+         this.#insertarCarta.run({ usuario: usuarioAcepta, carta_id: cartaDa }); //el otro usuario obtiene esa carta
+         this.#borrarCartaUsuario.run({ usuario: usuarioAcepta, carta_id: cartaObtiene });
+         this.#insertarCarta.run({ usuario: usuarioSolicita, carta_id: cartaDa });
+        }
+        catch(err){
+            console.error(`Error intercambiando cartas entre ${usuarioSolicita} y ${usuarioAcepta}:`, err);
+            throw new Error(`No se pudo completar el intercambio: ${err.message}`);
+        }
     }
 
     static getImagenPorId(id){
@@ -99,7 +117,7 @@ export class Carta {
 
 static deleteByName(name, usuario) {
     const carta = this.getCartaByName(name);
-    const id = carta.#id;
+    const id = carta.id;
     const imagenDb = carta.Imagen;
 
     const imagenPorDefecto = 'https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg';
@@ -150,7 +168,22 @@ static deleteByName(name, usuario) {
     }
 
     static obtenerCartasAPedir(usuario) { //cartas que el usuario puede pedir en el intercambio, xq no las posee
-        return this.#getTodasCartasMenosUsuario.all({usuario : usuario});
+        const cartas_ids = this.#getTodasCartasMenosUsuario.all({usuario : usuario});
+        const cartas = cartas_ids.map(row => {  
+        const carta = this.getCardPorId(row.carta_id);
+        // carta es un objeto { id, nombre, coleccion, rareza, vida, creador, imagen }
+            console.log(`ID de la carta a procesar: ${carta.id}`);
+        return new Carta(
+            carta.nombre,
+            carta.coleccion,
+            carta.rareza,
+            carta.vida,
+            carta.id,
+            carta.creador,
+            carta.Imagen
+            );
+        });
+        return cartas;
     }
 
     static obtenerCartasPertenecientesAlUsuario(usuario) {
@@ -173,15 +206,16 @@ static deleteByName(name, usuario) {
     }
 
     static deleteAllCartasUsuario(usuario) {
-        const mazos = this.#getCartasOfUsuario.all({ creador: usuario });
+        const mazos = this.#getCartasOfUsuario.all({ usuario: usuario });
         
         for (const { id } of mazos) {
-            this.#deleteAllCartasOfUsuario2.run({ id });
+            this.#deleteAllCartasOfUsuario2.run({ id }); //borrado de mazoCartas
+
         }
-        
+        this.#deleteAllCartasOfUsuario3.run({ usuario: usuario });
         const result = this.#deleteAllCartasOfUsuario.run({ creador: usuario });
         
-        if (result.changes === 0) throw new CartaNoEncontrada(usuario);
+        if (result.changes === 0) throw new FalloBorrado(usuario);
     }
 
     static #insert(carta) {
@@ -194,8 +228,8 @@ static deleteByName(name, usuario) {
     
                 result = this.#insertCartaBBDD.run(datos);
     
-                usuario.#id = result.lastInsertRowid;
-            } catch(e) { // SqliteError: https://github.com/WiseLibs/better-sqlite3/blob/master/docs/api.md#class-sqliteerror
+                usuario.id = result.lastInsertRowid;
+            } catch(e) {
                 if (e.code === 'SQLITE_CONSTRAINT') {
                     throw new CartaYaExiste(carta.nombre);
                 }
@@ -222,7 +256,7 @@ static deleteByName(name, usuario) {
     
 
     persist() {
-        if (this.#id === null) return Carta.#insert(this);
+        if (this.id === null) return Carta.#insert(this);
         return Carta.#update(this);
     }
 
@@ -275,6 +309,19 @@ export class CartaNoEncontrada extends Error {
         this.name = 'CartaNoEncontrada';
     }
 }
+
+export class FalloBorrado extends Error {
+    /**
+     * 
+     * @param {string} nombre
+     * @param {ErrorOptions} [options]
+     */
+    constructor(nombre, options) {
+        super(`Fallo al borrar cartas del usuario: ${nombre}`, options);
+        this.name = 'FalloBorrado';
+    }
+}
+
 
 export class CartaYaExiste extends Error {
     /**
