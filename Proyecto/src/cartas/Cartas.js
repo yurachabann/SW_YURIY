@@ -97,7 +97,7 @@ export class Carta {
          this.#borrarCartaUsuario.run({ usuario: usuarioSolicita, carta_id: cartaDa }); //borramos de la tabla usuarioCartas la carta (de la BBDD no, ya que solo se intercambia)
          this.#insertarCarta.run({ usuario: usuarioAcepta, carta_id: cartaDa }); //el otro usuario obtiene esa carta
          this.#borrarCartaUsuario.run({ usuario: usuarioAcepta, carta_id: cartaObtiene });
-         this.#insertarCarta.run({ usuario: usuarioSolicita, carta_id: cartaDa });
+         this.#insertarCarta.run({ usuario: usuarioSolicita, carta_id: cartaObtiene });
         }
         catch(err){
             console.error(`Error intercambiando cartas entre ${usuarioSolicita} y ${usuarioAcepta}:`, err);
