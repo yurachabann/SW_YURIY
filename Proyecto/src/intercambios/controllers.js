@@ -4,7 +4,7 @@ import { Intercambio } from './Intercambio.js';
 
 export function viewSolicitarIntercambio(req, res) {
     const cartasObtener = Carta.obtenerCartasAPedir(req.session.nombre);
-    const cartasDar = Carta.getCartasUsuario(req.session.nombre);
+    const cartasDar = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
     res.render('pagina', {
         contenido: 'paginas/solicitarIntercambio',
         session: req.session,

@@ -123,7 +123,7 @@ export function doEliminateCard(req, res) {
     }
   }
   
-
+//OBSOLETO
 export function doEliminateCardsUsuario(req,res){
     const usuario = req.body.name.trim();
     Carta.deleteAllCartasUsuario(usuario);

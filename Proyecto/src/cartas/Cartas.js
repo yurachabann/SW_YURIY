@@ -1,3 +1,10 @@
+import * as fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = dirname(__filename);
 
 export const EnumColecciones = {
     0: 'Estandar',
@@ -90,15 +97,35 @@ export class Carta {
         return carta;
     }
 
-    static deleteByName(name, usuario) {
-        const carta = this.getCartaByName(name);
-        let id = carta.#id;
-        this.#borrarCartaUsuario.run({usuario: usuario, carta_id: id});
-        this.#deleteCarta.run({id});
-        const result = this.#delete.run({ name });
-        if (result.changes === 0) throw new CartaNoEncontrada(name);
+static deleteByName(name, usuario) {
+    const carta = this.getCartaByName(name);
+    const id = carta.#id;
+    const imagenDb = carta.Imagen;
+
+    const imagenPorDefecto = 'https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg';
+    if (imagenDb && imagenDb !== imagenPorDefecto) {
+
+      const rutaRelativa = imagenDb.replace(/^\/+/, ''); 
+      const rutaImagen = path.join(__dirname, '..', '..', 'static', rutaRelativa);
+      console.log('Intentando borrar imagen en:', rutaImagen);
+
+      try {
+        fs.unlinkSync(rutaImagen);
+        console.log(`Imagen eliminada: ${rutaImagen}`);
+      } catch (err) {
+        console.warn(`No se pudo borrar la imagen en disco (${rutaImagen}): ${err.message}`);
+      }
     }
- 
+
+    this.#borrarCartaUsuario.run({ usuario, carta_id: id });
+    this.#deleteCarta.run({ id });
+    const result = this.#delete.run({ name });
+
+    if (result.changes === 0) {
+      throw new CartaNoEncontrada(name);
+    }
+  }
+
     static cartaExiste(nombre) {
         if (this.#exists === null) {
             throw new Error("La base de datos no está inicializada. Llama a initStatements(db) primero.");
@@ -123,11 +150,11 @@ export class Carta {
     }
 
     static obtenerCartasAPedir(usuario) { //cartas que el usuario puede pedir en el intercambio, xq no las posee
-        return this.#getTodasCartasMenosUsuario.all({creador : usuario});
+        return this.#getTodasCartasMenosUsuario.all({usuario : usuario});
     }
 
-    static obtenerCartasPertenecientesAlUsuario(creador) {
-        const cartas_ids = this.#getCartasOfUsuario.all({usuario : creador});
+    static obtenerCartasPertenecientesAlUsuario(usuario) {
+        const cartas_ids = this.#getCartasOfUsuario.all({usuario : usuario});
         const cartas = cartas_ids.map(row => {  
         const carta = this.getCardPorId(row.carta_id);
         // carta es un objeto { id, nombre, coleccion, rareza, vida, creador, imagen }
