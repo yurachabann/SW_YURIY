@@ -8,12 +8,13 @@ export function viewCreateCard(req, res) {
     });
 }
 
+/*
 export function viewModifyCard(req, res) {
     res.render('pagina', {
         contenido: 'paginas/modifyCard',
         session: req.session,
     });
-}
+}*/
 
 export function preModificarCard(req, res) {
     res.render('pagina', {
@@ -67,7 +68,7 @@ export function viewEliminateCardsUsuario(req, res) {
 }
 
 export function viewGestionarCartas(req, res) {
-    const cartas = Carta.obtenerCartasCreadasPorUsuario(req.session.nombre);
+    const cartas = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
     res.render('pagina', {
         contenido: 'paginas/gestionarCartas',
         session: req.session,
@@ -86,7 +87,7 @@ export function doEliminateCard(req, res) {
       });
     } else {
       if (req.session.esAdmin) {
-        Carta.deleteByName(req.body.name);
+        Carta.deleteByName(req.body.name, req.session.nombre);
         const cartas = Carta.obtenerCartas();
         return res.render('pagina', {
           contenido: 'paginas/administrarCartas',
@@ -99,8 +100,8 @@ export function doEliminateCard(req, res) {
       }
       else if (!req.session.esAdmin) {
         if (Carta.getCreadorByNombre(req.body.name) == req.session.nombre) {
-          Carta.deleteByName(req.body.name);
-          const cartas = Carta.obtenerCartasCreadasPorUsuario(req.session.nombre);
+          Carta.deleteByName(req.body.name, req.session.nombre);
+          const cartas = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
           return res.render('pagina', {
             contenido: 'paginas/gestionarCartas',
             mensaje: 'Carta borrada con éxito',
@@ -143,23 +144,45 @@ export function doCreateCard(req,res){
     const nombre = req.body.nombre.trim();
     const rareza = req.body.rareza.trim();
     const vida = req.body.vida.trim();
-    //const imagen = req.body.imagen.trim();
-      // Multer rellena req.file
-  if (!req.file) {                      // por si el usuario no adjunta nada
+  // Multer rellena req.file
+  if (!req.file) {
     return res.render('pagina', {
-        contenido: 'paginas/añadirCarta',   // ← la vista que quieres
+        contenido: 'paginas/añadirCarta',
         mensaje:   'Debes subir una imagen',
         session:   req.session,
       });
     }
 
-  const imagen = `/img/${req.file.filename}`;  // <-- ruta pública
+        const imagen = `/img/${req.file.filename}`;  // <-- ruta pública
+        const vidaNum = Number(vida);
+        const rarezaNum = Number(rareza);
+
+        if (typeof vidaNum !== 'number' ||  vidaNum < 1 || vidaNum > 1000) {
+            throw new Error('La vida tiene que estar entre 1 y 1000');
+        }
+
+        if (typeof rarezaNum !== 'number' ||  rarezaNum < 1 || rarezaNum > 4) {
+            throw new Error('Esta rareza no existe');
+        }
+
+        if (typeof nombre !== 'string' || nombre.trim() === '') {
+            throw new Error('El nombre debe ser un texto no vacío');
+        }
+
+        if (typeof imagen !== 'string' || nombre.trim() === '') {
+            throw new Error('la imagen debe ser una url');
+        }
+
+        if (Carta.cartaExiste(nombre)) {
+            throw new Error(`La carta con el nombre "${nombre}" ya existe`);
+        }
+
     if(req.session.esAdmin) {
-        Carta.agregarCarta(nombre,0,rareza,vida,null,imagen);
+        Carta.crearCarta(nombre,0,rareza,vida,null,imagen);
         const cartas = Carta.obtenerCartas();
         return res.render('pagina', {
             contenido: 'paginas/administrarCartas',
-            mensaje: 'Carta creada con éxito',
+            mensaje: 'Carta creada con éxito y añadida a tu inventario',
             cartas,
             session: req.session,
             EnumColecciones,
@@ -167,8 +190,8 @@ export function doCreateCard(req,res){
         });
     }
     else {
-        Carta.agregarCarta(nombre,1,rareza,vida,req.session.nombre, imagen);
-        const cartas = Carta.obtenerCartasCreadasPorUsuario(req.session.nombre);
+        Carta.crearCarta(nombre,1,rareza,vida,req.session.nombre, imagen);
+        const cartas = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
         return res.render('pagina', {
             contenido: 'paginas/gestionarCartas',
             mensaje: 'Carta creada con éxito',
@@ -187,9 +210,15 @@ export function doModifyCard(req, res) {
     const rareza = req.body.rareza.trim();
     const vida = req.body.vida.trim();
     
+    const cartaActual = Carta.getCartaByName(nombre);
+
+    const imagen = req.file
+      ? `/img/${req.file.filename}`
+      : cartaActual.Imagen;
+    
         if(Carta.cartaExiste(nombre)){
             if(req.session.esAdmin){
-        Carta.actualizarCampos(nombre,nombre2, rareza, vida);
+        Carta.actualizarCampos(nombre,nombre2, rareza, vida, imagen);
         const cartas = Carta.obtenerCartas();
         return res.render('pagina', {
             contenido: 'paginas/administrarCartas',
@@ -201,8 +230,8 @@ export function doModifyCard(req, res) {
         });
     }
     else if(Carta.getCreadorByNombre(nombre) == req.session.nombre){
-        Carta.actualizarCampos(nombre,nombre2, rareza, vida);
-        const cartas = Carta.obtenerCartasCreadasPorUsuario(req.session.nombre);
+        Carta.actualizarCampos(nombre,nombre2, rareza, vida, imagen);
+        const cartas = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
         return res.render('pagina', {
             contenido: 'paginas/gestionarCartas',
             mensaje: 'Carta actualizada con éxito',
@@ -228,4 +257,6 @@ export function doModifyCard(req, res) {
         });
     }
 }
+
+
 

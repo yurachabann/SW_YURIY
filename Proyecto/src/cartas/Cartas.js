@@ -19,19 +19,19 @@ export class Carta {
     rareza;
     vida;
     #creador;
-    imagen;
+    Imagen;
     
-    constructor(nombre, coleccion, rareza, vida, id = null, creador = null, imagen = "https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg") {
+    constructor(nombre, coleccion, rareza, vida, id = null, creador = null, Imagen = "https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg") {
         this.nombre = nombre;
         this.coleccion = coleccion;
         this.rareza = rareza;
         this.vida = vida;
         this.#id = id;
         this.#creador = creador;
-        this.imagen = imagen;
+        this.Imagen = Imagen;
     }
 
-    static #insertSmth = null; 
+    static #insertCartaBBDD = null; //insertar la carta en la BBDD
     static #getAll = null; 
     static #exists = null; 
     static #getByNombre = null; 
@@ -42,33 +42,42 @@ export class Carta {
     static #deleteCarta = null;
     static #deleteAllCartasOfUsuario = null; //para borrar las cartas de la tabla Cartas
     static #deleteAllCartasOfUsuario2 = null; //para borrar las cartas de la tabla MazoCartas
-    static #getCartasOfUsuario = null;
     static #getTodasCartasMenosUsuario = null; //cartas que el usuario puede pedir en el intercambio. Logicamente no puede
     //pedir una carta que ya tiene. El proposito del intercambio es pedir cartas que no tienes todavia
     static #getImagenPorId = null;
     static #getCardPorId = null;
 
+    static #insertarCarta = null; //insertar la carta en la tabla UsuariosCartas que relaciona los usuarios y las cartas
+    //que les pertenecen
+    static #borrarCartaUsuario = null; //borrar la carta de la tabla de pertenencia
+    static #getCartasOfUsuario = null;
+
     static initStatements(db) {
         
-        if (this.#insertSmth !== null) return;    
-        this.#insertSmth = db.prepare(
-            'INSERT INTO Cartas (nombre, coleccion, rareza, vida, creador, imagen) VALUES (@nombre, @coleccion, @rareza, @vida, @creador, @imagen)'
+        if (this.#insertCartaBBDD !== null) return;    
+        this.#insertCartaBBDD = db.prepare(
+            'INSERT INTO Cartas (nombre, coleccion, rareza, vida, creador, Imagen) VALUES (@nombre, @coleccion, @rareza, @vida, @creador, @Imagen)'
         );
 
         this.#getAll = db.prepare('SELECT * FROM Cartas');
         this.#exists = db.prepare('SELECT COUNT(*) as count FROM Cartas WHERE nombre = @nombre');
         this.#getByNombre = db.prepare('SELECT * FROM Cartas WHERE nombre = @nombre');
-        this.#updateCarta = db.prepare('UPDATE Cartas SET nombre = @nombreNew, coleccion = @coleccion, rareza = @rareza, vida = @vida WHERE nombre = @nombre');
+        this.#updateCarta = db.prepare('UPDATE Cartas SET nombre = @nombreNew, coleccion = @coleccion, rareza = @rareza, vida = @vida, Imagen = @imagen WHERE nombre = @nombre');
         this.#delete = db.prepare('DELETE FROM Cartas WHERE nombre = @name');
         this.#getByCreador = db.prepare('SELECT * FROM Cartas WHERE creador = @creador')
         this.#getCreadorByName = db.prepare('SELECT creador FROM Cartas WHERE nombre = @nombre')
         this.#deleteCarta = db.prepare('DELETE FROM MazoCartas WHERE carta_id = @id');
         this.#deleteAllCartasOfUsuario = db.prepare('DELETE FROM Cartas where creador = @creador');
         this.#deleteAllCartasOfUsuario2 = db.prepare('DELETE FROM MazoCartas where carta_id = @id')
-        this.#getCartasOfUsuario = db.prepare('SELECT * FROM Cartas WHERE creador = @creador')
-        this.#getTodasCartasMenosUsuario = db.prepare('SELECT * FROM Cartas WHERE creador != @creador OR creador IS NULL'); //nulo si fue creado por admins
+        //this.#getCartasOfUsuario = db.prepare('SELECT * FROM Cartas WHERE creador = @creador')
         this.#getImagenPorId = db.prepare('SELECT Imagen FROM Cartas WHERE id = @id');
         this.#getCardPorId = db.prepare('SELECT * FROM Cartas WHERE id = @id');
+
+        //sentencias de la tabla de pertenencia
+        this.#insertarCarta = db.prepare(`INSERT INTO UsuariosCartas (usuario, carta_id) VALUES (@usuario, @carta_id)`);
+        this.#borrarCartaUsuario = db.prepare('DELETE FROM UsuariosCartas WHERE usuario = @usuario AND carta_id = @carta_id');
+        this.#getCartasOfUsuario = db.prepare('SELECT carta_id FROM UsuariosCartas WHERE usuario = @usuario');
+        this.#getTodasCartasMenosUsuario = db.prepare('SELECT * FROM UsuariosCartas WHERE usuario != @usuario');
     }
 
     static getImagenPorId(id){
@@ -81,13 +90,10 @@ export class Carta {
         return carta;
     }
 
-    static getCartasUsuario(usuario){
-        return this.#getCartasOfUsuario.all({creador : usuario});
-    }
-
-    static deleteByName(name) {
+    static deleteByName(name, usuario) {
         const carta = this.getCartaByName(name);
         let id = carta.#id;
+        this.#borrarCartaUsuario.run({usuario: usuario, carta_id: id});
         this.#deleteCarta.run({id});
         const result = this.#delete.run({ name });
         if (result.changes === 0) throw new CartaNoEncontrada(name);
@@ -101,37 +107,12 @@ export class Carta {
         return carta !== undefined;
     }
 
-    static agregarCarta(nombre, coleccion, rareza, vida, creador, imagen) {
-        const coleccionNum = Number(coleccion);
-        const vidaNum = Number(vida);
-        const rarezaNum = Number(rareza);
-
-        if (typeof coleccionNum !== 'number' || coleccionNum < 0 || coleccionNum > 1) {
-            throw new Error('Dicha coleccion no existe');
-        }
-
-        if (typeof vidaNum !== 'number' ||  vidaNum < 1 || vidaNum > 1000) {
-            throw new Error('La vida tiene que estar entre 1 y 1000');
-        }
-
-        if (typeof rarezaNum !== 'number' ||  rarezaNum < 1 || rarezaNum > 4) {
-            throw new Error('Esta rareza no existe');
-        }
-
-        if (typeof nombre !== 'string' || nombre.trim() === '') {
-            throw new Error('El nombre debe ser un texto no vacío');
-        }
-
-        if (typeof imagen !== 'string' || nombre.trim() === '') {
-            throw new Error('la imagen debe ser una url');
-        }
-
-        if (this.cartaExiste(nombre)) {
-            throw new Error(`La carta con el nombre "${nombre}" ya existe`);
-        }
-
+    static crearCarta(nombre, coleccion, rareza, vida, creador, Imagen) {
         try {
-            this.#insertSmth.run({ nombre, coleccion, rareza, vida, creador, imagen });
+            const info = this.#insertCartaBBDD.run({ nombre, coleccion, rareza, vida, creador, Imagen });
+            const cartaInsertada_id = info.lastInsertRowid;
+            if(creador != null)
+            this.#insertarCarta.run({ usuario: creador, carta_id: cartaInsertada_id }); //si es nulo, lo ha creado un admin. Y Admins no tienen pertenencia de cartas como tal
         } catch (e) {
             throw new Error(`No se pudo insertar la carta: ${e.message}`);
         }
@@ -145,8 +126,23 @@ export class Carta {
         return this.#getTodasCartasMenosUsuario.all({creador : usuario});
     }
 
-    static obtenerCartasCreadasPorUsuario(creador) {
-        return this.#getByCreador.all({ creador });
+    static obtenerCartasPertenecientesAlUsuario(creador) {
+        const cartas_ids = this.#getCartasOfUsuario.all({usuario : creador});
+        const cartas = cartas_ids.map(row => {  
+        const carta = this.getCardPorId(row.carta_id);
+        // carta es un objeto { id, nombre, coleccion, rareza, vida, creador, imagen }
+        return new Carta(
+            carta.nombre,
+            carta.coleccion,
+            carta.rareza,
+            carta.vida,
+            carta.id,
+            carta.creador,
+            carta.Imagen
+            );
+        });
+
+  return cartas;
     }
 
     static deleteAllCartasUsuario(usuario) {
@@ -169,7 +165,7 @@ export class Carta {
                 const tipoCarta = carta.tipoCarta;
                 const datos = {nombre, fuerza, tipoCarta};
     
-                result = this.#insert.run(datos);
+                result = this.#insertCartaBBDD.run(datos);
     
                 usuario.#id = result.lastInsertRowid;
             } catch(e) { // SqliteError: https://github.com/WiseLibs/better-sqlite3/blob/master/docs/api.md#class-sqliteerror
@@ -186,8 +182,9 @@ export class Carta {
             const coleccion = carta.coleccion;
             const rareza = carta.rareza;
             const vida = carta.vida;
+            const imagen = carta.Imagen;
 
-            const datos = { nombre, nombreNew, coleccion, rareza, vida, id: carta.id };
+            const datos = { nombre, nombreNew, coleccion, rareza, vida, id: carta.id, imagen };
     
     
             const result = this.#updateCarta.run(datos);
@@ -207,9 +204,9 @@ export class Carta {
         console.log("Fetching card with nombre:", nombre); 
         if (carta === undefined) throw new CartaNoEncontrada(nombre);
     
-        const { nombre: cartaNombre, coleccion, rareza, vida, id } = carta;
-    
-        return new Carta(cartaNombre, coleccion, rareza, vida, id);
+        const { nombre: cartaNombre, coleccion, rareza, vida, id, creador, Imagen } = carta;
+
+        return new Carta( cartaNombre, coleccion, rareza, vida, id, creador, Imagen );
     }
     
     static getCreadorByNombre(nombre) {
@@ -219,7 +216,7 @@ export class Carta {
         return row.creador;
     }
 
-    static actualizarCampos(nombre, nombre2, rareza, vida) {
+    static actualizarCampos(nombre, nombre2, rareza, vida, imagen) {
         let carta = this.getCartaByName(nombre);
      
          if (nombre2.trim() !== "") {
@@ -234,6 +231,7 @@ export class Carta {
              carta.vida = vida;
          }
      
+         carta.Imagen = imagen;
          Carta.#update(carta, nombre2);
      }
 
