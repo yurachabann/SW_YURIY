@@ -5,8 +5,6 @@ import { Intercambio } from './Intercambio.js';
 export function viewSolicitarIntercambio(req, res) {
     const cartasObtener = Carta.obtenerCartasAPedir(req.session.nombre);
     const cartasDar = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
-    console.log('cartasObtener (con id):', cartasObtener.map(c => ({ nombre: c.nombre, id: c.id })));
-  console.log('cartasDar     (con id):',     cartasDar.map(c => ({ nombre: c.nombre, id: c.id })));
 
     res.render('pagina', {
         contenido: 'paginas/solicitarIntercambio',
@@ -62,8 +60,6 @@ export function doSolicitarIntercambio(req, res) {
     }
     const nuevo = new Intercambio(req.session.nombre, cartaQueQuiere, cartaQueDa);
 const guardado = Intercambio.guardarIntercambio(nuevo);
-console.log('→ Intercambio guardado:', guardado);
-
 
     res.render('pagina', {
         mensaje: 'Intercambio guardado y disponible para otros usuarios',
@@ -121,22 +117,14 @@ export function doRealizarIntercambio(req, res) {
 }
 
 function normalizarIntercambios(){
-  console.log('INTERCAMBIOS RAW tras INSERT:', Intercambio.obtenerIntercambios());
   const intercambiosRaw = Intercambio.obtenerIntercambios();
-  console.log('INTERCAMBIOS RAW:', intercambiosRaw);
-
   const intercambiosCartas = intercambiosRaw.map(ix => {
     const usuario   = ix.UsuarioQueSolicita;
     const idQuiere  = ix.CartaQueQuiere;
     const idDa      = ix.CartaQueDa;
     
-    console.log(`Procesando intercambio: usuario=${usuario}, idQuiere=${idQuiere}, idDa=${idDa}`);
-
     const imagenQuiere = Carta.getImagenPorId(idQuiere);
     const imagenDa     = Carta.getImagenPorId(idDa);
-
-    console.log(`→ imagenQuiere(${idQuiere}) =`, imagenQuiere);
-    console.log(`→ imagenDa(${idDa})     =`, imagenDa);
 
     return {
       usuarioQueSolicita: usuario,

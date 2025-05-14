@@ -8,6 +8,39 @@ export function viewCreateCard(req, res) {
     });
 }
 
+export function viewAddCardInventarioEstandar(req, res) {
+    const cartas_coleccion_estandar = Carta.getEstandar();
+    res.render('pagina', {
+        contenido: 'paginas/addCardInventarioEstandar',
+        session: req.session,
+        cartas_coleccion_estandar,
+        EnumColecciones,
+        EnumRarezas
+    });
+}
+
+export function viewAddCardInventarioTodos(req, res) {
+    const cartas_coleccion_todos = Carta.getTodos();
+    res.render('pagina', {
+        contenido: 'paginas/addCardInventarioTodos',
+        session: req.session,
+        cartas_coleccion_todos,
+        EnumColecciones,
+        EnumRarezas
+    });
+}
+
+export function viewAddCardInventarioCustom(req, res) {
+    const cartas_coleccion_custom = Carta.getCustom();
+    res.render('pagina', {
+        contenido: 'paginas/addCardInventarioCustom',
+        session: req.session,
+        cartas_coleccion_custom,
+        EnumColecciones,
+        EnumRarezas
+    });
+}
+
 /*
 export function viewModifyCard(req, res) {
     res.render('pagina', {
@@ -123,8 +156,8 @@ export function doEliminateCard(req, res) {
     }
   }
   
-//OBSOLETO
-export function doEliminateCardsUsuario(req,res){
+
+  export function doEliminateCardsUsuario(req,res){
     const usuario = req.body.name.trim();
     Carta.deleteAllCartasUsuario(usuario);
     const cartas = Carta.obtenerCartas();
@@ -139,6 +172,107 @@ export function doEliminateCardsUsuario(req,res){
     });
 }
 
+export function doAddCardInventarioEstandar(req,res){
+
+      const rawCartas = req.body['cartas[]'];
+   
+      try {
+          if (!rawCartas) {
+              throw new Error("Faltan campos obligatorios.");
+          }
+  
+          const cartasSeleccionadas = Array.isArray(rawCartas)
+          ? rawCartas
+          : [rawCartas];
+          
+      cartasSeleccionadas.forEach(id => {
+      const cartaId = Number(id);
+      if (Number.isNaN(cartaId)) {
+        throw new Error(`ID inválido: ${id}`);
+      }
+      Carta.agregarAlInventario(req.session.nombre, cartaId);
+      });
+     } catch (error) {
+          console.error('Error al seleccionar cartas: ', error.message);
+      }
+      const cartas = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
+       return res.render('pagina', {
+        contenido: 'paginas/gestionarCartas',
+        mensaje:   'Cartas añadidas con éxito a tu inventario!',
+        session:   req.session,
+        cartas,
+        EnumColecciones,
+        EnumRarezas
+      });
+    }
+    
+    export function doAddCardInventarioCustom(req,res){
+
+      const rawCartas = req.body['cartas[]'];
+   
+      try {
+          if (!rawCartas) {
+              throw new Error("Faltan campos obligatorios.");
+          }
+  
+          const cartasSeleccionadas = Array.isArray(rawCartas)
+          ? rawCartas
+          : [rawCartas];
+          
+      cartasSeleccionadas.forEach(id => {
+      const cartaId = Number(id);
+      if (Number.isNaN(cartaId)) {
+        throw new Error(`ID inválido: ${id}`);
+      }
+      Carta.agregarAlInventario(req.session.nombre, cartaId);
+      });
+     } catch (error) {
+          console.error('Error al seleccionar cartas: ', error.message);
+      }
+      const cartas = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
+       return res.render('pagina', {
+        contenido: 'paginas/gestionarCartas',
+        mensaje:   'Cartas añadidas con éxito a tu inventario!',
+        session:   req.session,
+        cartas,
+        EnumColecciones,
+        EnumRarezas
+      });
+    }
+
+    export function doAddCardInventarioTodos(req,res){
+
+      const rawCartas = req.body['cartas[]'];
+   
+      try {
+          if (!rawCartas) {
+              throw new Error("Faltan campos obligatorios.");
+          }
+  
+          const cartasSeleccionadas = Array.isArray(rawCartas)
+          ? rawCartas
+          : [rawCartas];
+          
+      cartasSeleccionadas.forEach(id => {
+      const cartaId = Number(id);
+      if (Number.isNaN(cartaId)) {
+        throw new Error(`ID inválido: ${id}`);
+      }
+      Carta.agregarAlInventario(req.session.nombre, cartaId);
+      });
+     } catch (error) {
+          console.error('Error al seleccionar cartas: ', error.message);
+      }
+      const cartas = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
+       return res.render('pagina', {
+        contenido: 'paginas/gestionarCartas',
+        mensaje:   'Cartas añadidas con éxito a tu inventario!',
+        session:   req.session,
+        cartas,
+        EnumColecciones,
+        EnumRarezas
+      });
+    }
 
 export function doCreateCard(req,res){
     const nombre = req.body.nombre.trim();
@@ -182,7 +316,7 @@ export function doCreateCard(req,res){
         const cartas = Carta.obtenerCartas();
         return res.render('pagina', {
             contenido: 'paginas/administrarCartas',
-            mensaje: 'Carta creada con éxito y añadida a tu inventario',
+            mensaje: 'Carta creada con éxito.',
             cartas,
             session: req.session,
             EnumColecciones,
@@ -194,7 +328,7 @@ export function doCreateCard(req,res){
         const cartas = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
         return res.render('pagina', {
             contenido: 'paginas/gestionarCartas',
-            mensaje: 'Carta creada con éxito',
+            mensaje: 'Carta creada con éxito y añadida a tu inventario!',
             cartas,
             session: req.session,
             EnumColecciones,

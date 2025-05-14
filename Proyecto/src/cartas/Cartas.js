@@ -54,6 +54,8 @@ export class Carta {
     //pedir una carta que ya tiene. El proposito del intercambio es pedir cartas que no tienes todavia
     static #getImagenPorId = null;
     static #getCardPorId = null;
+    static #getColeccionEstandar = null;
+    static #getColeccionCustom = null;
 
     static #insertarCarta = null; //insertar la carta en la tabla UsuariosCartas que relaciona los usuarios y las cartas
     //que les pertenecen
@@ -78,6 +80,8 @@ export class Carta {
         //this.#getCartasOfUsuario = db.prepare('SELECT * FROM Cartas WHERE creador = @creador')
         this.#getImagenPorId = db.prepare('SELECT Imagen FROM Cartas WHERE id = @id');
         this.#getCardPorId = db.prepare('SELECT * FROM Cartas WHERE id = @id');
+        this.#getColeccionEstandar = db.prepare('SELECT * FROM Cartas WHERE creador IS NULL');
+        this.#getColeccionCustom = db.prepare('SELECT * FROM Cartas WHERE creador IS NOT NULL');
 
         //mazoCartas
         this.#deleteAllCartasOfUsuario2 = db.prepare('DELETE FROM MazoCartas where carta_id = @id')
@@ -89,6 +93,10 @@ export class Carta {
         this.#getCartasOfUsuario = db.prepare('SELECT carta_id FROM UsuariosCartas WHERE usuario = @usuario');
         this.#getTodasCartasMenosUsuario = db.prepare('SELECT * FROM UsuariosCartas WHERE usuario != @usuario');
         this.#deleteAllCartasOfUsuario3 = db.prepare('DELETE FROM UsuariosCartas where usuario = @usuario');
+    }
+
+    static agregarAlInventario(usuario, carta_id){
+        this.#insertarCarta.run({usuario, carta_id})
     }
 
     static intercambiar(usuarioSolicita, usuarioAcepta, cartaObtiene, cartaDa){ //probablemente el metodo mas lioso. cartaObtiene se refiere a la carta que obtiene el usuario que
@@ -103,6 +111,18 @@ export class Carta {
             console.error(`Error intercambiando cartas entre ${usuarioSolicita} y ${usuarioAcepta}:`, err);
             throw new Error(`No se pudo completar el intercambio: ${err.message}`);
         }
+    }
+
+    static getTodos(){
+        return this.#getAll.all();
+    }
+
+    static getEstandar(){
+        return this.#getColeccionEstandar.all();
+    }
+
+    static getCustom(){
+        return this.#getColeccionCustom.all();
     }
 
     static getImagenPorId(id){

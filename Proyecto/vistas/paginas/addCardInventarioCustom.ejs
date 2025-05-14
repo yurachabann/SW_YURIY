@@ -1,0 +1,41 @@
+<form action="/cartas/addCardInventarioEstandar" method="POST" id="form-seleccion">
+  <fieldset>
+    <legend>COLLECION CUSTOM</legend>
+    <% if (locals.mensaje) { %>
+      <p><strong><%= locals.mensaje %></strong></p>
+    <% } %>
+
+    <!-- GRID DE CARTAS -->
+    <div class="form-group">
+      <label>Selecciona las que quieres:</label>
+      <p id="contador" class="form-hint">Seleccionadas: 0</p>
+      <div class="cartas-grid">
+        <% cartas_coleccion_custom.forEach(carta => { %>
+          <label class="carta-item-seleccionar">
+            <input
+              type="checkbox"
+              name="cartas[]"
+              value="<%= carta.id %>"
+            >
+            <img
+              src="<%= carta.Imagen || 'https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg' %>"
+              alt="<%= carta.nombre %>"
+            >
+            <div class="carta-info">
+              <h4><%= carta.nombre %></h4>
+              <p>Colección: <%= EnumColecciones[carta.coleccion] || 'N/D' %></p>
+              <p>Rareza: <%= EnumRarezas[carta.rareza] || 'N/D' %></p>
+              <p>Vida: <%= carta.vida %></p>
+            </div>
+          </label>
+        <% }) %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button type="submit">Guardar cartas en tu inventario</button>
+    </div>
+  </fieldset>
+</form>
+
+<script src="/js/seleccionCartasInventario.js" defer></script>
