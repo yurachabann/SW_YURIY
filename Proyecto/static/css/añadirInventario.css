@@ -1,0 +1,61 @@
+ body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #eef2ff, #c7d2fe);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .panel {
+      text-align: center;
+      background: #ffffffdd;
+      padding: 2.5rem 3rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    .panel h2 {
+      margin-bottom: 2rem;
+      font-size: 1.75rem;
+      color: #1e293b;
+    }
+
+    .panel .btn {
+      display: inline-block;
+      margin: 0 .5rem;
+      padding: 0.75rem 1.75rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #fff;
+      background: #4f46e5;
+      border: none;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      transition: transform .2s, box-shadow .2s, background .2s;
+    }
+.panel .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.panel .btn-coleccion-estandar {
+  background-color: #2002c9;
+}
+.panel .btn-coleccion-estandar:hover {
+  background-color: #1242e0;
+}
+
+.panel .btn-coleccion-custom {
+  background-color: #04a0a5;
+}
+.panel .btn-coleccion-custom:hover {
+  background-color: #078fb1;
+}
+
+.panel .btn-coleccion-todos {
+  background-color: #02b653;
+}
+.panel .btn-coleccion-todos:hover {
+  background-color: #04c45a;
+}
