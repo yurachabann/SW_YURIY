@@ -60,6 +60,7 @@ export class Carta {
     static #insertarCarta = null; //insertar la carta en la tabla UsuariosCartas que relaciona los usuarios y las cartas
     //que les pertenecen
     static #borrarCartaUsuario = null; //borrar la carta de la tabla de pertenencia
+    static #borrarCartasTodosUsuarios = null; //cuando admin borra una carta, se borra para todos
     static #getCartasOfUsuario = null;
 
     static initStatements(db) {
@@ -93,6 +94,7 @@ export class Carta {
         this.#getCartasOfUsuario = db.prepare('SELECT carta_id FROM UsuariosCartas WHERE usuario = @usuario');
         this.#getTodasCartasMenosUsuario = db.prepare('SELECT * FROM UsuariosCartas WHERE usuario != @usuario');
         this.#deleteAllCartasOfUsuario3 = db.prepare('DELETE FROM UsuariosCartas where usuario = @usuario');
+        this.#borrarCartasTodosUsuarios = db.prepare('DELETE FROM UsuariosCartas where carta_id = @carta_id');
     }
 
     static agregarAlInventario(usuario, carta_id){
@@ -135,7 +137,11 @@ export class Carta {
         return carta;
     }
 
-static deleteByName(name, usuario) {
+    static getByCreador(creador) {
+        return this.#getByCreador.all({ creador });
+    }
+
+static deleteByName(name) {
     const carta = this.getCartaByName(name);
     const id = carta.id;
     const imagenDb = carta.Imagen;
@@ -155,9 +161,9 @@ static deleteByName(name, usuario) {
       }
     }
 
-    this.#borrarCartaUsuario.run({ usuario, carta_id: id });
-    this.#deleteCarta.run({ id });
-    const result = this.#delete.run({ name });
+    this.#borrarCartasTodosUsuarios.run({ carta_id: id }); //borra carta de la tabla de pertenencia para todos
+    this.#deleteCarta.run({ id }); //borra carta de MazoCartas
+    const result = this.#delete.run({ name }); //borra carta de Cartas
 
     if (result.changes === 0) {
       throw new CartaNoEncontrada(name);

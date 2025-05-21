@@ -37,9 +37,11 @@ export function viewModify(req, res) {
 }
 
 export function viewEliminate(req, res) {
+    const usuarios = Usuario.obtenerUsuarios();
     res.render('pagina', {
         contenido: 'paginas/borrarUsuario',
-        session: req.session
+        session: req.session,
+        usuarios
     });
 }
 

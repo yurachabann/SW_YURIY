@@ -6,6 +6,22 @@
 		<p><strong><%= locals.mensaje %></strong></p>
 	<% } %>
 	<legend>Nombre del mazo a borrar</legend>
-	<div><label>Nombre:</label> <input type="text" name="name" /></div>
+	<div>
+  <label for="mazo">Mazo:</label>
+  <select name="name" id="mazo" required>
+    <% if (misMazos.length > 0) { %>
+      <% misMazos.forEach((m, idx) => { %>
+        <option
+          value="<%= m.nombre %>"
+          <%= idx === 0 ? 'selected' : '' %>
+        >
+          <%= m.nombre %>
+        </option>
+      <% }) %>
+    <% } else { %>
+      <option value="" disabled selected>No tienes mazos aún</option>
+    <% } %>
+  </select>
+</div>
 	<button type="submit">Eliminar</button>
 </fieldset>

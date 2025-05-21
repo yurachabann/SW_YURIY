@@ -1,11 +1,25 @@
-<h1>Introduce el nombre de la carta que quieres modificar</h1>
+<h1>Seleccione la carta que quiere modificar</h1>
 
 <form action="/cartas/preModificarCard" method="POST">
-<fieldset>
-	<% if (locals.mensaje) { %>
-		<p><strong><%= locals.mensaje %></strong></p>
-	<% } %>
-	<legend>Nombre de la carta a modificar</legend>
-	<div><label>Nombre:</label> <input type="text" name="nombre" /></div>
-	<button type="submit">Modificar</button>
-</fieldset>
+  <fieldset>
+    <% if (locals.mensaje) { %>
+      <p><strong><%= locals.mensaje %></strong></p>
+    <% } %>
+    <legend>Elige una carta</legend>
+
+    <div>
+      <label for="carta">Carta:</label>
+      <select name="nombre" id="carta" required>
+        <option value="" disabled selected>-- Selecciona una carta --</option>
+        <% cartas.forEach(carta => { %>
+          <option value="<%= carta.nombre %>">
+            <%= carta.nombre %> 
+            (Rareza: <%= EnumRarezas[carta.rareza] %>)
+          </option>
+        <% }) %>
+      </select>
+    </div>
+
+    <button type="submit">Modificar</button>
+  </fieldset>
+</form>

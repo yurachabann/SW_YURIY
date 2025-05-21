@@ -144,6 +144,10 @@ export class Mazo {
         return mazo;
     }
 
+    static getByCreador(creador) {
+        return this.#getByUsername.all({ creador });
+    }
+
     static obtenerMazos() {
         return this.#getAllWithNames.all();
       }

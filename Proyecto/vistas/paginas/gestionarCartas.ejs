@@ -11,24 +11,24 @@
 <a href="/cartas/removeCardInventario" class="btn btn-remove">Quitar cartas de tu inventario</a>
 
 <a href="/cartas/preModificarCard" class="btn btn-modificar">Modificar Carta</a>
-
-<a href="/cartas/eliminarCarta" class="btn btn-eliminar">Eliminar Carta que has creado</a>
   
-<div class="cartas-grid">
-  <% cartas.forEach(carta => { %>
-    <div class="carta-item">
-      <img
-        src="<%= carta.Imagen || 'https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg' %>"
-        alt="<%= carta.nombre %>"
-      >
-
-      <!-- overlay oculto hasta hover -->
-      <div class="carta-info">
-        <h4><%= carta.nombre %></h4>
-        <p>Colección: <%= EnumColecciones[carta.coleccion] || 'N/D' %></p>
-        <p>Rareza: <%= EnumRarezas[carta.rareza] || 'N/D' %></p>
-        <p>Vida: <%= carta.vida %></p>
+<% if (cartas.length === 0) { %>
+  <p class="sin-cartas">No hay cartas disponibles</p>
+<% } else { %>
+  <div class="cartas-grid">
+    <% cartas.forEach(carta => { %>
+      <div class="carta-item">
+        <img
+          src="<%= carta.Imagen || 'https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg' %>"
+          alt="<%= carta.nombre %>"
+        >
+        <div class="carta-info">
+          <h4><%= carta.nombre %></h4>
+          <p>Colección: <%= EnumColecciones[carta.coleccion] || 'N/D' %></p>
+          <p>Rareza: <%= EnumRarezas[carta.rareza] || 'N/D' %></p>
+          <p>Vida: <%= carta.vida %></p>
+        </div>
       </div>
-    </div>
-  <% }) %>
-</div>
+    <% }) %>
+  </div>
+<% } %>

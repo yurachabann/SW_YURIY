@@ -6,6 +6,18 @@
 		<p><strong><%= locals.mensaje %></strong></p>
 	<% } %>
 	<legend>Nombre de la carta a borrar</legend>
-	<div><label>Nombre:</label> <input type="text" name="name" /></div>
+	<div>
+  <label for="carta">Carta:</label>
+  <select name="name" id="carta" required>
+    <option value="" selected disabled>-- Selecciona una carta --</option>
+    <% cartas.forEach(c => { %>
+      <option value="<%= c.nombre %>">
+        <%= c.nombre %> 
+        (Colección: <%= EnumColecciones[c.coleccion] %>, 
+         Rareza: <%= EnumRarezas[c.rareza] %>)
+      </option>
+    <% }) %>
+  </select>
+</div>
 	<button type="submit">Eliminar</button>
 </fieldset>

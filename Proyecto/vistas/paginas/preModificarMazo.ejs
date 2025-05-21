@@ -1,11 +1,24 @@
-<h1>Introduce el nombre del mazo que quieres modificar</h1>
+<h1>Selecciona el mazo que quieres modificar</h1>
 
 <form action="/mazos/preModificarMazo" method="POST">
-<fieldset>
-	<% if (locals.mensaje) { %>
-		<p><strong><%= locals.mensaje %></strong></p>
-	<% } %>
-	<legend>Nombre del mazo a modificar</legend>
-	<div><label>Nombre:</label> <input type="text" name="nombre" /></div>
-	<button type="submit">Modificar</button>
-</fieldset>
+  <fieldset>
+    <% if (locals.mensaje) { %>
+      <p><strong><%= locals.mensaje %></strong></p>
+    <% } %>
+    <legend>Mazo a modificar</legend>
+
+    <div>
+      <label for="mazo">Mazo:</label>
+      <select name="nombre" id="mazo" required>
+        <option value="" disabled selected>-- Selecciona un mazo --</option>
+        <% misMazos.forEach(m => { %>
+          <option value="<%= m.nombre %>">
+            <%= m.nombre %> 
+          </option>
+        <% }) %>
+      </select>
+    </div>
+
+    <button type="submit">Modificar</button>
+  </fieldset>
+</form>

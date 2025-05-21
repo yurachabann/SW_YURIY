@@ -32,7 +32,7 @@ export function modificarMazoConRelleno(req, res) {
     const mazo = Mazo.getMazoByName(nombreMazo);
     const cartasSeleccionadas = JSON.parse(mazo.cartas).map(Number);
     const cartas = Carta.obtenerCartas();
-  
+
     res.render('pagina', {
       contenido: 'paginas/modificarMazo',
       session: req.session,
@@ -45,9 +45,11 @@ export function modificarMazoConRelleno(req, res) {
   }
 
 export function preModificarMazo(req, res) {
+    const misMazos = Mazo.getByCreador(req.session.nombre);
     res.render('pagina', {
         contenido: 'paginas/preModificarMazo',
-        session: req.session
+        session: req.session,
+        misMazos
     });
 }
 
@@ -148,6 +150,10 @@ export function doEliminarMazosUsuario(req, res) {
         ? rawCartas
         : [rawCartas];
 
+        if (cartasSeleccionadas.length > 10 || cartasSeleccionadas.length < 10) {
+            throw new Error("Necesitas 10 cartas.");
+        }
+
     const cartasJSON = JSON.stringify(cartasSeleccionadas);
 
     const cartas = Carta.obtenerCartas();
@@ -194,9 +200,11 @@ export function doEliminarMazosUsuario(req, res) {
   }
 
 export function viewEliminarMazo(req, res) {
+    const misMazos = Mazo.getByCreador(req.session.nombre);
     res.render('pagina', {
         contenido: 'paginas/eliminarMazo',
-        session: req.session
+        session: req.session,
+        misMazos
     });
 }
 

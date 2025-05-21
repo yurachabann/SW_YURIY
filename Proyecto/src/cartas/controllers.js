@@ -36,23 +36,24 @@ export function viewAddCardInventarioCustom(req, res) {
         contenido: 'paginas/addCardInventarioCustom',
         session: req.session,
         cartas_coleccion_custom,
-        EnumColecciones,
         EnumRarezas
     });
 }
 
-/*
-export function viewModifyCard(req, res) {
-    res.render('pagina', {
-        contenido: 'paginas/modifyCard',
-        session: req.session,
-    });
-}*/
-
 export function preModificarCard(req, res) {
+    let cartas = null;
+    if(req.session.esAdmin){
+        cartas = Carta.getTodos();
+    }
+    else {
+        cartas = Carta.getByCreador(req.session.nombre);
+    }
     res.render('pagina', {
         contenido: 'paginas/preModificarCard',
-        session: req.session
+        session: req.session,
+        cartas,
+        EnumColecciones,
+        EnumRarezas
     });
 }
 
@@ -80,9 +81,13 @@ export function administrarCartas(req, res) {
 }
 
 export function viewEliminateCard(req, res) {
+    const cartas = Carta.obtenerCartas()
     res.render('pagina', {
         contenido: 'paginas/eliminarCarta',
-        session: req.session
+        session: req.session,
+        cartas,
+        EnumColecciones,
+        EnumRarezas
     });
 }
 
@@ -130,28 +135,6 @@ export function doEliminateCard(req, res) {
           EnumColecciones,
           EnumRarezas,
         });
-      }
-      else if (!req.session.esAdmin) {
-        if (Carta.getCreadorByNombre(req.body.name) == req.session.nombre) {
-          Carta.deleteByName(req.body.name, req.session.nombre);
-          const cartas = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
-          return res.render('pagina', {
-            contenido: 'paginas/gestionarCartas',
-            mensaje: 'Carta borrada con éxito',
-            cartas,
-            session: req.session,
-            EnumColecciones,
-            EnumRarezas,
-          });
-        } else {
-            console.log(Carta.getCreadorByNombre(req.body.name));
-            console.log(req.session.nombre);
-          return res.render('pagina', {
-            contenido: 'paginas/eliminarCarta',
-            mensaje: 'No tienes permisos para borrar esta carta',
-            session: req.session,
-          });
-        }
       }
     }
   }
