@@ -1,7 +1,7 @@
 import express from 'express';
 import { viewCreateCard, doCreateCard, doModifyCard, viewEliminateCard, doEliminateCard, doEliminateCardsUsuario, administrarCartas, viewGestionarCartas, preModificarCard,
     modificarCartaConRelleno, viewEliminateCardsUsuario, viewAddCardInventario, viewAddCardInventarioEstandar, doAddCardInventarioEstandar,
-    viewAddCardInventarioCustom, doAddCardInventarioCustom, viewAddCardInventarioTodos, doAddCardInventarioTodos
+    viewAddCardInventarioCustom, doAddCardInventarioCustom, viewAddCardInventarioTodos, doAddCardInventarioTodos, viewRemoveCardInventario, doRemoveCardInventario
 
 } from './controllers.js';
 
@@ -35,5 +35,7 @@ cartasRouter.get('/addCardInventarioCustom', viewAddCardInventarioCustom);
 cartasRouter.post('/addCardInventarioCustom', doAddCardInventarioCustom);
 cartasRouter.get('/addCardInventarioTodos', viewAddCardInventarioTodos);
 cartasRouter.post('/addCardInventarioTodos', doAddCardInventarioTodos);
+cartasRouter.get('/removeCardInventario', viewRemoveCardInventario);
+cartasRouter.post('/removeCardInventario', doRemoveCardInventario);
 
 export default cartasRouter;

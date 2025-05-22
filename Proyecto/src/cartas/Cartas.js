@@ -97,6 +97,11 @@ export class Carta {
         this.#borrarCartasTodosUsuarios = db.prepare('DELETE FROM UsuariosCartas where carta_id = @carta_id');
     }
 
+    static removeFromInventory(usuario, nombreCarta) {
+        const carta = this.getCartaByName(nombreCarta);
+        this.#borrarCartaUsuario.run({ usuario, carta_id: carta.id });
+  }
+
     static agregarAlInventario(usuario, carta_id){
         this.#insertarCarta.run({usuario, carta_id})
     }

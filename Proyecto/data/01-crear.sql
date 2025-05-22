@@ -1,4 +1,12 @@
 BEGIN TRANSACTION;
+DROP TABLE IF EXISTS "Intercambios";
+CREATE TABLE "Intercambios" (
+	"UsuarioQueSolicita"	TEXT NOT NULL,
+	"CartaQueQuiere"	INTEGER NOT NULL,
+	"CartaQueDa"	INTEGER NOT NULL,
+	"id"	INTEGER NOT NULL,
+	PRIMARY KEY("id")
+);
 DROP TABLE IF EXISTS "MazoCartas";
 CREATE TABLE MazoCartas (
   mazo_id   INTEGER    REFERENCES Mazos(id),
@@ -21,6 +29,13 @@ CREATE TABLE "Usuarios" (
 	"password"	TEXT NOT NULL,
 	"email"	TEXT NOT NULL DEFAULT 'test@gmail.com',
 	PRIMARY KEY("id" AUTOINCREMENT)
+);
+DROP TABLE IF EXISTS "UsuariosCartas";
+CREATE TABLE "UsuariosCartas" (
+  usuario   TEXT NOT NULL,
+  carta_id  INTEGER NOT NULL,
+  PRIMARY KEY (usuario, carta_id),
+  FOREIGN KEY(carta_id) REFERENCES Cartas(id)
 );
 DROP TABLE IF EXISTS "cartas";
 CREATE TABLE cartas (

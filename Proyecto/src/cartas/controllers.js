@@ -384,5 +384,41 @@ export function doModifyCard(req, res) {
     }
 }
 
+export function viewRemoveCardInventario(req, res) {
+  const cartas = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
+  res.render('pagina', {
+    contenido: 'paginas/removeCardInventario',
+    session: req.session,
+    cartas,
+    EnumColecciones,
+    EnumRarezas
+  });
+}
+
+export function doRemoveCardInventario(req, res) {
+  const nombre = req.body.name;
+  try {
+    Carta.removeFromInventory(req.session.nombre, nombre);
+    const cartas = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
+    res.render('pagina', {
+      contenido: 'paginas/gestionarCartas',
+      session: req.session,
+      cartas,
+      EnumColecciones,
+      EnumRarezas,
+      mensaje: 'Carta eliminada de tu inventario con éxito'
+    });
+  } catch (e) {
+    const cartas = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
+    res.render('pagina', {
+      contenido: 'paginas/removeCardInventario',
+      session: req.session,
+      cartas,
+      EnumColecciones,
+      EnumRarezas,
+      mensaje: 'No se pudo eliminar la carta: ' + e.message
+    });
+  }
+}
 
 

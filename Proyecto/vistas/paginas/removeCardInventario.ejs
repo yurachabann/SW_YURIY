@@ -1,0 +1,30 @@
+<h1>Quitar carta de tu inventario</h1>
+
+<form action="/cartas/removeCardInventario" method="POST">
+  <fieldset>
+    <% if (locals.mensaje) { %>
+      <p><strong><%= locals.mensaje %></strong></p>
+    <% } %>
+    <legend>Elige la carta que quieres quitar</legend>
+
+    <% if (cartas.length > 0) { %>
+      <div>
+        <label for="carta">Carta:</label>
+        <select name="name" id="carta" required>
+          <option value="" selected disabled>-- Selecciona una carta --</option>
+          <% cartas.forEach(c => { %>
+            <option value="<%= c.nombre %>">
+              <%= c.nombre %>
+              (Colección: <%= EnumColecciones[c.coleccion] %>,
+               Rareza: <%= EnumRarezas[c.rareza] %>)
+            </option>
+          <% }) %>
+        </select>
+      </div>
+      <button type="submit">Quitar carta</button>
+    <% } else { %>
+      <p>No tienes cartas en tu inventario.</p>
+    <% } %>
+
+  </fieldset>
+</form>
