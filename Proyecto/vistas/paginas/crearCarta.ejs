@@ -1,43 +1,52 @@
 <form action="/cartas/createCard" method="POST" enctype="multipart/form-data">
-    <fieldset>
-      <% if (locals.mensaje) { %>
-        <p><strong><%= locals.mensaje %></strong></p>
-      <% } %>
-      <legend>Crear una nueva carta</legend>
-      
-      <div>
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" required>
-      </div>
-      
-      <div>
-        <label>
-          <input type="radio" name="rareza" value="1"> Común
-        </label>
-        <label>
-          <input type="radio" name="rareza" value="2"> Rara
-        </label>
-        <label>
-          <input type="radio" name="rareza" value="3"> Épica
-        </label>
-        <label>
-          <input type="radio" name="rareza" value="4"> Legendaria
-        </label>
-      </div>
+  <fieldset>
+    <% if (locals.mensaje) { %>
+      <p><strong><%= locals.mensaje %></strong></p>
+    <% } %>
+    <legend>Crear una nueva carta</legend>
+    
+    <div>
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" required>
+    </div>
+    
+    <div>
+      <label>
+        <input type="radio" name="rareza" value="1"> Común
+      </label>
+      <label>
+        <input type="radio" name="rareza" value="2"> Rara
+      </label>
+      <label>
+        <input type="radio" name="rareza" value="3"> Épica
+      </label>
+      <label>
+        <input type="radio" name="rareza" value="4"> Legendaria
+      </label>
+    </div>
 
-      <div>
-        <label for="vida">Vida:</label>
-        <input type="number" id="vida" name="vida" required min="1" max="1000">
-      </div>
-      
-      <div>
-        <label for="file">Imagen:</label>
-        <input type="file" id="imagen" name="imagen" accept="image/*" required>
-      </div>
-      
-      <div>
-        <button type="submit">Crear Carta</button>
-      </div>
-    </fieldset>
-  </form>
-  
+    <div>
+      <label for="vida">Vida:</label>
+      <input type="number" id="vida" name="vida" required min="1" max="1000">
+    </div>
+    
+    <div>
+      <label>Imagen actual:</label>
+      <img id="preview" 
+           src="https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg" 
+           alt="Vista previa" 
+           width="200">
+    </div>
+    
+    <div>
+      <label for="imagen">Imagen:</label>
+      <input type="file" id="imagen" name="imagen" accept="image/*" required>
+    </div>
+    
+    <div>
+      <button type="submit">Crear Carta</button>
+    </div>
+  </fieldset>
+</form>
+
+<script src="/js/ImagenModificar_Crear.js" defer></script>
