@@ -30,6 +30,8 @@ export class Mazo {
     static #deleteAllMazosOfUsuario2 = null; //limpia las referencias de mazoCartas cuando queremos eliminar TODOS los mazos de un usuario
     static #deleteCartas = null;
     static #getMazosOfUsuario = null;
+    static #countByUsuario = null; //contar los mazos que tiene cada usuario
+    
 
     static initStatements(db) {
         if (this.#getByUsername !== null) return;
@@ -73,6 +75,7 @@ export class Mazo {
             GROUP BY m.id
           `);
          this.#getMazosOfUsuario = db.prepare('SELECT id FROM Mazos WHERE creador = @creador')
+         this.#countByUsuario = db.prepare(`SELECT COUNT(*) AS cnt FROM Mazos WHERE creador = @creador`);
 
 
    // una pequeña transacción para actualizar la lista de cartas de un mazo
@@ -81,6 +84,11 @@ export class Mazo {
     for (const cartaId of cartaIds)
       this.#insertCartas.run({ mazoId: id, cartaId });
     });
+    }
+
+      static tieneMazos(usuario) {
+            const row = this.#countByUsuario.get({ creador: usuario });
+            return row.cnt > 0;
     }
 
     static getMazoByName(name) {

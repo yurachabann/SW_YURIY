@@ -30,6 +30,7 @@ export class Usuario {
     static #deleteStmt = null;
     static #getAll = null;
     static #deleteAll = null;
+    static #getAllNonAdmin = null; //para sacar los usuarios que tienen cartas o mazos - admins no pueden tener nada.
 
     static initStatements(db) {
         if (this.#getByUsernameStmt !== null) return;
@@ -40,7 +41,16 @@ export class Usuario {
         this.#deleteStmt = db.prepare('DELETE FROM Usuarios WHERE username = @username');
         this.#getAll = db.prepare('SELECT * FROM Usuarios');
         this.#deleteAll = db.prepare('DELETE FROM Usuarios WHERE username != @username');
+        this.#getAllNonAdmin = db.prepare("SELECT * FROM Usuarios WHERE rol = 'U'");
     }
+
+    static obtenerUsuariosNoAdmin() {
+        const rows = this.#getAllNonAdmin.all({});
+        return rows.map(u => {
+      
+        return new Usuario(u.username, u.password, u.nombre, u.rol, u.id, u.email);
+    });
+  }
 
     static getUsuarioByUsername(username) {
         const usuario = this.#getByUsernameStmt.get({ username });

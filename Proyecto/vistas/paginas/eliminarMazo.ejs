@@ -1,27 +1,27 @@
 <h1>Borrado de mazos</h1>
 
 <form action="/mazos/eliminarMazo" method="POST">
-<fieldset>
-	<% if (locals.mensaje) { %>
-		<p><strong><%= locals.mensaje %></strong></p>
-	<% } %>
-	<legend>Nombre del mazo a borrar</legend>
-	<div>
-  <label for="mazo">Mazo:</label>
-  <select name="name" id="mazo" required>
-    <% if (misMazos.length > 0) { %>
-      <% misMazos.forEach((m, idx) => { %>
-        <option
-          value="<%= m.nombre %>"
-          <%= idx === 0 ? 'selected' : '' %>
-        >
-          <%= m.nombre %>
-        </option>
-      <% }) %>
-    <% } else { %>
-      <option value="" disabled selected>No tienes mazos aún</option>
+  <fieldset>
+    <% if (locals.mensaje) { %>
+      <p><strong><%= locals.mensaje %></strong></p>
     <% } %>
-  </select>
-</div>
-	<button type="submit">Eliminar</button>
-</fieldset>
+    <legend>Nombre del mazo a borrar</legend>
+
+    <% if (misMazos.length > 0) { %>
+      <div>
+        <label for="mazo">Mazo:</label>
+        <select name="name" id="mazo" required>
+          <% misMazos.forEach((m, idx) => { %>
+            <option value="<%= m.nombre %>" <%= idx === 0 ? 'selected' : '' %>>
+              <%= m.nombre %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+      <button type="submit">Eliminar</button>
+    <% } else { %>
+      <p>No hay mazos que satisfacen la peticion.</p>
+    <% } %>
+
+  </fieldset>
+</form>

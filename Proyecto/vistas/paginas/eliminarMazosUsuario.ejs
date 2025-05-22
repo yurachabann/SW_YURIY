@@ -1,11 +1,28 @@
 <h1>Borrar TODOS los mazos del usuario</h1>
 
 <form action="/mazos/eliminarMazos" method="POST">
-<fieldset>
-	<% if (locals.mensaje) { %>
-		<p><strong><%= locals.mensaje %></strong></p>
-	<% } %>
-	<legend>Nombre del usuario</legend>
-	<div><label>Nombre:</label> <input type="text" name="name" /></div>
-	<button type="submit">Eliminar</button>
-</fieldset>
+  <fieldset>
+    <% if (locals.mensaje) { %>
+      <p><strong><%= locals.mensaje %></strong></p>
+    <% } %>
+    <legend>Nombre del usuario</legend>
+
+    <% if (usuarios.length === 0) { %>
+      <p>No hay mazos aún.</p>
+    <% } else { %>
+      <div>
+        <label for="usuario">Usuario:</label>
+        <select name="name" id="usuario" required>
+          <option value="" selected disabled>-- Selecciona un usuario --</option>
+          <% usuarios.forEach(u => { %>
+            <option value="<%= u.nombre %>">
+              <%= u.nombre %> (<%= u.username %>)
+            </option>
+          <% }) %>
+        </select>
+      </div>
+      <button type="submit">Eliminar</button>
+    <% } %>
+
+  </fieldset>
+</form>

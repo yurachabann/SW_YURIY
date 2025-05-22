@@ -1,6 +1,7 @@
 import { body } from 'express-validator';
 import { Carta, EnumColecciones, EnumRarezas } from '../cartas/Cartas.js';
 import { Mazo } from '../mazos/Mazos.js';
+import { Usuario } from '../usuarios/Usuario.js';
 
 export function viewAddMazo(req, res) { 
     let contenido = 'paginas/login';
@@ -45,11 +46,17 @@ export function modificarMazoConRelleno(req, res) {
   }
 
 export function preModificarMazo(req, res) {
-    const misMazos = Mazo.getByCreador(req.session.nombre);
+  let mazos = null;
+  if(req.session.esAdmin){
+    mazos = Mazo.obtenerMazos();
+  }
+  else{
+    mazos = Mazo.getByCreador(req.session.nombre);
+  }
     res.render('pagina', {
         contenido: 'paginas/preModificarMazo',
         session: req.session,
-        misMazos
+        mazos
     });
 }
 
@@ -119,9 +126,13 @@ export function viewModificarMazo(req, res) {
 }
 
 export function viewEliminarMazos(req, res) {
+    const usuarios = Usuario
+    .obtenerUsuariosNoAdmin()
+    .filter(u => Mazo.tieneMazos(u.nombre));
     res.render('pagina', {
         contenido: 'paginas/eliminarMazosUsuario',
         session: req.session,
+        usuarios
     });
 }
 
@@ -209,9 +220,11 @@ export function viewEliminarMazo(req, res) {
 }
 
 export function viewEliminarMazoAdmin(req, res) {
+    const mazos = Mazo.obtenerMazos();
     res.render('pagina', {
         contenido: 'paginas/eliminarMazoAdmin',
-        session: req.session
+        session: req.session,
+        mazos
     });
 }
 

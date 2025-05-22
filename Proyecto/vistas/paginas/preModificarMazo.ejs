@@ -7,18 +7,22 @@
     <% } %>
     <legend>Mazo a modificar</legend>
 
-    <div>
-      <label for="mazo">Mazo:</label>
-      <select name="nombre" id="mazo" required>
-        <option value="" disabled selected>-- Selecciona un mazo --</option>
-        <% misMazos.forEach(m => { %>
-          <option value="<%= m.nombre %>">
-            <%= m.nombre %> 
-          </option>
-        <% }) %>
-      </select>
-    </div>
-
-    <button type="submit">Modificar</button>
+    <% if (mazos.length > 0) { %>
+      <div>
+        <label for="mazo">Mazo:</label>
+        <select name="nombre" id="mazo" required>
+          <option value="" disabled selected>-- Selecciona un mazo --</option>
+          <% mazos.forEach(m => { %>
+            <option value="<%= m.nombre %>">
+              <%= m.nombre %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+      <button type="submit">Modificar</button>
+    <% } else { %>
+      <p>No hay mazos que satisfacen la petición.</p>
+    <% } %>
+    
   </fieldset>
 </form>

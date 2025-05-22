@@ -1,5 +1,6 @@
 import { body } from 'express-validator';
 import { Carta, EnumColecciones, EnumRarezas } from './Cartas.js'
+import { Usuario } from '../usuarios/Usuario.js';
 
 export function viewCreateCard(req, res) {
     res.render('pagina', {
@@ -36,7 +37,8 @@ export function viewAddCardInventarioCustom(req, res) {
         contenido: 'paginas/addCardInventarioCustom',
         session: req.session,
         cartas_coleccion_custom,
-        EnumRarezas
+        EnumRarezas,
+        EnumColecciones
     });
 }
 
@@ -99,9 +101,16 @@ export function viewAddCardInventario(req, res) {
 }
 
 export function viewEliminateCardsUsuario(req, res) {
+    const todos = Usuario.obtenerUsuarios();
+    const usuarios = todos.filter(u => {
+    const cartasDelUsuario = Carta.obtenerCartasPertenecientesAlUsuario(u.nombre);
+    return cartasDelUsuario.length > 0;
+  });
+
     res.render('pagina', {
         contenido: 'paginas/eliminarCartasUsuario',
-        session: req.session
+        session: req.session,
+        usuarios
     });
 }
 

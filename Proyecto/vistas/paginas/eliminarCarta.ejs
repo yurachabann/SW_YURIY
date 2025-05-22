@@ -1,23 +1,30 @@
 <h1>Borrado de cartas</h1>
 
 <form action="/cartas/eliminarCarta" method="POST">
-<fieldset>
-	<% if (locals.mensaje) { %>
-		<p><strong><%= locals.mensaje %></strong></p>
-	<% } %>
-	<legend>Nombre de la carta a borrar</legend>
-	<div>
-  <label for="carta">Carta:</label>
-  <select name="name" id="carta" required>
-    <option value="" selected disabled>-- Selecciona una carta --</option>
-    <% cartas.forEach(c => { %>
-      <option value="<%= c.nombre %>">
-        <%= c.nombre %> 
-        (Colección: <%= EnumColecciones[c.coleccion] %>, 
-         Rareza: <%= EnumRarezas[c.rareza] %>)
-      </option>
-    <% }) %>
-  </select>
-</div>
-	<button type="submit">Eliminar</button>
-</fieldset>
+  <fieldset>
+    <% if (locals.mensaje) { %>
+      <p><strong><%= locals.mensaje %></strong></p>
+    <% } %>
+    <legend>Nombre de la carta a borrar</legend>
+
+    <% if (cartas.length > 0) { %>
+      <div>
+        <label for="carta">Carta:</label>
+        <select name="name" id="carta" required>
+          <option value="" selected disabled>-- Selecciona una carta --</option>
+          <% cartas.forEach(c => { %>
+            <option value="<%= c.nombre %>">
+              <%= c.nombre %>
+              (Colección: <%= EnumColecciones[c.coleccion] %>,
+               Rareza: <%= EnumRarezas[c.rareza] %>)
+            </option>
+          <% }) %>
+        </select>
+      </div>
+      <button type="submit">Eliminar</button>
+    <% } else { %>
+      <p>No hay cartas disponibles para borrar.</p>
+    <% } %>
+
+  </fieldset>
+</form>

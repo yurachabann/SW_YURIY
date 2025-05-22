@@ -7,19 +7,23 @@
     <% } %>
     <legend>Elige una carta</legend>
 
-    <div>
-      <label for="carta">Carta:</label>
-      <select name="nombre" id="carta" required>
-        <option value="" disabled selected>-- Selecciona una carta --</option>
-        <% cartas.forEach(carta => { %>
-          <option value="<%= carta.nombre %>">
-            <%= carta.nombre %> 
-            (Rareza: <%= EnumRarezas[carta.rareza] %>)
-          </option>
-        <% }) %>
-      </select>
-    </div>
-
-    <button type="submit">Modificar</button>
+    <% if (cartas.length > 0) { %>
+      <div>
+        <label for="carta">Carta:</label>
+        <select name="nombre" id="carta" required>
+          <option value="" disabled selected>-- Selecciona una carta --</option>
+          <% cartas.forEach(carta => { %>
+            <option value="<%= carta.nombre %>">
+              <%= carta.nombre %> 
+              (Rareza: <%= EnumRarezas[carta.rareza] %>)
+            </option>
+          <% }) %>
+        </select>
+      </div>
+      <button type="submit">Modificar</button>
+    <% } else { %>
+      <p>No hay cartas disponibles.</p>
+    <% } %>
+    
   </fieldset>
 </form>
