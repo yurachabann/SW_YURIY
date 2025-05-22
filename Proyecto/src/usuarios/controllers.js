@@ -4,53 +4,64 @@ import { Mazo } from '../mazos/Mazos.js';
 import { body, validationResult } from 'express-validator';
 
 export function viewLogin(req, res) {
+    const mensaje = req.query.mensaje || null;
     let contenido = 'paginas/login';
     if (req.session != null && req.session.login) {
         contenido = 'paginas/home'
     }
     res.render('pagina', {
         contenido,
-        session: req.session
+        session: req.session,
+        mensaje
     });
 }
 
 export function viewRegister(req, res) {
+    const mensaje = req.query.mensaje || null;
     res.render('pagina', {
         contenido: 'paginas/register',
-        session: req.session
+        session: req.session,
+        mensaje
     });
 }
 
 export function administrarUsuarios(req, res) {
     const usuarios = Usuario.obtenerUsuarios();
-    
+    const mensaje = req.query.mensaje || null;
     res.render('pagina', {
         contenido: 'paginas/administrarUsuarios',
         usuarios,
-        session: req.session
+        session: req.session,
+        mensaje
     });
 }
 
 export function viewModify(req, res) {
+    const mensaje = req.query.mensaje || null;
     res.render('pagina', {
         contenido: 'paginas/modifyUser',
-        session: req.session
+        session: req.session,
+        mensaje
     });
 }
 
 export function viewEliminate(req, res) {
     const usuarios = Usuario.obtenerUsuarios();
+    const mensaje = req.query.mensaje || null;
     res.render('pagina', {
         contenido: 'paginas/borrarUsuario',
         session: req.session,
-        usuarios
+        usuarios,
+        mensaje
     });
 }
 
 export function viewAdd(req, res) {
+    const mensaje = req.query.mensaje || null;
     res.render('pagina', {
         contenido: 'paginas/aniadirUsuario',
-        session: req.session
+        session: req.session,
+        mensaje
     });
 }
 
@@ -101,90 +112,70 @@ export function doLogin(req, res) {
 }
 
 export function aniadirUsuario(req, res) {
-    body('nombre').escape();
-    body('email').normalizeEmail();
-    body('pass').escape();
-    body('username').escape();
-    body('rol').isIn([RolesEnum.ADMIN, RolesEnum.USER]);
+  body('nombre').escape();
+  body('email').normalizeEmail();
+  body('pass').escape();
+  body('username').escape();
+  body('rol').isIn([RolesEnum.ADMIN, RolesEnum.USER]);
 
-    const nombre = req.body.nombre.trim();
-    const email = req.body.email.trim();
-    const pass = req.body.pass.trim();
-    const rol = req.body.tipoUsuario.trim();
-    const username = req.body.username.trim();
-    //console.log(rol);
-    
-    if (!nombre || !email || !rol || !username) {
-        return res.render('pagina', {
-            contenido: 'paginas/aniadirUsuario',
-            mensaje: 'Todos los campos son obligatorios.'
-        });
+  const nombre = req.body.nombre?.trim();
+  const email = req.body.email?.trim();
+  const pass = req.body.pass?.trim();
+  const rol = req.body.tipoUsuario?.trim();
+  const username = req.body.username?.trim();
+
+  if (!nombre || !email || !rol || !username) {
+    const mensaje = encodeURIComponent('Todos los campos son obligatorios.');
+    return res.redirect(`/usuarios/aniadirUsuario?mensaje=${mensaje}`);
+  }
+
+  try {
+    if (rol === "A") {
+      Usuario.addUserAdmin(username, pass, email, nombre);
+    } else {
+      Usuario.register(username, pass, email, nombre);
     }
 
-    try {
-    
-        if(rol == "A") { Usuario.addUserAdmin(username,pass,email,nombre); }
-        else Usuario.register(username,pass,email,nombre);
-        //console.log(rol);
-        const usuarios = Usuario.obtenerUsuarios();
-        return res.render('pagina', {
-            contenido: 'paginas/administrarUsuarios',
-            session: req.session,
-            usuarios,
-            mensaje: 'Usuario añadido con éxito'
-        });
-
-    } catch (e) {
-        // Si ocurre algún error al crear el usuario
-        return res.render('pagina', {
-            contenido: 'paginas/aniadirUsuario',
-            mensaje: 'Error al añadir el usuario: ' + e.message
-        });
-    }
+    const mensaje = encodeURIComponent('Usuario añadido con éxito');
+    return res.redirect(`/usuarios/administrarUsuarios?mensaje=${mensaje}`);
+  } catch (e) {
+    const mensaje = encodeURIComponent('Error al añadir el usuario: ' + e.message);
+    return res.redirect(`/usuarios/aniadirUsuario?mensaje=${mensaje}`);
+  }
 }
 
+
 export function doRegister(req, res) {
-    
-    body('name').escape();
-    body('usernameRegister').escape();
-    body('email').normalizeEmail();
-    body('password1').escape();
-    body('password2').escape();
+  body('name').escape();
+  body('usernameRegister').escape();
+  body('email').normalizeEmail();
+  body('password1').escape();
+  body('password2').escape();
 
-    const username = req.body.usernameRegister.trim();
-    const password1 = req.body.password1.trim();
-    const password2 = req.body.password2.trim();
-    const email = req.body.email.trim();
-    const name = req.body.name.trim();
+  const username  = req.body.usernameRegister?.trim();
+  const password1 = req.body.password1?.trim();
+  const password2 = req.body.password2?.trim();
+  const email = req.body.email?.trim();
+  const name = req.body.name?.trim();
 
-    if (password1 !== password2) {
-        return res.render('pagina', {
-            contenido: 'paginas/register',
-            mensaje: 'Las contraseñas no coinciden',
-            session: req.session
-        });
-    }
+  if (password1 !== password2) {
+    const mensaje = encodeURIComponent('Las contraseñas no coinciden');
+    return res.redirect(`/usuarios/register?mensaje=${mensaje}`);
+  }
 
-    try {
+  try {
+    const nuevoUsuario = Usuario.register(username, password1, email, name);
 
-        const nuevoUsuario = Usuario.register(username, password1, email, name);
+    req.session.login   = true;
+    req.session.nombre  = nuevoUsuario.nombre;
+    req.session.esAdmin = nuevoUsuario.rol === RolesEnum.ADMIN;
 
-        req.session.login = true;
-        req.session.nombre = nuevoUsuario.nombre;
-        req.session.esAdmin = nuevoUsuario.rol === RolesEnum.ADMIN;
+    return res.redirect(`/usuarios/login`);
+  } catch (e) {
 
-        return res.render('pagina', {
-            contenido: 'paginas/home',
-            session: req.session
-        });
-    } catch (e) {
-        return res.render('pagina', {
-            contenido: 'paginas/register',
-            mensaje: 'Error en el registro: ' + e.message,
-            session: req.session
-        });
-    }
-        
+    const mensaje = encodeURIComponent('Error en el registro: ' + e.message);
+    return res.redirect(`/usuarios/register?mensaje=${mensaje}`);
+  }
 }
 
 
@@ -201,60 +192,48 @@ export function doLogout(req, res, next) {
     })
 }
 
-export function eliminateUser(req,res){
-    if(!Usuario.usuarioExiste(req.body.username)){
-    return res.render('pagina', {
-        contenido: 'paginas/borrarUsuario',
-        mensaje: 'Error al borrar el usuario ',
-        session: req.session
-    });
-}
-    else {
-        let nombre = Usuario.obtenerNombrePorUsername(req.body.username);
-        Mazo.deleteAllMazosUsuario(nombre);
-        Carta.limpiarInventarioUsuario(nombre);
-        Usuario.deleteByUsername(req.body.username);
-        const usuarios = Usuario.obtenerUsuarios();
-        return res.render('pagina', {
-        contenido: 'paginas/administrarUsuarios',
-        mensaje: 'Usuario borrado con exito ',
-        usuarios,
-        session: req.session
-        });
+export function eliminateUser(req, res) {
+  const usernameReq = req.body.username?.trim();
 
+  if (!Usuario.usuarioExiste(usernameReq)) {
+    const mensaje = encodeURIComponent('Error al borrar el usuario');
+    return res.redirect(
+      `/usuarios/borrarUsuario?username=${encodeURIComponent(usernameReq)}&mensaje=${mensaje}`
+    );
+  }
+
+  const nombre = Usuario.obtenerNombrePorUsername(usernameReq);
+  Mazo.deleteAllMazosUsuario(nombre);
+  Carta.limpiarInventarioUsuario(nombre);
+  Usuario.deleteByUsername(usernameReq);
+
+  const mensaje = encodeURIComponent('Usuario borrado con éxito');
+  return res.redirect(`/usuarios/administrarUsuarios?mensaje=${mensaje}`);
 }
 
-}
+
 
 export function doModify(req, res) {
-    body('username').escape();
-    body('usuario2').normalizeEmail();
-    body('pass2').escape();
-    body('email').normalizeEmail();
-    body('tipoUsuario').isIn([RolesEnum.ADMIN, RolesEnum.USER]); 
+  body('username').escape();
+  body('usuario2').normalizeEmail();
+  body('pass2').escape();
+  body('email').normalizeEmail();
+  body('tipoUsuario').isIn([RolesEnum.ADMIN, RolesEnum.USER]);
 
-    const usuario = req.body.username.trim();
-    const usuario2 = req.body.usuario2.trim();
-    const pass2 = req.body.pass2.trim();
-    const rol = req.body.tipoUsuario.trim();
-    const email = req.body.email.trim();
-    //console.log(rol);
-    
-        if(Usuario.usuarioExiste(usuario)){
-        Usuario.actualizarCampos(usuario, usuario2, pass2, rol, email);
-        const usuarios = Usuario.obtenerUsuarios();
-        return res.render('pagina', {
-            contenido: 'paginas/administrarUsuarios',
-            session: req.session,
-            usuarios,
-            mensaje: 'Usuario modificado con éxito'
-        });
-    }
-        else{
-        return res.render('pagina', {
-            contenido: 'paginas/modifyUser',
-            mensaje: 'El usuario no existe ' ,
-            session: req.session
-        });
-    }
+  const usuario = req.body.username?.trim();
+  const usuario2 = req.body.usuario2?.trim();
+  const pass2 = req.body.pass2?.trim();
+  const rol = req.body.tipoUsuario?.trim();
+  const email = req.body.email?.trim();
+
+  if (!Usuario.usuarioExiste(usuario)) {
+    const mensaje = encodeURIComponent('El usuario no existe');
+    return res.redirect(
+      `/usuarios/modifyUser?username=${encodeURIComponent(usuario)}&mensaje=${mensaje}`
+    );
+  }
+
+  Usuario.actualizarCampos(usuario, usuario2, pass2, rol, email);
+  const mensaje = encodeURIComponent('Usuario modificado con éxito');
+  return res.redirect(`/usuarios/administrarUsuarios?mensaje=${mensaje}`);
 }

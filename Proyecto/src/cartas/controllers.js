@@ -364,14 +364,12 @@ export function doModifyCard(req, res) {
     ? `/img/${req.file.filename}`
     : cartaActual.Imagen;
 
-  // Compruebo permisos
   const esCreador = Carta.getCreadorByNombre(nombre) === req.session.nombre;
   if (!req.session.esAdmin && !esCreador) {
     const errMsg = encodeURIComponent('No tienes permisos para modificar esta carta');
     return res.redirect(`/cartas/modifyCard?nombre=${encodeURIComponent(nombre)}&mensaje=${errMsg}`);
   }
 
-  // Hago la actualización
   try {
     Carta.actualizarCampos(nombre, nombre2, rareza, vida, imagen);
   } catch (err) {
@@ -380,7 +378,6 @@ export function doModifyCard(req, res) {
     return res.redirect(`/cartas/modifyCard?nombre=${encodeURIComponent(nombre)}&mensaje=${errMsg}`);
   }
 
-  // Redirijo según rol
   const successMsg = encodeURIComponent('Carta actualizada con éxito');
   if (req.session.esAdmin) {
     return res.redirect(`/cartas/administrarCartas?mensaje=${successMsg}`);

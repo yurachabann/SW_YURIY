@@ -68,9 +68,9 @@ export function doSolicitarIntercambio(req, res) {
 
 export function doRealizarIntercambio(req, res) {
   const usuarioQueSolicita = req.body.usuarioQueSolicita;
-  const cartaQueQuiere     = Number(req.body.cartaQueQuiere);
-  const cartaDa            = Number(req.body.cartaDa);
-  const usuarioAcepta      = req.session.nombre;
+  const cartaQueQuiere = Number(req.body.cartaQueQuiere);
+  const cartaDa = Number(req.body.cartaDa);
+  const usuarioAcepta = req.session.nombre;
 
   // 1) Validación básica
   if (isNaN(cartaQueQuiere) || isNaN(cartaDa)) {
@@ -133,9 +133,9 @@ export function doRealizarIntercambio(req, res) {
 function normalizarIntercambios(intercambiosRaw){
   //const intercambiosRaw = Intercambio.obtenerIntercambios();
   const intercambiosCartas = intercambiosRaw.map(ix => {
-    const usuario   = ix.UsuarioQueSolicita;
-    const idQuiere  = ix.CartaQueQuiere;
-    const idDa      = ix.CartaQueDa;
+    const usuario = ix.UsuarioQueSolicita;
+    const idQuiere = ix.CartaQueQuiere;
+    const idDa = ix.CartaQueDa;
     
     const imagenQuiere = Carta.getImagenPorId(idQuiere);
     const imagenDa     = Carta.getImagenPorId(idDa);

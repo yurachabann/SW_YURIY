@@ -109,7 +109,7 @@ export class Mazo {
 
         const result = this.#deleteAllMazosOfUsuario.run({ creador: usuario });
 
-        if (result.changes === 0) throw new MazoNoEncontrado(usuario);
+        //if (result.changes === 0) throw new MazoNoEncontrado(usuario);
     }
 
     static getMazoByCreador(name) {
