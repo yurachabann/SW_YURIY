@@ -31,6 +31,7 @@ export class Mazo {
     static #deleteCartas = null;
     static #getMazosOfUsuario = null;
     static #countByUsuario = null; //contar los mazos que tiene cada usuario
+    static #deleteById = null
     
 
     static initStatements(db) {
@@ -45,6 +46,7 @@ export class Mazo {
         this.#getAll = db.prepare('SELECT * FROM Mazos');
         this.#getMy = db.prepare('SELECT * FROM Mazos WHERE creador = @username');
         this.#deleteAllMazosOfUsuario = db.prepare('DELETE FROM Mazos WHERE creador = @creador');
+        this.#deleteById = db.prepare('DELETE FROM Mazos WHERE id = @id');
 
         this.#insertCartas = db.prepare('INSERT INTO MazoCartas(mazo_id, carta_id) VALUES (@mazoId, @cartaId)'); //TABLA PARA HACER JOINS ENTRE MAZOS Y CARTAS
         this.#deleteCartas = db.prepare('DELETE FROM MazoCartas WHERE mazo_id = @id');

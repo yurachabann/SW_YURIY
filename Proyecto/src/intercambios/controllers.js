@@ -30,10 +30,11 @@ export function viewContenidoIntercambios(req, res) {
     });
   }
 
+  const intercambiosRaw= Intercambio.obtenerIntercambios(req.session.nombre);
   return res.render('pagina', {
     contenido:    'paginas/intercambios',
     session:      req.session,
-    intercambiosCartas: normalizarIntercambios()
+    intercambiosCartas: normalizarIntercambios(intercambiosRaw)
   });
 }
 
@@ -42,6 +43,22 @@ export function doSolicitarIntercambio(req, res) {
     console.log('>> req.body:', req.body);
     const cartaQueQuiere = req.body.cartaObtener.trim();
     const cartaQueDa = req.body.cartaDar.trim();
+
+     if (cartaQueQuiere === cartaQueDa) {
+      const cartasObtener = Carta.obtenerCartasAPedir(req.session.nombre);
+      const cartasDar     = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
+      
+      return res.render('pagina', {
+        contenido: 'paginas/solicitarIntercambio',
+        mensaje:   'No puedes solicitar un intercambio de la misma carta.',
+        session:   req.session,
+        EnumColecciones,
+        EnumRarezas,
+        cartasObtener,
+        cartasDar
+      });
+    }
+
     const existe = Intercambio.comprobarSiExiste(req.session.nombre,cartaQueQuiere)
 
     const cartasObtener = Carta.obtenerCartasAPedir(req.session.nombre);
@@ -61,11 +78,12 @@ export function doSolicitarIntercambio(req, res) {
     const nuevo = new Intercambio(req.session.nombre, cartaQueQuiere, cartaQueDa);
 const guardado = Intercambio.guardarIntercambio(nuevo);
 
+    const intercambiosRaw = Intercambio.obtenerIntercambios(req.session.nombre);
     res.render('pagina', {
         mensaje: 'Intercambio guardado y disponible para otros usuarios',
         contenido: 'paginas/intercambios',
         session: req.session,
-        intercambiosCartas: normalizarIntercambios()
+        intercambiosCartas: normalizarIntercambios(intercambiosRaw)
     });
 }
 
@@ -83,6 +101,7 @@ export function doRealizarIntercambio(req, res) {
     }
 
     Carta.intercambiar(usuarioQueSolicita, req.session.nombre, cartaQueQuiere,cartaDa);
+    Intercambio.eliminarIntercambio(usuarioQueSolicita, cartaQueQuiere, cartaDa);
     /*
   if (cartaQuiere && cartaDar) {
     console.log('--- Realizando Intercambio ---');
@@ -107,17 +126,18 @@ export function doRealizarIntercambio(req, res) {
     console.log('------------------------------');
   }*/
 
+   const intercambiosRaw = Intercambio.obtenerIntercambios(req.session.nombre);
    res.render('pagina', {
         mensaje: 'Intercambio realizado exitosamente. Revisa tu nueva carta en el inventario!',
         contenido: 'paginas/intercambios',
         session: req.session,
-        intercambiosCartas: normalizarIntercambios()
+        intercambiosCartas: normalizarIntercambios(intercambiosRaw)
     });
 
 }
 
-function normalizarIntercambios(){
-  const intercambiosRaw = Intercambio.obtenerIntercambios();
+function normalizarIntercambios(intercambiosRaw){
+  //const intercambiosRaw = Intercambio.obtenerIntercambios();
   const intercambiosCartas = intercambiosRaw.map(ix => {
     const usuario   = ix.UsuarioQueSolicita;
     const idQuiere  = ix.CartaQueQuiere;

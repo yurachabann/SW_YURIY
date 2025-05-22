@@ -86,3 +86,10 @@
 .btn-realizar:hover {
   background-color: #218838;
 }
+
+.no-intercambios {
+  text-align: center;
+  margin: 2rem 0;
+  font-size: 1.1rem;
+  color: #555;
+}

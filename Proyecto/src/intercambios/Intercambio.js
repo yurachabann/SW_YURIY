@@ -17,6 +17,7 @@ export class Intercambio {
     static #intercambioCompletado = null; //borra el intercambio de la lista cuando ya se produjo
     static #getAll = null; 
     static #existe = null;
+    static #getAvailable = null; //intercambios que el usuario puede realizar, y que no son suyos
 
     static initStatements(db) {
         if (this.#nuevoIntercambio !== null) return; 
@@ -24,8 +25,10 @@ export class Intercambio {
             'INSERT INTO Intercambios (usuarioQueSolicita, cartaQueQuiere, cartaQueDa) VALUES (@usuarioQueSolicita, @cartaQueQuiere, @cartaQueDa)'
         );
         this.#intercambioCompletado = db.prepare('DELETE FROM Intercambios WHERE usuarioQueSolicita = @usuarioQueSolicita AND cartaQueQuiere = @cartaQueQuiere');
-        this.#getAll = db.prepare('SELECT * FROM Intercambios');
+        this.#getAll = db.prepare('SELECT * FROM Intercambios'); //en desuso
         this.#existe = db.prepare('SELECT COUNT(*) as count FROM Intercambios WHERE usuarioQueSolicita = @usuarioQueSolicita AND cartaQueQuiere = @cartaQueQuiere');
+       // this.#getOthers = db.prepare('SELECT * FROM Intercambios WHERE usuarioQueSolicita != @usuarioActual');
+        this.#getAvailable = db.prepare('SELECT I.* FROM Intercambios AS I JOIN UsuariosCartas AS U ON I.cartaQueQuiere = U.carta_id WHERE I.usuarioQueSolicita != @usuarioActual AND U.usuario = @usuarioActual');
     }
 
     static delete(usuarioQueSolicita, cartaQueQuiere) {
@@ -33,13 +36,21 @@ export class Intercambio {
         if (result.changes === 0) throw new IntercambioNoEncontrado(usuarioQueSolicita, cartaQueQuiere);
     }
  
-    static obtenerIntercambios() {
-        return this.#getAll.all();
+    static obtenerIntercambios(usuarioActual) {
+        return this.#getAvailable.all({ usuarioActual });
     }
 
     static comprobarSiExiste(usuarioQueSolicita, cartaQueQuiere){
         const { count } = this.#existe.get({ usuarioQueSolicita, cartaQueQuiere });
         return count > 0;
+    }
+
+     static eliminarIntercambio(usuarioQueSolicita, cartaQueQuiere) {
+        const result = this.#intercambioCompletado.run({ usuarioQueSolicita, cartaQueQuiere });
+        if (result.changes === 0) {
+            throw new IntercambioNoEncontrado(usuarioQueSolicita, cartaQueQuiere);
+        }
+        return result;
     }
 
     static guardarIntercambio(intercambio){

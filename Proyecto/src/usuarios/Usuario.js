@@ -44,6 +44,16 @@ export class Usuario {
         this.#getAllNonAdmin = db.prepare("SELECT * FROM Usuarios WHERE rol = 'U'");
     }
 
+
+      static obtenerNombrePorUsername(username) {
+            // Reutiliza el statement que ya tienes:
+            const row = this.#getByUsernameStmt.get({ username });
+            if (!row) {
+                throw new UsuarioNoEncontrado(username);
+             }
+             return row.nombre;
+        }
+
     static obtenerUsuariosNoAdmin() {
         const rows = this.#getAllNonAdmin.all({});
         return rows.map(u => {
@@ -128,7 +138,7 @@ export class Usuario {
     get id() {
         return this.#id;
     }
-
+    
     set password(nuevoPassword) {
         // XXX: En el ej3 / P3 lo cambiaremos para usar async / await o Promises
         this.#password = bcrypt.hashSync(nuevoPassword);

@@ -1,4 +1,6 @@
 import { Usuario, RolesEnum } from './Usuario.js';
+import { Carta } from '../cartas/Cartas.js';
+import { Mazo } from '../mazos/Mazos.js';
 import { body, validationResult } from 'express-validator';
 
 export function viewLogin(req, res) {
@@ -208,6 +210,9 @@ export function eliminateUser(req,res){
     });
 }
     else {
+        let nombre = Usuario.obtenerNombrePorUsername(req.body.username);
+        Mazo.deleteAllMazosUsuario(nombre);
+        Carta.limpiarInventarioUsuario(nombre);
         Usuario.deleteByUsername(req.body.username);
         const usuarios = Usuario.obtenerUsuarios();
         return res.render('pagina', {
