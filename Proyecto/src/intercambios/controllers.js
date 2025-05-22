@@ -5,14 +5,15 @@ import { Intercambio } from './Intercambio.js';
 export function viewSolicitarIntercambio(req, res) {
     const cartasObtener = Carta.obtenerCartasAPedir(req.session.nombre);
     const cartasDar = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
-
+    const mensaje = req.query.mensaje || null;
     res.render('pagina', {
         contenido: 'paginas/solicitarIntercambio',
         session: req.session,
         EnumColecciones,
         EnumRarezas,
         cartasDar,
-        cartasObtener
+        cartasObtener,
+        mensaje
     });
 }
 
@@ -31,110 +32,103 @@ export function viewContenidoIntercambios(req, res) {
   }
 
   const intercambiosRaw= Intercambio.obtenerIntercambios(req.session.nombre);
+  const mensaje = req.query.mensaje || null;
   return res.render('pagina', {
     contenido:    'paginas/intercambios',
     session:      req.session,
+    mensaje,
     intercambiosCartas: normalizarIntercambios(intercambiosRaw)
   });
 }
 
 
 export function doSolicitarIntercambio(req, res) {
-    console.log('>> req.body:', req.body);
-    const cartaQueQuiere = req.body.cartaObtener.trim();
-    const cartaQueDa = req.body.cartaDar.trim();
+  const usuario = req.session.nombre;
+  const cartaQueQuiere = req.body.cartaObtener?.trim();
+  const cartaQueDa     = req.body.cartaDar?.trim();
 
-     if (cartaQueQuiere === cartaQueDa) {
-      const cartasObtener = Carta.obtenerCartasAPedir(req.session.nombre);
-      const cartasDar     = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
-      
-      return res.render('pagina', {
-        contenido: 'paginas/solicitarIntercambio',
-        mensaje:   'No puedes solicitar un intercambio de la misma carta.',
-        session:   req.session,
-        EnumColecciones,
-        EnumRarezas,
-        cartasObtener,
-        cartasDar
-      });
-    }
+  if (cartaQueQuiere === cartaQueDa) {
+    const msg = encodeURIComponent('No puedes solicitar un intercambio de la misma carta.');
+    return res.redirect(`/intercambios/solicitarIntercambio?mensaje=${msg}`);
+  }
 
-    const existe = Intercambio.comprobarSiExiste(req.session.nombre,cartaQueQuiere)
+  const existe = Intercambio.comprobarSiExiste(usuario, cartaQueQuiere);
+  if (existe) {
+    const msg = encodeURIComponent('Ese intercambio ya existe');
+    return res.redirect(`/intercambios/solicitarIntercambio?mensaje=${msg}`);
+  }
 
-    const cartasObtener = Carta.obtenerCartasAPedir(req.session.nombre);
-    const cartasDar = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
+  const nuevo = new Intercambio(usuario, cartaQueQuiere, cartaQueDa);
+  Intercambio.guardarIntercambio(nuevo);
 
-    if(existe){
-        return res.render('pagina', {
-            contenido: 'paginas/solicitarIntercambio',
-            mensaje: 'Ese intercambio ya existe',
-            session: req.session,
-            EnumColecciones,
-            EnumRarezas,
-            cartasObtener,
-            cartasDar
-          });
-    }
-    const nuevo = new Intercambio(req.session.nombre, cartaQueQuiere, cartaQueDa);
-const guardado = Intercambio.guardarIntercambio(nuevo);
-
-    const intercambiosRaw = Intercambio.obtenerIntercambios(req.session.nombre);
-    res.render('pagina', {
-        mensaje: 'Intercambio guardado y disponible para otros usuarios',
-        contenido: 'paginas/intercambios',
-        session: req.session,
-        intercambiosCartas: normalizarIntercambios(intercambiosRaw)
-    });
+  const msg = encodeURIComponent('Intercambio guardado y disponible para otros usuarios');
+  return res.redirect(`/intercambios/intercambios?mensaje=${msg}`);
 }
 
-export function doRealizarIntercambio(req, res) {
-    const { usuarioQueSolicita, cartaQueQuiere, cartaDa } = req.body;
-    
-    const cartaQuiere = Carta.getCardPorId(cartaQueQuiere);
-    const cartaDar   = Carta.getCardPorId(cartaDa);
 
-    if (!cartaQuiere) {
-     console.error('ERROR: no se encontró la carta que quiere con id=', cartaQueQuiere);
+export function doRealizarIntercambio(req, res) {
+  const usuarioQueSolicita = req.body.usuarioQueSolicita;
+  const cartaQueQuiere     = Number(req.body.cartaQueQuiere);
+  const cartaDa            = Number(req.body.cartaDa);
+  const usuarioAcepta      = req.session.nombre;
+
+  // 1) Validación básica
+  if (isNaN(cartaQueQuiere) || isNaN(cartaDa)) {
+    const err = encodeURIComponent('IDs de carta inválidos');
+    return res.redirect(`/intercambios/intercambios?mensaje=${err}`);
+  }
+
+  try {
+    const cartaQuiereObj = Carta.getCardPorId(cartaQueQuiere);
+    const cartaDarObj    = Carta.getCardPorId(cartaDa);
+
+    if (!cartaQuiereObj) {
+      console.error('ERROR: no se encontró la carta que quiere con id=', cartaQueQuiere);
     }
-    if (!cartaDar) {
+    if (!cartaDarObj) {
       console.error('ERROR: no se encontró la carta que da con id=', cartaDa);
     }
 
-    Carta.intercambiar(usuarioQueSolicita, req.session.nombre, cartaQueQuiere,cartaDa);
-    Intercambio.eliminarIntercambio(usuarioQueSolicita, cartaQueQuiere, cartaDa);
     /*
-  if (cartaQuiere && cartaDar) {
-    console.log('--- Realizando Intercambio ---');
-    console.log('Carta que quiere el usuario:', {
-      id:        cartaQuiere.id,
-      nombre:    cartaQuiere.nombre,
-      coleccion: cartaQuiere.coleccion,
-      rareza:    cartaQuiere.rareza,
-      vida:      cartaQuiere.vida,
-      creador:   cartaQuiere.creador,
-      imagen:    cartaQuiere.Imagen
-    });
-    console.log('Carta que da el usuario:', {
-      id:        cartaDar.id,
-      nombre:    cartaDar.nombre,
-      coleccion: cartaDar.coleccion,
-      rareza:    cartaDar.rareza,
-      vida:      cartaDar.vida,
-      creador:   cartaDar.creador,
-      imagen:    cartaDar.Imagen
-    });
-    console.log('------------------------------');
-  }*/
+    if (cartaQuiereObj && cartaDarObj) {
+      console.log('--- Realizando Intercambio ---');
+      console.log('Carta que quiere el usuario:', {
+        id:        cartaQuiereObj.id,
+        nombre:    cartaQuiereObj.nombre,
+        coleccion: cartaQuiereObj.coleccion,
+        rareza:    cartaQuiereObj.rareza,
+        vida:      cartaQuiereObj.vida,
+        creador:   cartaQuiereObj.creador,
+        imagen:    cartaQuiereObj.Imagen
+      });
+      console.log('Carta que da el usuario:', {
+        id:        cartaDarObj.id,
+        nombre:    cartaDarObj.nombre,
+        coleccion: cartaDarObj.coleccion,
+        rareza:    cartaDarObj.rareza,
+        vida:      cartaDarObj.vida,
+        creador:   cartaDarObj.creador,
+        imagen:    cartaDarObj.Imagen
+      });
+      console.log('------------------------------');
+    }
+    */
 
-   const intercambiosRaw = Intercambio.obtenerIntercambios(req.session.nombre);
-   res.render('pagina', {
-        mensaje: 'Intercambio realizado exitosamente. Revisa tu nueva carta en el inventario!',
-        contenido: 'paginas/intercambios',
-        session: req.session,
-        intercambiosCartas: normalizarIntercambios(intercambiosRaw)
-    });
+    Carta.intercambiar(usuarioQueSolicita, usuarioAcepta, cartaQueQuiere, cartaDa);
+    Intercambio.eliminarIntercambio(usuarioQueSolicita, cartaQueQuiere, cartaDa);
 
+    const msg = encodeURIComponent(
+      'Intercambio realizado exitosamente. Revisa tu nueva carta en el inventario!'
+    );
+    return res.redirect(`/intercambios/intercambios?mensaje=${msg}`);
+
+  } catch (e) {
+    console.error('Error al realizar intercambio:', e);
+    const err = encodeURIComponent('No se pudo realizar el intercambio: ' + e.message);
+    return res.redirect(`/intercambios/intercambios?mensaje=${err}`);
+  }
 }
+
 
 function normalizarIntercambios(intercambiosRaw){
   //const intercambiosRaw = Intercambio.obtenerIntercambios();

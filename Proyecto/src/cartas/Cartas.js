@@ -97,7 +97,7 @@ export class Carta {
         this.#borrarCartasTodosUsuarios = db.prepare('DELETE FROM UsuariosCartas where carta_id = @carta_id');
     }
 
-    static limpiarInventarioUsuario(usuario) {
+    static limpiarInventarioUsuario(usuario) { //no se usa
         this.#deleteAllCartasOfUsuario3.run({ usuario });
   }
 
@@ -240,18 +240,19 @@ static deleteByName(name) {
   return cartas;
     }
 
-    static deleteAllCartasUsuario(usuario) {
-        const mazos = this.#getCartasOfUsuario.all({ usuario: usuario });
-        
-        for (const { id } of mazos) {
-            this.#deleteAllCartasOfUsuario2.run({ id }); //borrado de mazoCartas
+static deleteAllCartasUsuario(usuario) {
+  const creadas = this.#getByCreador.all({ creador: usuario });
 
-        }
-        this.#deleteAllCartasOfUsuario3.run({ usuario: usuario });
-        const result = this.#deleteAllCartasOfUsuario.run({ creador: usuario });
-        
-        if (result.changes === 0) throw new FalloBorrado(usuario);
-    }
+  for (const { id } of creadas) {
+    this.#deleteAllCartasOfUsuario2.run({ id });
+    this.#borrarCartasTodosUsuarios.run({ carta_id: id });
+  }
+  const result = this.#deleteAllCartasOfUsuario.run({ creador: usuario });
+
+  if (result.changes === 0) {
+    throw new FalloBorrado(usuario);
+  }
+}
 
     static #insert(carta) {
             let result = null;
