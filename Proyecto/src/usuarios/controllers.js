@@ -27,7 +27,7 @@ export function viewRegister(req, res) {
 
 export function viewPreModify(req, res) {
     const mensaje = req.query.mensaje || null;
-    const usuarios = Usuario.obtenerUsuariosNoAdmin();
+    const usuarios = Usuario.obtenerUsuariosExcept(req.session.nombre);
     res.render('pagina', {
         contenido: 'paginas/preModificarUsuario',
         session: req.session,
@@ -73,7 +73,8 @@ export function administrarUsuarios(req, res) {
 }
 
 export function viewEliminate(req, res) {
-    const usuarios = Usuario.obtenerUsuarios();
+    const usuarios = Usuario.obtenerUsuariosExcept(req.session.nombre);
+   // console.log(req.session);
     const mensaje = req.query.mensaje || null;
     res.render('pagina', {
         contenido: 'paginas/borrarUsuario',

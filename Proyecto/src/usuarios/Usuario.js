@@ -31,6 +31,7 @@ export class Usuario {
     static #getAll = null;
     static #deleteAll = null;
     static #getAllNonAdmin = null; //para sacar los usuarios que tienen cartas o mazos - admins no pueden tener nada.
+    static #getAllExceptMe = null;
 
     static initStatements(db) {
         if (this.#getByUsernameStmt !== null) return;
@@ -42,6 +43,19 @@ export class Usuario {
         this.#getAll = db.prepare('SELECT * FROM Usuarios');
         this.#deleteAll = db.prepare('DELETE FROM Usuarios WHERE username != @username');
         this.#getAllNonAdmin = db.prepare("SELECT * FROM Usuarios WHERE rol = 'U'");
+        this.#getAllExceptMe = db.prepare('SELECT * FROM Usuarios WHERE nombre != @nombre');
+    }
+
+    static obtenerUsuariosExcept(usernameActual) {
+        const rows = this.#getAllExceptMe.all({ nombre: usernameActual });
+        return rows.map(u => new Usuario(
+            u.username,
+            u.password,
+            u.nombre,
+            u.rol,
+            u.id,
+            u.email
+        ));
     }
 
     static getDatosByUsername(username) {
@@ -153,7 +167,6 @@ export class Usuario {
     }
     
     set password(nuevoPassword) {
-        // XXX: En el ej3 / P3 lo cambiaremos para usar async / await o Promises
         this.#password = bcrypt.hashSync(nuevoPassword);
     }
 
