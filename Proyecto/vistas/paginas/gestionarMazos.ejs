@@ -1,35 +1,56 @@
+
 <h2>Gestionar Tus Mazos</h2>
 
-<% if (locals.mensaje) { %>
-    <p><strong><%= locals.mensaje %></strong></p>
+<% if (mensaje) { %>
+  <p><strong><%= mensaje %></strong></p>
 <% } %>
 
-<a href="/mazos/addMazo" class="btn btn-crear">Crear un nuevo mazo</a>
+<div class="acciones-globales">
+  <a href="/mazos/addMazo" class="btn btn-crear">Crear un nuevo mazo</a>
+  <a href="/mazos/preModificarMazo" class="btn btn-modificar">Modificar Mazo</a>
+  <a href="/mazos/eliminarMazo" class="btn btn-eliminar">Eliminar Mazo</a>
+</div>
 
-<a href="/mazos/preModificarMazo" class="btn btn-modificar">Modificar Mazo</a>
+<% if (!mazos || mazos.length === 0) { %>
+  <p class="sin-cartas">No hay mazos disponibles</p>
+<% } else { %>
+  <% mazos.forEach(function(mazo) { %>
+    <section class="mazo-section">
+      <h3 class="titulo-mazo"><%= mazo.nombre %></h3>
 
-<a href="/mazos/eliminarMazo" class="btn btn-eliminar">Eliminar Mazo</a>
+      <% 
+        // 1) Convertir la cadena “A, B, C” en array
+        const nombres = (mazo.cartas || '')
+          .split(',')
+          .map(n => n.trim())
+          .filter(n => n);
+      %>
 
-<table border="1">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Cartas</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% if (mazos.length > 0) { %>
-            <% mazos.forEach(mazo => { %>
-                <tr>
-                    <td><%= mazo.nombre %></td>
-                    <td><%= mazo.cartas %></td>
-                </tr>
-            <% }); %>
-        <% } else { %>
-            <tr>
-                <td colspan="2">No hay mazos disponibles</td>
-            </tr>
-        <% } %>
-    </tbody>
-</table>
+      <% if (nombres.length > 0) { %>
+        <div class="cartas-grid">
+          <% nombres.forEach(function(nombreCarta) {
+               // 2) Buscar el objeto carta en tu array global
+               const cartaObj = cartasGlobal.find(c => c.nombre === nombreCarta);
+               if (!cartaObj) return;
+          %>
+            <div class="carta-item">
+              <img
+                src="<%= cartaObj.Imagen || 'https://i.pinimg.com/736x/b4/49/0a/b4490a5661fb671aa2c1b13daa2e7faa.jpg' %>"
+                alt="<%= cartaObj.nombre %>"
+              >
+              <div class="carta-info">
+                <h4><%= cartaObj.nombre %></h4>
+                <p>Colección: <%= EnumColecciones[cartaObj.coleccion] || 'N/D' %></p>
+                <p>Rareza: <%= EnumRarezas[cartaObj.rareza] || 'N/D' %></p>
+                <p>Vida: <%= cartaObj.vida %></p>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <p class="sin-cartas">Este mazo no contiene cartas.</p>
+      <% } %>
 
+    </section>
+  <% }); %>
+<% } %>

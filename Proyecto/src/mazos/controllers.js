@@ -1,7 +1,7 @@
 import { body } from 'express-validator';
 import { Carta, EnumColecciones, EnumRarezas } from '../cartas/Cartas.js';
 import { Mazo } from '../mazos/Mazos.js';
-import { Usuario } from '../usuarios/Usuario.js';
+import { RolesEnum, Usuario } from '../usuarios/Usuario.js';
 
 export function viewAddMazo(req, res) { 
     let contenido = 'paginas/login';
@@ -256,22 +256,33 @@ export function doEliminarMazoAdmin(req, res) {
 
 export function gestionarMazos(req, res) {
   const mensaje = req.query.mensaje || null;
-    res.render('pagina', {
-        contenido: 'paginas/gestionarMazos',
-        mazos: normalizarMazos(req.session.esAdmin, req.session.nombre),
-        session: req.session,
-        mensaje
-    });
-
+  const mazos = normalizarMazos(req.session.esAdmin, req.session.nombre);
+  const cartasGlobal = Carta.obtenerCartas();
+  res.render('pagina', {
+    contenido: 'paginas/gestionarMazos',
+    mazos,
+    cartasGlobal,
+    EnumColecciones,
+    EnumRarezas,
+    session: req.session,
+    mensaje
+  });
 }
+
 export function administrarMazos(req, res) {
-  const mensaje = req.query.mensaje || null;
-    res.render('pagina', {      
-        contenido: 'paginas/administrarMazos',
-        mazos : normalizarMazos(req.session.esAdmin, req.session.nombre),
-        session: req.session,
-        mensaje
-    });
+  const mensaje    = req.query.mensaje || null;
+  const rawMazos   = normalizarMazos(req.session.esAdmin, req.session.nombre);
+  const todasCartas = Carta.obtenerCartas();
+
+  res.render('pagina', {
+    contenido:    'paginas/administrarMazos',
+    session:      req.session,
+    mazos:        rawMazos,
+    cartasGlobal: todasCartas,
+    mensaje,
+    EnumColecciones,
+    EnumRarezas
+  });
 }
 
 function normalizarMazos(esAdmin, usuario) {
