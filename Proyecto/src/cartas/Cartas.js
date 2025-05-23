@@ -2,6 +2,7 @@ import * as fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'node:path';
+import { Usuario } from '../usuarios/Usuario.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = dirname(__filename);
@@ -225,7 +226,6 @@ static deleteByName(name) {
         const cartas_ids = this.#getCartasOfUsuario.all({usuario : usuario});
         const cartas = cartas_ids.map(row => {  
         const carta = this.getCardPorId(row.carta_id);
-        // carta es un objeto { id, nombre, coleccion, rareza, vida, creador, imagen }
         return new Carta(
             carta.nombre,
             carta.coleccion,
@@ -238,6 +238,15 @@ static deleteByName(name) {
         });
 
   return cartas;
+    }
+
+    static obtenerUsuariosConCartasCreadas() {
+        const todos = Usuario.obtenerUsuarios();
+   
+        return todos.filter(u => {
+            const cartasDelCreador = this.#getByCreador.all({ creador: u.nombre });
+            return cartasDelCreador.length > 0;
+        });
     }
 
 static deleteAllCartasUsuario(usuario) {

@@ -1,6 +1,7 @@
 import { body } from 'express-validator';
 import { Carta, EnumColecciones, EnumRarezas } from '../cartas/Cartas.js'
 import { Intercambio } from './Intercambio.js';
+import { validationResult } from 'express-validator';
 
 export function viewSolicitarIntercambio(req, res) {
     const cartasObtener = Carta.obtenerCartasAPedir(req.session.nombre);
@@ -43,6 +44,22 @@ export function viewContenidoIntercambios(req, res) {
 
 
 export function doSolicitarIntercambio(req, res) {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const cartasObtener = Carta.obtenerCartasAPedir(req.session.nombre);
+    const cartasDar = Carta.obtenerCartasPertenecientesAlUsuario(req.session.nombre);
+    return res.render('pagina', {
+      contenido:       'paginas/solicitarIntercambio',
+      session:         req.session,
+      EnumColecciones,
+      EnumRarezas,
+      cartasDar,
+      cartasObtener,
+      mensaje:         errors.array()[0].msg
+    });
+  }
+
   const usuario = req.session.nombre;
   const cartaQueQuiere = req.body.cartaObtener?.trim();
   const cartaQueDa     = req.body.cartaDar?.trim();
@@ -67,6 +84,13 @@ export function doSolicitarIntercambio(req, res) {
 
 
 export function doRealizarIntercambio(req, res) {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const msg = encodeURIComponent(errors.array()[0].msg);
+    return res.redirect(`/intercambios/intercambios?mensaje=${msg}`);
+  }
+
   const usuarioQueSolicita = req.body.usuarioQueSolicita;
   const cartaQueQuiere = Number(req.body.cartaQueQuiere);
   const cartaDa = Number(req.body.cartaDa);
