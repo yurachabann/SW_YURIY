@@ -1,4 +1,3 @@
-import { body } from 'express-validator';
 import { Carta, EnumColecciones, EnumRarezas } from '../cartas/Cartas.js'
 import { Intercambio } from './Intercambio.js';
 import { validationResult } from 'express-validator';

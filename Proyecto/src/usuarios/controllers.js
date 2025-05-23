@@ -37,6 +37,19 @@ export function viewPreModify(req, res) {
 }
 
 export function doPreModify(req,res){
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const usuarios = Usuario.obtenerUsuariosExcept(req.session.nombre);
+    const mensaje = errors.array()[0].msg;
+    return res.render('pagina', {
+      contenido: 'paginas/preModificarUsuario',
+      session: req.session,
+      mensaje,
+      usuarios
+    });
+  }
+
   const username = req.body.username.trim();
 
   if (!username) {
@@ -94,57 +107,52 @@ export function viewAdd(req, res) {
 }
 
 export function doLogin(req, res) {
-    //No valen campos vacíos
-    const validations = [
-        body('username', 'El nombre de usuario es obligatorio').notEmpty(),
-        body('password', 'La contraseña es obligatoria').notEmpty(),
-    ];
+  const errors = validationResult(req);
+ if (!errors.isEmpty()) {
+  return res.render('pagina', {
+    contenido: 'paginas/login',
+    mensaje: errors.array()[0].msg
+  });
+}
 
-    //Validaciones
-    Promise.all(validations.map(validation => validation.run(req))).then(() => {
-        const errors = validationResult(req);
-        //Si hay error devolverlo al usuario (errores tiene algo dentro)
-        if (!errors.isEmpty()) {
-            return res.render('pagina', {
-                contenido: 'paginas/login',
-                //Mostrar los errores que haya
-                error: errors.array().map(err => err.msg).join('. '), 
-            });
-        }
+  const username = req.body.username.trim();
+  const password = req.body.password.trim();
 
-        //Capturar username y password
-        const username = req.body.username.trim();
-        const password = req.body.password.trim();
+  try {
+    const usuario = Usuario.login(username, password);
+    req.session.login = true;
+    req.session.nombre = usuario.nombre;
+    req.session.esAdmin = usuario.rol === RolesEnum.ADMIN;
 
-        try {
-            //Verificamos si el usuario existe y si la contraseña es la correcta
-            const usuario = Usuario.login(username, password);
-            req.session.login = true;
-            req.session.nombre = usuario.nombre;
-            req.session.esAdmin = usuario.rol === RolesEnum.ADMIN;
-
-            //Renderiza la página por login true
-            return res.render('pagina', {
-                contenido: 'paginas/home',
-                session: req.session,
-            });
-
-        } catch (e) {
-            //Error de usuario o contraseña, renderiza
-            return res.render('pagina', {
-                contenido: 'paginas/login',
-                error: 'El usuario o contraseña no son válidos',
-            });
-        }
+    return res.render('pagina', {
+      contenido: 'paginas/home',
+      session: req.session
     });
+  } catch (e) {
+    return res.render('pagina', {
+      contenido: 'paginas/login',
+      mensaje: 'El usuario o contraseña no son válidos'
+    });
+  }
 }
 
 export function aniadirUsuario(req, res) {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.render('pagina', {
+      contenido: 'paginas/aniadirUsuario',
+      session: req.session,
+      mensaje: errors.array()[0].msg
+    });
+  }
+  /*
   body('nombre').escape();
   body('email').normalizeEmail();
   body('pass').escape();
   body('username').escape();
   body('rol').isIn([RolesEnum.ADMIN, RolesEnum.USER]);
+  */
 
   const nombre = req.body.nombre?.trim();
   const email = req.body.email?.trim();
@@ -174,11 +182,22 @@ export function aniadirUsuario(req, res) {
 
 
 export function doRegister(req, res) {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.render('pagina', {
+      contenido: 'paginas/register',
+      mensaje: errors.array()[0].msg
+    });
+  }
+
+  /*
   body('name').escape();
   body('usernameRegister').escape();
   body('email').normalizeEmail();
   body('password1').escape();
   body('password2').escape();
+  */
 
   const username  = req.body.usernameRegister?.trim();
   const password1 = req.body.password1?.trim();
@@ -221,6 +240,18 @@ export function doLogout(req, res, next) {
 }
 
 export function eliminateUser(req, res) {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const usuarios = Usuario.obtenerUsuariosExcept(req.session.nombre);
+    return res.render('pagina', {
+      contenido: 'paginas/borrarUsuario',
+      session: req.session,
+      usuarios,
+      mensaje: errors.array()[0].msg
+    });
+  }
+
   const usernameReq = req.body.username?.trim();
 
   if (!Usuario.usuarioExiste(usernameReq)) {
@@ -243,11 +274,24 @@ export function eliminateUser(req, res) {
 
 export function doModify(req, res) {
 
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const usuarios = Usuario.obtenerUsuarios();
+    return res.render('pagina', {
+      contenido: 'paginas/administrarUsuarios',
+      session: req.session,
+      usuarios,
+      mensaje: errors.array()[0].msg
+    });
+  }
+
+  /*
   body('username').escape();
   body('usuario2').normalizeEmail();
   body('pass2').escape();
   body('email').normalizeEmail();
   body('tipoUsuario').isIn([RolesEnum.ADMIN, RolesEnum.USER]);
+  */
 
   const usuario = req.body.username.trim();
   const usuario2 = req.body.usuario2?.trim();

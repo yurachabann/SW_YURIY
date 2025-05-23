@@ -1,4 +1,4 @@
-import { body } from 'express-validator';
+import { validationResult } from 'express-validator';
 import { Carta, EnumColecciones, EnumRarezas } from '../cartas/Cartas.js';
 import { Mazo } from '../mazos/Mazos.js';
 import { RolesEnum, Usuario } from '../usuarios/Usuario.js';
@@ -32,6 +32,26 @@ export function viewAddMazo(req, res) {
 }
 
 export function modificarMazoConRelleno(req, res) {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+      const mensaje = errors.array()[0].msg;
+      let mazos;
+
+      if (req.session.esAdmin) {
+         mazos = Mazo.obtenerMazos();
+      } else {
+          mazos = Mazo.getByCreador(req.session.nombre);
+      }
+
+  return res.render('pagina', {
+    contenido: 'paginas/preModificarMazo',
+    session: req.session,
+    mensaje,
+    mazos
+  });
+  }
+
 
     const nombreMazo = req.body.nombre.trim();
     const mazo = Mazo.getMazoByName(nombreMazo);
@@ -68,6 +88,7 @@ export function preModificarMazo(req, res) {
 }
 
 export function doAddMazo(req, res) {
+
   const username = req.session.nombre;
   console.log("usuario", username);
 
@@ -134,6 +155,21 @@ export function viewEliminarMazos(req, res) {
 }
 
 export function doEliminarMazosUsuario(req, res) {
+
+   const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const usuarios = Usuario
+      .obtenerUsuariosNoAdmin()
+      .filter(u => Mazo.tieneMazos(u.nombre));
+
+    return res.render('pagina', {
+      contenido: 'paginas/eliminarMazosUsuario',
+      session: req.session,
+      usuarios,
+      mensaje: errors.array()[0].msg
+    });
+  }
+
   const nombre = req.body.name.trim();
   Mazo.deleteAllMazosUsuario(nombre);
 
@@ -213,6 +249,18 @@ export function viewEliminarMazoAdmin(req, res) {
 }
 
 export function doEliminarMazo(req, res) {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const misMazos = Mazo.getByCreador(req.session.nombre);
+    return res.render('pagina', {
+      contenido: 'paginas/eliminarMazo',
+      session: req.session,
+      misMazos,
+      mensaje: errors.array()[0].msg
+    });
+  }
+
   const username = req.session.nombre;
   const mazoName = req.body.name.trim();
 
@@ -239,6 +287,18 @@ export function doEliminarMazo(req, res) {
 
   
 export function doEliminarMazoAdmin(req, res) {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const mazos = Mazo.obtenerMazos();
+    return res.render('pagina', {
+      contenido: 'paginas/eliminarMazoAdmin',
+      session: req.session,
+      mazos,
+      mensaje: errors.array()[0].msg
+    });
+  }
+
   const mazoName = req.body.name.trim();
 
   if (!Mazo.mazoExiste(mazoName)) {
