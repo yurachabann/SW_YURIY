@@ -44,9 +44,22 @@ export class Usuario {
         this.#getAllNonAdmin = db.prepare("SELECT * FROM Usuarios WHERE rol = 'U'");
     }
 
+    static getDatosByUsername(username) {
+        const row = this.#getByUsernameStmt.get({ username });
+        if (!row) {
+            throw new UsuarioNoEncontrado(username);
+        }
+        return {
+            id:       row.id,
+            username: row.username,
+            nombre:   row.nombre,
+            rol:      row.rol,
+            email:    row.email,
+            password: row.password
+        };
+    }
 
       static obtenerNombrePorUsername(username) {
-            // Reutiliza el statement que ya tienes:
             const row = this.#getByUsernameStmt.get({ username });
             if (!row) {
                 throw new UsuarioNoEncontrado(username);

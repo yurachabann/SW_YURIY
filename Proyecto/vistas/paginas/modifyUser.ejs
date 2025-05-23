@@ -1,44 +1,84 @@
-<h2>Modificar Usuarios</h2>
+<h2>Modificar Usuario</h2>
 
 <form action="/usuarios/modifyUser" method="POST">
   <fieldset>
-    <% if (locals.mensaje) { %>
-      <p><strong><%= locals.mensaje %></strong></p>
+
+    <% if (mensaje) { %>
+      <p><strong><%= mensaje %></strong></p>
     <% } %>
+
+    <!-- 1) Campo oculto con el username original -->
+    <input type="hidden" name="username" value="<%= usuario.username %>">
+
     <legend>Datos del usuario</legend>
-    
+
+    <!-- 2) Muestra el usuario actual (solo lectura) -->
     <div style="margin-bottom: 1rem;">
-      <label for="username">Usuario:</label>
-      <input type="text" id="username" name="username" required>
+      <label for="actualUsuario">Usuario actual:</label>
+      <input
+        type="text"
+        id="actualUsuario"
+        value="<%= usuario.username %>"
+        readonly
+      >
     </div>
-        
+
+    <!-- 3) Campo para el nuevo nombre de usuario -->
     <div style="margin-bottom: 1rem;">
-      <label for="usuario2">Nuevo usuario:</label>
-      <input type="text" id="usuario2" name="usuario2">
+      <label for="nuevoUsuario">Nuevo usuario:</label>
+      <input
+        type="text"
+        id="nuevoUsuario"
+        name="usuario2"
+        placeholder="Deja vacío para no cambiarlo"
+      >
     </div>
-    
+
+    <!-- 4) Nueva contraseña, siempre vacío -->
     <div style="margin-bottom: 1rem;">
       <label for="pass2">Nueva contraseña:</label>
-      <input type="password" id="pass2" name="pass2">
+      <input
+        type="password"
+        id="pass2"
+        name="pass2"
+        placeholder="Deja vacío para no cambiarla"
+      >
     </div>
-    
+
+    <!-- 5) Email, precargado -->
     <div style="margin-bottom: 1rem;">
-      <label for="email">Nuevo correo electrónico:</label>
-      <input type="email" id="email" name="email" required>
+      <label for="email">Correo electrónico:</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        value="<%= usuario.email %>"
+        required
+      >
     </div>
-    
+
+    <!-- 6) Rol, con el radio correspondiente marcado -->
     <div style="margin-bottom: 1rem;">
       <label>
-        <input type="radio" name="tipoUsuario" value="A"> Admin
+        <input
+          type="radio"
+          name="tipoUsuario"
+          value="A"
+          <%= usuario.rol === RolesEnum.ADMIN ? 'checked' : '' %>
+        > Admin
       </label>
       <label>
-        <input type="radio" name="tipoUsuario" value="U"> Usuario
+        <input
+          type="radio"
+          name="tipoUsuario"
+          value="U"
+          <%= usuario.rol === RolesEnum.USUARIO ? 'checked' : '' %>
+        > Usuario
       </label>
     </div>
-    
+
     <div>
       <button type="submit">Modificar usuario</button>
     </div>
-    
   </fieldset>
 </form>

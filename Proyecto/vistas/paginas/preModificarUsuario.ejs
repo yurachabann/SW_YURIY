@@ -1,0 +1,22 @@
+<h1>Borrado de usuarios</h1>
+
+<form action="/usuarios/preModifyUser" method="POST">
+<fieldset>
+	<% if (locals.mensaje) { %>
+		<p><strong><%= locals.mensaje %></strong></p>
+	<% } %>
+	<legend>Nombre del usuario a borrar</legend>
+	<div>
+  <label for="usuario">Usuario:</label>
+  <select name="username" id="usuario" required>
+    <option value="" selected disabled>-- Selecciona un usuario --</option>
+    <% usuarios.forEach(u => { %>
+      <option value="<%= u.username %>">
+        <%= u.username %> (<%= u.nombre %>)
+      </option>
+    <% }) %>
+  </select>
+</div>
+
+	<button type="submit">Eliminar</button>
+</fieldset>

@@ -25,21 +25,48 @@ export function viewRegister(req, res) {
     });
 }
 
+export function viewPreModify(req, res) {
+    const mensaje = req.query.mensaje || null;
+    const usuarios = Usuario.obtenerUsuariosNoAdmin();
+    res.render('pagina', {
+        contenido: 'paginas/preModificarUsuario',
+        session: req.session,
+        mensaje,
+        usuarios
+    });
+}
+
+export function doPreModify(req,res){
+  const username = req.body.username.trim();
+
+  if (!username) {
+    const mensaje = encodeURIComponent('No se indicó ningún usuario');
+    return res.redirect(`/usuarios/preModifyUser?mensaje=${mensaje}`);
+  }
+
+  if (!Usuario.usuarioExiste(username)) {
+    const mensaje = encodeURIComponent('El usuario no existe');
+    return res.redirect(`/usuarios/preModifyUser?mensaje=${mensaje}`);
+  }
+
+   const usuario = Usuario.getDatosByUsername(username); //usuario a modificar
+
+   const mensaje = req.query.mensaje || null;
+   res.render('pagina', {
+        contenido: 'paginas/modifyUser',
+        session: req.session,
+        mensaje,
+        usuario,
+        RolesEnum
+    });
+}
+
 export function administrarUsuarios(req, res) {
     const usuarios = Usuario.obtenerUsuarios();
     const mensaje = req.query.mensaje || null;
     res.render('pagina', {
         contenido: 'paginas/administrarUsuarios',
         usuarios,
-        session: req.session,
-        mensaje
-    });
-}
-
-export function viewModify(req, res) {
-    const mensaje = req.query.mensaje || null;
-    res.render('pagina', {
-        contenido: 'paginas/modifyUser',
         session: req.session,
         mensaje
     });
@@ -214,13 +241,14 @@ export function eliminateUser(req, res) {
 
 
 export function doModify(req, res) {
+
   body('username').escape();
   body('usuario2').normalizeEmail();
   body('pass2').escape();
   body('email').normalizeEmail();
   body('tipoUsuario').isIn([RolesEnum.ADMIN, RolesEnum.USER]);
 
-  const usuario = req.body.username?.trim();
+  const usuario = req.body.username.trim();
   const usuario2 = req.body.usuario2?.trim();
   const pass2 = req.body.pass2?.trim();
   const rol = req.body.tipoUsuario?.trim();
